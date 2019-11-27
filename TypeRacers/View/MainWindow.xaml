@@ -25,6 +25,6 @@
         </Grid.RowDefinitions>
         <TextBlock FontFamily="Times New Roman" Name="displayText" Grid.Column="1" Grid.Row="1" FontSize="30" Text="{Binding Model.Text}" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap"/>
         <TextBox Name="validationCheck" Grid.Column="1" Grid.Row="2"/>
-        <TextBox Name="userInput" Grid.Column="1" Grid.Row="3" TextChanged="UserInput_TextChanged" KeyUp="KeyListener"/>
+        <TextBox Name="userInput" Grid.Column="1" Grid.Row="3" TextChanged="UserInput_TextChanged" PreviewKeyDown="KeyListener"/>
     </Grid>
 </Window>
