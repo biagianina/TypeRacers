@@ -19,10 +19,12 @@
             <RowDefinition Name="border2" Height="10"/>
             <RowDefinition Name="mainR" Height="*"/>
             <RowDefinition Name="main1" Height="20"/>
+            <RowDefinition Name="main" Height="20"/>
             <RowDefinition Name="main2" Height="20"/>
             <RowDefinition Name="border3" Height="40"/>
         </Grid.RowDefinitions>
-        <TextBlock FontFamily="Times New Roman" Name="MyText" Grid.Column="1" Grid.Row="1" FontSize="30" Text="{Binding Model.Text}" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap"/>
-        <TextBox Name="userInput" Grid.Column="1" Grid.Row="2"/>
+        <TextBlock FontFamily="Times New Roman" Name="displayText" Grid.Column="1" Grid.Row="1" FontSize="30" Text="{Binding Model.Text}" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap"/>
+        <TextBox Name="validationCheck" Grid.Column="1" Grid.Row="2"/>
+        <TextBox Name="userInput" Grid.Column="1" Grid.Row="3" TextChanged="UserInput_TextChanged" KeyUp="KeyListener"/>
     </Grid>
 </Window>

@@ -59,6 +59,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="ModelView\DataValidation.cs" />
     <Compile Include="ModelView\TypeViewModel.cs" />
     <Compile Include="Model\TypeModel.cs" />
     <Compile Include="View\App.xaml.cs">
