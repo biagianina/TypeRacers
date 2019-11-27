@@ -8,7 +8,7 @@ namespace echo
     public class ContestText
     {
         //Path for the .txt document
-        private const string Path = @"C:\Users\DELL\source\repos\NewRepo\Texts.txt";
+        private const string Path = @"D:\ProgramData\JuniorMind\OOP\(5.) Retea\TypeRacers\Texts.txt";
 
         //Genertes random lines from the text document
         public string GetText()
