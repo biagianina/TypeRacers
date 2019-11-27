@@ -21,42 +21,76 @@ namespace TypeRacers
     /// </summary>
     public partial class MainWindow : Window
     {
+        private int charIndex = 0;
+        string originalText;
+        bool isValidInput;
+        DataValidation dataValidation;
+        StringBuilder wordToCheck = new StringBuilder();
+        bool backspacePressed;
+
+
         public MainWindow()
         {
             InitializeComponent();
             DataContext = new TypeViewModel(); //sets data context to be the ViewModel, in order to bind the text from the server
-            KeyDown += new KeyEventHandler(EnterIsPressed);
+            originalText = displayText.Text;
+            dataValidation = new DataValidation(originalText);
         }
 
-        //extra utilities to check whole text, event when enter is pressed
-        private void EnterIsPressed(object sender, KeyEventArgs e)
+        //this listener is used only for backspace key
+        private void KeyListener(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if (e.Key != Key.Back)
             {
-                e.Handled = true;
+                backspacePressed = false;
             }
 
-            if (e.Handled)
+            //check for backspace
+            if (e.Key == Key.Back)
             {
-                if (userInput.Text != "")
+                if (userInput.Text != string.Empty)
                 {
-                    if (userInput.Text.Equals(MyText.Text))
+                    backspacePressed = true;
+                    //remove one char at a time if length is greater than 0
+                    if (wordToCheck.Length > 0)
                     {
-                        MyText.Foreground = Brushes.Green;
-                        MessageBox.Show("Great!");
-                    }
-                    else
-                    {
-                        MyText.Foreground = Brushes.Red;
-                        MessageBox.Show("Oops! Try again!");
-                    }
-                }
+                        wordToCheck.Remove(wordToCheck.Length - 1, 1);
 
-                else
-                {
-                    MessageBox.Show("Type something!");
+                    }
+
+                    //lowering the char index
+                    charIndex--;
                 }
             }
+        }
+
+        //listener when user types char by char
+        private void UserInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            char currentChar = default;
+            // getting the current char from input
+            if (userInput.Text != string.Empty)
+            {
+                currentChar = userInput.Text.Last();
+            }
+
+            //adding the current char to the formed word that will be validated
+            if (!backspacePressed)
+            {
+                wordToCheck.Append(currentChar);
+                charIndex++;
+            }
+
+            //validate formed word
+            var result = dataValidation.ValidateWord(wordToCheck.ToString(), charIndex);
+
+            isValidInput = result.Item1;
+            var substringToCheck = result.Item2;
+
+            validationCheck.Text = "word to check: " + wordToCheck.ToString() + " substring formed: " + substringToCheck +
+                " char index: " + charIndex +
+                " is valid: " + isValidInput;
+
         }
     }
 }
