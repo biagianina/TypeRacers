@@ -14,6 +14,5 @@ namespace echo
             var serv = new Server();
             serv.ServerSetup();
         }
-
     }
 }
