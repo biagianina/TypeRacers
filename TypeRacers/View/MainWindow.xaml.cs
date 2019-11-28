@@ -87,7 +87,8 @@ namespace TypeRacers
             isValidInput = result.Item1;
             var substringToCheck = result.Item2;
 
-            validationCheck.Text = "word to check: " + wordToCheck.ToString() + " substring formed: " + substringToCheck +
+            validationCheck.Text = "word to check: " + wordToCheck.ToString() +
+                " substring formed: " + substringToCheck +
                 " char index: " + charIndex +
                 " is valid: " + isValidInput;
 

@@ -21,9 +21,7 @@ namespace echo
             try
             {
                 NetworkStream networkStream = clientSocket.GetStream();
-                byte[] broadcastBytes = null;
-                
-                broadcastBytes = Encoding.ASCII.GetBytes(new ContestText().GetText()); //generates random text from text document
+                byte[] broadcastBytes = Encoding.ASCII.GetBytes(new ContestText().GetText()); //generates random text from text document
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
                 networkStream.Flush();
             }
