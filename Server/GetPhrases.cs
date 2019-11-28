@@ -8,7 +8,7 @@ namespace echo
     public class ContestText
     {
         //Path for the .txt document
-        private const string Path = @"C:\Users\DELL\source\repos\NewRepo\Texts.txt";
+        private readonly string ExePath = AppDomain.CurrentDomain.BaseDirectory + "Texts.txt";
 
         //Genertes random lines from the text document
         public string GetText()
@@ -21,7 +21,8 @@ namespace echo
 
         private IEnumerable<string> GetLines()
         {
-            return File.ReadAllLines(Path);
+            return File.ReadAllLines(ExePath);
         }
     }
+    
 }

@@ -20,8 +20,7 @@ namespace Client
             {
                 byte[] inStream = new byte[10025];
                 var read = stream.Read(inStream, 0, inStream.Length);
-                var data = Encoding.ASCII.GetString(inStream, 0, read);
-                return data;
+                return Encoding.ASCII.GetString(inStream, 0, read);
             }
             catch (Exception)
             {
