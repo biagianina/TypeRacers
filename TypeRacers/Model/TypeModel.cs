@@ -10,10 +10,10 @@ namespace TypeRacers.Model
 
         public TypeModel(string text)
         {
-            Text = text;
+            TextFromServer = text;
         }
 
-        public string Text
+        public string TextFromServer
         {
             get
             {

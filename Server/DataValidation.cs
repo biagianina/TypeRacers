@@ -9,8 +9,6 @@ namespace TypeRacers
     public class DataValidation
     {
         private string originalText = string.Empty;
-        private int charIndex = 0;
-        StringBuilder newFormedWord = new StringBuilder(); //word formed after everytime a char is typed
 
         public DataValidation(string input)
         {
@@ -23,55 +21,27 @@ namespace TypeRacers
         }
 
         //validate only one word
-        public bool ValidateWord(char currentInputChar, bool isBackspace)
+        public bool ValidateWord(string currentTypedWord, int currentCharIndex)
         {
-            bool charIndexIsInRange = charIndex != -1 && charIndex <= originalText.Length;
+            bool charIndexIsInRange = currentCharIndex != -1 && currentCharIndex <= originalText.Length;
 
             if (!charIndexIsInRange)
             {
                 return false;
             }
 
-            // create new form word with the input char
-            if (!isBackspace)
-            {
-                newFormedWord.Append(currentInputChar);
-                charIndex++;
-            }
-
-            //check for backspace key
-            if (isBackspace)
-            {
-                if (newFormedWord.Length > 0)
-                {
-                    newFormedWord.Remove(newFormedWord.Length - 1, 1);
-
-                }
-
-                //lowering the char index
-                charIndex--;
-            }
-
-
 
             string substringToCheck = string.Empty;
 
-            //create the substring to compare with new formed word
+            //create the substring to compare with the typed word
 
             if (charIndexIsInRange)
             {
-                substringToCheck = originalText.Substring(0, charIndex);
+                substringToCheck = originalText.Substring(0, currentCharIndex);
             }
 
-            return CheckIfTwoStringsAreEqual(substringToCheck, newFormedWord.ToString());
+            return substringToCheck.Equals(currentTypedWord);
 
         }
-
-
-        private bool CheckIfTwoStringsAreEqual(string first, string second)
-        {
-            return first.Equals(second);
-        }
-
     }
 }
