@@ -10,7 +10,6 @@ namespace TypeRacers.ModelView
     {
         private string originalText = string.Empty;
 
-
         public DataValidation(string input)
         {
             if (input is null)
@@ -38,9 +37,7 @@ namespace TypeRacers.ModelView
             }
 
             return (CheckIfTwoStringsAreEqual(substringToCheck, wordToCheck), substringToCheck);
-
         }
-
 
         private bool CheckIfTwoStringsAreEqual(string first, string second)
         {

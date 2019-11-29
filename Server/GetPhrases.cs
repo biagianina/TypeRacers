@@ -24,5 +24,4 @@ namespace echo
             return File.ReadAllLines(ExePath);
         }
     }
-    
 }
