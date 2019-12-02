@@ -1,28 +1,35 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using Client;
 
 namespace TypeRacers.Model
 {
-    public class TypeModel : INotifyPropertyChanged 
+    public class Model : INotifyPropertyChanged
     {
         // a class to hold the text to type received from the server
-        private string _text;
+        private string textFromServer;
 
-        public TypeModel(string text)
+        public Model()
         {
-            TextFromServer = text;
+
+            TextFromServer = new Client.Client().GetMessageFromServer();
+
+            if(TextFromServer == null)
+            {
+                throw new ArgumentNullException("Text not found");
+            }
         }
 
         public string TextFromServer
         {
             get
             {
-                return _text;
+                return textFromServer;
             }
 
             set
             {
-                _text = value;
+                textFromServer = value;
                 OnPropertyChanged("Text");
             }
         }
@@ -31,7 +38,7 @@ namespace TypeRacers.Model
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(text));
         }
 
-        
+
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }

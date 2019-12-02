@@ -10,8 +10,6 @@ namespace Client
 {
     public class Client
     {
-        IPAddress host = IPAddress.Parse("192.168.1.125");
-
         readonly TcpClient client ;
         private NetworkStream stream;
 
