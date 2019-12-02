@@ -7,12 +7,12 @@ namespace echo
     public class Server
     {
         private TcpClient client;
-        private IPAddress ip = Dns.GetHostEntry("localhost").AddressList[0];
+        private IPAddress ip;
         private TcpListener server;
 
         public void ServerSetup()
         {
-            server = new TcpListener(ip, 123);
+            server = new TcpListener(Dns.GetHostEntry("localhost").AddressList[0], 8000);
             try
             {
                 server.Start();

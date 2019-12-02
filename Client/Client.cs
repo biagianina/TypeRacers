@@ -10,18 +10,12 @@ namespace Client
 {
     public class Client
     {
-<<<<<<< HEAD
-        readonly TcpClient client = new TcpClient(System.Configuration.ConfigurationManager.AppSettings["JuniorMindIP"], 123);
-=======
-        IPAddress host = IPAddress.Parse("192.168.1.125");
-
-        readonly TcpClient client ;
->>>>>>> b605b724f34f7a11b8b2202c6475da3d99d8d76c
+        readonly TcpClient client;
         private NetworkStream stream;
 
         public Client()
         {
-           client = new TcpClient("localhost", 123);
+            client = new TcpClient("localhost", 8000);
         }
         //returns a string to connect to the MVVM
         public string GetMessageFromServer()
