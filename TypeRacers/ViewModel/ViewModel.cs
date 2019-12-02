@@ -6,20 +6,20 @@ using TypeRacers.Model;
 
 namespace TypeRacers.ModelView
 {
-    internal class TypeViewModel : INotifyPropertyChanged
+    //a class to holde the logic
+    internal class ViewModel : INotifyPropertyChanged
     {
         string text;
-        string originalText;
         InputCharacterValidation dataValidation;
         bool isValid;
         int spaceIndex;
-
-        //creates an instance of the model with the text received from the server
-        public TypeViewModel()
+        Model.Model model;
+        
+        public ViewModel()
         {
-            TextToType = new TypeModel(new Client.Client().GetMessageFromServer()).TextFromServer;
-            originalText = TextToType;
-            dataValidation = new InputCharacterValidation(originalText);
+            model = new Model.Model();
+            TextToType = model.TextFromServer;
+            dataValidation = new InputCharacterValidation(TextToType);
         }
       
         public bool IsValid
@@ -54,7 +54,7 @@ namespace TypeRacers.ModelView
                 if (isValid && value.EndsWith(" "))
                 {
                     spaceIndex += text.Length;
-                    dataValidation = new InputCharacterValidation(originalText.Substring(spaceIndex));
+                    dataValidation = new InputCharacterValidation(TextToType.Substring(spaceIndex));
                     text = "";
                 }
 
