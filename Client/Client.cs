@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,9 +10,15 @@ namespace Client
 {
     public class Client
     {
-        readonly TcpClient client = new TcpClient("localhost", 123);
+        IPAddress host = IPAddress.Parse("192.168.1.125");
+
+        readonly TcpClient client ;
         private NetworkStream stream;
 
+        public Client()
+        {
+           client = new TcpClient("localhost", 123);
+        }
         //returns a string to connect to the MVVM
         public string GetMessageFromServer()
         {
