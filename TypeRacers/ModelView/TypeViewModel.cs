@@ -45,7 +45,6 @@ namespace TypeRacers.ModelView
                 //validate current word
                 IsValid = dataValidation.ValidateWord(CurrentInputText, CurrentInputText.Length);
                 TriggerPropertyChanged(nameof(CurrentInputText));
-
             }
 
         }

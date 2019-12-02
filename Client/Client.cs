@@ -9,7 +9,7 @@ namespace Client
 {
     public class Client
     {
-        readonly TcpClient client = new TcpClient("localhost", 123);
+        readonly TcpClient client = new TcpClient(System.Configuration.ConfigurationManager.AppSettings["JuniorMindIP"], 123);
         private NetworkStream stream;
 
         //returns a string to connect to the MVVM
