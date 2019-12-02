@@ -4,15 +4,15 @@ using Client;
 
 namespace TypeRacers.Model
 {
-    public class Model : INotifyPropertyChanged
+    public class Model
     {
-        // a class to hold the text to type received from the server
+        // a class to hold the data
         private string textFromServer;
 
         public Model()
         {
-
-            TextFromServer = new Client.Client().GetMessageFromServer();
+            //creates an instance of the client with the text received from the server
+            textFromServer = new Client.Client().GetMessageFromServer();
 
             if(TextFromServer == null)
             {
@@ -26,19 +26,6 @@ namespace TypeRacers.Model
             {
                 return textFromServer;
             }
-
-            set
-            {
-                textFromServer = value;
-                OnPropertyChanged("Text");
-            }
         }
-        private void OnPropertyChanged(string text)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(text));
-        }
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

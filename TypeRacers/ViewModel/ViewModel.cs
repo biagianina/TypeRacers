@@ -6,20 +6,19 @@ using TypeRacers.Model;
 
 namespace TypeRacers.ModelView
 {
+    //a class to holde the logic
     internal class ViewModel : INotifyPropertyChanged
     {
         string text;
         InputCharacterValidation dataValidation;
         bool isValid;
         int spaceIndex;
-        Model.Model typeModel;
+        Model.Model model;
         
-
-        //creates an instance of the model with the text received from the server
         public ViewModel()
         {
-            typeModel = new Model.Model();
-            TextToType = typeModel.TextFromServer;
+            model = new Model.Model();
+            TextToType = model.TextFromServer;
             dataValidation = new InputCharacterValidation(TextToType);
         }
       
