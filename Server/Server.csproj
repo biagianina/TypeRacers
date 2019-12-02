@@ -66,7 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataValidation.cs" />
+    <Compile Include="InputCharacterValidation.cs" />
     <Compile Include="GetPhrases.cs" />
     <Compile Include="HandleClient.cs" />
     <Compile Include="MyServer.cs" />

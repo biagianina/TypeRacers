@@ -1,23 +1,27 @@
 ﻿using System.ComponentModel;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Media;
 using TypeRacers.Model;
 
 namespace TypeRacers.ModelView
 {
     internal class TypeViewModel : INotifyPropertyChanged
     {
-        private string text;
+        string text;
         string originalText;
-        DataValidation dataValidation;
+        InputCharacterValidation dataValidation;
         bool isValid;
+        int spaceIndex;
 
         //creates an instance of the model with the text received from the server
         public TypeViewModel()
         {
-            Model = new TypeModel(new Client.Client().GetMessageFromServer());
-            originalText = Model.TextFromServer;
-            dataValidation = new DataValidation(originalText);
+            TextToType = new TypeModel(new Client.Client().GetMessageFromServer()).TextFromServer;
+            originalText = TextToType;
+            dataValidation = new InputCharacterValidation(originalText);
         }
-
+      
         public bool IsValid
         {
             get => isValid;
@@ -29,6 +33,8 @@ namespace TypeRacers.ModelView
 
                 isValid = value;
                 TriggerPropertyChanged(nameof(isValid));
+                TriggerPropertyChanged(nameof(Color));
+                TriggerPropertyChanged(nameof(InputBackgroundColor));
             }
         }
 
@@ -44,12 +50,59 @@ namespace TypeRacers.ModelView
 
                 //validate current word
                 IsValid = dataValidation.ValidateWord(CurrentInputText, CurrentInputText.Length);
-                TriggerPropertyChanged(nameof(CurrentInputText));
-            }
+           
+                if (isValid && value.EndsWith(" "))
+                {
+                    spaceIndex += text.Length;
+                    dataValidation = new InputCharacterValidation(originalText.Substring(spaceIndex));
+                    text = "";
+                }
 
+                TriggerPropertyChanged(nameof(CurrentInputText));
+<<<<<<< HEAD
+=======
+            }
         }
 
-        public TypeModel Model { get; }
+        public string Color
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(CurrentInputText))
+                {                   
+                    return "Black";
+                }
+                if (isValid)
+                {
+                    return "Green";
+                    
+                }
+                else
+                {
+                    return "Red";
+                }
+>>>>>>> b605b724f34f7a11b8b2202c6475da3d99d8d76c
+            }
+        }
+
+        public string TextToType { get; }
+        public string InputBackgroundColor
+        { 
+            get
+            {
+                if (string.IsNullOrEmpty(CurrentInputText))
+                {
+                    return default;
+                }
+                if (!isValid)
+                {
+                    return "Darkred";
+                }
+
+                return default;
+            }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
