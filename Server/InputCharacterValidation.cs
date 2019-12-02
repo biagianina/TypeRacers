@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace TypeRacers
 {
-    public class DataValidation
+    public class InputCharacterValidation
     {
         private string originalText = string.Empty;
 
-        public DataValidation(string input)
+        public InputCharacterValidation(string input)
         {
             if (input is null)
             {
@@ -29,7 +29,6 @@ namespace TypeRacers
             {
                 return false;
             }
-
 
             string substringToCheck = string.Empty;
 

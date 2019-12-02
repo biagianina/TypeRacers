@@ -25,9 +25,6 @@ namespace TypeRacers
         public MainWindow()
         {
             InitializeComponent();
-            var context = new TypeViewModel();
-            DataContext = context; //sets data context to be the ViewModel, in order to bind the text from the server
         }
-      
     }
 }
