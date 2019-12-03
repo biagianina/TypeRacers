@@ -4,14 +4,14 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
-namespace echo
+namespace TypeRacers.Server
 {
     public class HandleClient
     {
         TcpClient clientSocket;
         public void StartClient(TcpClient inClientSocket)
         {
-            this.clientSocket = inClientSocket;
+            clientSocket = inClientSocket;
             DoChat();
         }
 
@@ -22,7 +22,7 @@ namespace echo
             {
                 NetworkStream networkStream = clientSocket.GetStream();
                 byte[] broadcastBytes = Encoding.ASCII.GetBytes(new ContestText().GetText()); //generates random text from text document
-                networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
+                networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
                 networkStream.Flush();
             }
             catch (Exception)

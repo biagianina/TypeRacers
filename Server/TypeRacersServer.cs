@@ -1,8 +1,9 @@
-﻿using System;
+﻿
+using System;
 using System.Net;
 using System.Net.Sockets;
 
-namespace echo
+namespace TypeRacers.Server
 {
     public class Server
     {
@@ -12,7 +13,7 @@ namespace echo
 
         public void ServerSetup()
         {
-            server = new TcpListener(ip, 123);
+            server = new TcpListener(ip, 80);
             try
             {
                 server.Start();

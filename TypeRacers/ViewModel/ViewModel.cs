@@ -43,6 +43,7 @@ namespace TypeRacers.ModelView
             get => text;
             set
             {
+                // return because we dont need to execute logic if the input text has not changed
                 if (text == value)
                     return;
 

@@ -3,14 +3,14 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace echo
+namespace TypeRacers.Server
 {
     class Program
     {
         //Console app for an echo server
         static void Main()
-        {
-            //try to make a class to not open console when we run it ?? help
+        { 
+            //new instance of server and starting 
             var serv = new Server();
             serv.ServerSetup();
         }
