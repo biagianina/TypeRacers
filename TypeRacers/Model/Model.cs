@@ -7,7 +7,7 @@ namespace TypeRacers.Model
     public class Model
     {
         // a class to hold the data
-        private string textFromServer;
+        private readonly string textFromServer;
 
         public Model()
         {

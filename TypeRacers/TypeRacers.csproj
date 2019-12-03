@@ -64,6 +64,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="System\Collections\ObjectModel\ObservableCollection.cs" />
+    <Compile Include="ViewModel\TextBlockExtensions.cs" />
     <Compile Include="ViewModel\ViewModel.cs" />
     <Compile Include="Model\Model.cs" />
     <Compile Include="View\App.xaml.cs">

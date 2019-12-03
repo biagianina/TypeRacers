@@ -4,16 +4,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="clr-namespace:TypeRacers.ModelView"
+    xmlns:vm="clr-namespace:TypeRacers.ViewModel"
     mc:Ignorable="d"
     Title="MainWindow"
     Height="450"
     Width="800">
     <Window.Resources>
         <vm:ViewModel
-            x:Key="TypeViewModel" />
+            x:Key="ViewModel" />
     </Window.Resources>
-    <Grid DataContext="{StaticResource TypeViewModel}">
+    <Grid DataContext="{StaticResource ViewModel}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition
                 Width="10" />
@@ -36,7 +36,8 @@
             <RowDefinition
                 Height="40" />
         </Grid.RowDefinitions>
-        <TextBlock FontFamily="Times New Roman"
+        <TextBlock vm:TextBlockExtensions.BindableInlines="{Binding Inlines, UpdateSourceTrigger=PropertyChanged}"
+                   FontFamily="Times New Roman"
                    Name="displayText"
                    Grid.Column="1"
                    Grid.Row="1"
@@ -44,9 +45,7 @@
                    TextAlignment="Center"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
-                   TextWrapping="Wrap"
-                   Text="{Binding TextToType}"
-                   Foreground="{Binding Color, UpdateSourceTrigger=PropertyChanged}" />
+                   TextWrapping="Wrap" />
         <TextBox
             Name="validationCheck"
             Grid.Column="1"
