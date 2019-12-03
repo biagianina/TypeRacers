@@ -5,17 +5,19 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using TypeRacers;
 
-namespace Client
+namespace TypeRacers.Client
 {
-    public class Client
+    public class TypeRacersClient
     {
         readonly TcpClient client ;
         private NetworkStream stream;
 
-        public Client()
+        public TypeRacersClient()
         {
-           client = new TcpClient("localhost", 123);
+           client = new TcpClient("localhost", 80);
+            
         }
         //returns a string to connect to the MVVM
         public string GetMessageFromServer()
@@ -25,6 +27,7 @@ namespace Client
             {
                 byte[] inStream = new byte[10025];
                 var read = stream.Read(inStream, 0, inStream.Length);
+                
                 return Encoding.ASCII.GetString(inStream, 0, read);
             }
             catch (Exception)
