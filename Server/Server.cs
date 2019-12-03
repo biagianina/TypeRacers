@@ -7,12 +7,12 @@ namespace echo
     public class Server
     {
         private TcpClient client;
-        private IPAddress ip;
+        private IPAddress ip = Dns.GetHostEntry("localhost").AddressList[0];
         private TcpListener server;
 
         public void ServerSetup()
         {
-            server = new TcpListener(Dns.GetHostEntry("localhost").AddressList[0], 8000);
+            server = new TcpListener(ip, 80);
             try
             {
                 server.Start();
@@ -22,11 +22,14 @@ namespace echo
                 throw new Exception(exception.Message);
             }
 
+            Console.WriteLine("Server started");
             while (true)
             {
                 client = server.AcceptTcpClient();
+                Console.WriteLine("New clien accepted");
                 HandleClient cl = new HandleClient(); //server sends a message to a new connected client
                 cl.StartClient(client);
+                Console.WriteLine("Handled client");
             }
         }
     }

@@ -15,7 +15,9 @@ namespace Client
 
         public Client()
         {
-            client = new TcpClient("localhost", 8000);
+           client = new TcpClient(
+               "localhost",
+               80);
         }
         //returns a string to connect to the MVVM
         public string GetMessageFromServer()
