@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using TypeRacers.Model;
-using TypeRacers.ViewModel;
 
 namespace TypeRacers.ViewModel
 {
@@ -44,6 +39,10 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(InputBackgroundColor));
             }
         }
+
+        //property that uses the extensions from TextBlockExtensions class
+        //(https://stackoverflow.com/questions/10623850/text-from-code-code-behind-into-textblock-with-different-font-style
+        //    this would be the code behind, using extensions binded to xaml you do the same but in ViewModel)
         public IEnumerable<Inline> Inlines
         {
             get => new[] { new Run() { Text = TextToType.Substring(0, spaceIndex) , Foreground = Brushes.Green},
@@ -68,7 +67,7 @@ namespace TypeRacers.ViewModel
                 //validate current word
                 IsValid = dataValidation.ValidateWord(CurrentInputText, CurrentInputText.Length);
 
-
+                //clears at space, holds space indexes, initialize validation with the substring remained after typing some valid characters/words
                 if (isValid && value.EndsWith(" "))
                 {
                     spaceIndex += text.Length;
@@ -76,9 +75,10 @@ namespace TypeRacers.ViewModel
                     text = "";
                 }
 
+                //determine number o characters taht are valid/invalid to form substrings
                 HighlightText();
 
-
+                //shows message text is over to not have exception -> To be fixed
                 if (spaceIndex + text.Length == TextToType.Length && isValid)
                 {
                     MessageBox.Show("Congrats!");
@@ -110,16 +110,21 @@ namespace TypeRacers.ViewModel
                 {
                     incorrectChars--;
                 }
-                else
+
+                else 
                 {
+                    correctChars = text.Length;
                     incorrectChars = 0;
                 }
             }
 
-            TriggerPropertyChanged(nameof(Inlines));
+            TriggerPropertyChanged(nameof(Inlines)); //new Inlines formed at each char in input
         }
 
         public string TextToType { get; }
+
+        //property to color the background of the input textbox when invalid char is typed
+        //binded in the input textbox (how to found in the tutorial WPF MVVM Step by Step (chanel .Net Interview Preparation)
         public string InputBackgroundColor
         {
             get
@@ -137,7 +142,7 @@ namespace TypeRacers.ViewModel
             }
         }
 
-
+        //INotifyPropertyChanged code - basic 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void TriggerPropertyChanged(string propertyName)
