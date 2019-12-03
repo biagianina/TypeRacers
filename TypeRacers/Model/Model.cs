@@ -13,7 +13,7 @@ namespace TypeRacers.Model
         {
             get
             {
-                return new TypeRacersClient().GetMessageFromServer();
+                return new TypeRacersClient()?.GetMessageFromServer();
             }
         }
     }
