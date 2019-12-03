@@ -1,27 +1,35 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 using TypeRacers.Model;
+using TypeRacers.ViewModel;
 
-namespace TypeRacers.ModelView
+namespace TypeRacers.ViewModel
 {
-    //a class to holde the logic
+    //a class to hold the logic
     internal class ViewModel : INotifyPropertyChanged
     {
-        string text;
+        string text = "";
         InputCharacterValidation dataValidation;
         bool isValid;
         int spaceIndex;
-        Model.Model model;
-        
+        readonly Model.Model model;
+        int correctChars;
+        int incorrectChars;
+
         public ViewModel()
         {
             model = new Model.Model();
             TextToType = model.TextFromServer;
             dataValidation = new InputCharacterValidation(TextToType);
         }
-      
+
         public bool IsValid
         {
             get => isValid;
@@ -32,11 +40,19 @@ namespace TypeRacers.ModelView
                     return;
 
                 isValid = value;
-                TriggerPropertyChanged(nameof(isValid));
-                TriggerPropertyChanged(nameof(Color));
+                TriggerPropertyChanged(nameof(IsValid));
                 TriggerPropertyChanged(nameof(InputBackgroundColor));
             }
         }
+        public IEnumerable<Inline> Inlines
+        {
+            get => new[] { new Run() { Text = TextToType.Substring(0, spaceIndex) , Foreground = Brushes.Green},
+                new Run() { Text = TextToType.Substring(spaceIndex, correctChars) , Foreground = Brushes.Green},
+                new Run() { Text = TextToType.Substring(correctChars + spaceIndex, incorrectChars) , Background = Brushes.IndianRed},
+                new Run() { Text = TextToType.Substring(correctChars + incorrectChars + spaceIndex) , Foreground = Brushes.Black}
+                };
+        }
+
 
         public string CurrentInputText
         {
@@ -51,7 +67,8 @@ namespace TypeRacers.ModelView
 
                 //validate current word
                 IsValid = dataValidation.ValidateWord(CurrentInputText, CurrentInputText.Length);
-           
+
+
                 if (isValid && value.EndsWith(" "))
                 {
                     spaceIndex += text.Length;
@@ -59,33 +76,52 @@ namespace TypeRacers.ModelView
                     text = "";
                 }
 
+                HighlightText();
+
+
+                if (spaceIndex + text.Length == TextToType.Length && isValid)
+                {
+                    MessageBox.Show("Congrats!");
+                }
+
                 TriggerPropertyChanged(nameof(CurrentInputText));
             }
         }
 
-        public string Color
+        private void HighlightText()
         {
-            get
+            if (!Keyboard.IsKeyDown(Key.Back))
             {
-                if (string.IsNullOrEmpty(CurrentInputText))
-                {                   
-                    return "Black";
-                }
                 if (isValid)
                 {
-                    return "Green";
-                    
+                    correctChars = text.Length;
+                    incorrectChars = 0;
+                }
+
+                if (!isValid)
+                {
+                    incorrectChars++;
+                }
+
+            }
+            else
+            {
+                if (!isValid && !string.IsNullOrEmpty(text))
+                {
+                    incorrectChars--;
                 }
                 else
                 {
-                    return "Red";
+                    incorrectChars = 0;
                 }
             }
+
+            TriggerPropertyChanged(nameof(Inlines));
         }
 
         public string TextToType { get; }
         public string InputBackgroundColor
-        { 
+        {
             get
             {
                 if (string.IsNullOrEmpty(CurrentInputText))
@@ -94,7 +130,7 @@ namespace TypeRacers.ModelView
                 }
                 if (!isValid)
                 {
-                    return "Darkred";
+                    return "IndianRed";
                 }
 
                 return default;
