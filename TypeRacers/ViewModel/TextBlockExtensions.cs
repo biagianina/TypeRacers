@@ -9,6 +9,10 @@ using System.Windows.Documents;
 
 namespace TypeRacers.ViewModel
 {
+    //extensions for using inlines property of textblock outside xaml/xaml.cs code 
+    //binded in the xaml with code (<TextBlock vm:TextBlockExtensions.BindableInlines="{Binding Inlines, UpdateSourceTrigger=PropertyChanged}")
+    //vm stands for the local resource, Inlines stands for the property in ViewModel
+    //Read more documentation about DependencyPropery and DependencyObjecy !!!!
     public class TextBlockExtensions
     {
         public static IEnumerable<Inline> GetBindableInlines(DependencyObject obj)

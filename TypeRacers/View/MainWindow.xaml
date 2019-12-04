@@ -37,7 +37,7 @@
                 Height="40" />
         </Grid.RowDefinitions>
         <TextBlock vm:TextBlockExtensions.BindableInlines="{Binding Inlines, UpdateSourceTrigger=PropertyChanged}"
-                   FontFamily="Times New Roman"
+        FontFamily="Times New Roman"
                    Name="displayText"
                    Grid.Column="1"
                    Grid.Row="1"
@@ -50,11 +50,12 @@
             Name="validationCheck"
             Grid.Column="1"
             Grid.Row="2"
-            Text="{Binding IsValid}" />
+            Text="{Binding Progress , Mode=OneWay}" />
         <TextBox
             Name="userInput"
             Grid.Column="1"
             Grid.Row="3"
+            IsReadOnly="{Binding AllTextTyped}"
             Text="{Binding CurrentInputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             Background="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}" />
             
