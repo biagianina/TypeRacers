@@ -55,6 +55,7 @@
             Name="userInput"
             Grid.Column="1"
             Grid.Row="3"
+            IsReadOnly="{Binding AllTextTyped}"
             Text="{Binding CurrentInputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             Background="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}" />
             

@@ -18,6 +18,7 @@ namespace TypeRacers.ViewModel
         int correctChars;
         int incorrectChars;
         string progress;
+        private bool allTextTyped;
 
         public ViewModel()
         {
@@ -75,7 +76,7 @@ namespace TypeRacers.ViewModel
                 IsValid = dataValidation.ValidateWord(CurrentInputText, CurrentInputText.Length);
 
                 //clears at space, holds space indexes, initialize validation with the substring remained after typing some valid characters/words
-                if (isValid && value.EndsWith(" "))
+                if (isValid && value.EndsWith(" ") || text.Length + spaceIndex == TextToType.Length)
                 {
                     spaceIndex += text.Length;
                     TriggerPropertyChanged(nameof(Progress));
@@ -86,14 +87,20 @@ namespace TypeRacers.ViewModel
                 //determine number o characters taht are valid/invalid to form substrings
                 HighlightText();
 
-                //shows message text is over to not have exception -> To be fixed
-                if (spaceIndex + text.Length == TextToType.Length && isValid)
+                //makes textbox readonly when all text is typed
+                if (spaceIndex == TextToType.Length)
                 {
-                    MessageBox.Show("Congrats!");
+                    allTextTyped = true;
+                    TriggerPropertyChanged(nameof(AllTextTyped));
                 }
 
                 TriggerPropertyChanged(nameof(CurrentInputText));
             }
+        }
+
+        public bool AllTextTyped
+        {
+            get => allTextTyped;
         }
 
         private void HighlightText()
