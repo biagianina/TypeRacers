@@ -17,6 +17,7 @@ namespace TypeRacers.ViewModel
         readonly Model.Model model;
         int correctChars;
         int incorrectChars;
+        string progress;
 
         public ViewModel()
         {
@@ -52,7 +53,13 @@ namespace TypeRacers.ViewModel
                 };
         }
 
-
+        public string Progress
+        {            
+            get
+            {
+               return progress = (spaceIndex * 100 / TextToType.Length).ToString() + "%";
+            }
+        }
         public string CurrentInputText
         {
             get => text;
@@ -71,6 +78,7 @@ namespace TypeRacers.ViewModel
                 if (isValid && value.EndsWith(" "))
                 {
                     spaceIndex += text.Length;
+                    TriggerPropertyChanged(nameof(Progress));
                     dataValidation = new InputCharacterValidation(TextToType.Substring(spaceIndex));
                     text = "";
                 }

@@ -50,7 +50,7 @@
             Name="validationCheck"
             Grid.Column="1"
             Grid.Row="2"
-            Text="{Binding IsValid}" />
+            Text="{Binding Progress , Mode=OneWay}" />
         <TextBox
             Name="userInput"
             Grid.Column="1"
