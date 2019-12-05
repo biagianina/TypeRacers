@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:TypeRacers.ViewModel"
     mc:Ignorable="d"
-    Title="MainWindow"
+    Title="PracticeWindow"
     Height="450"
     Width="800">
     <Window.Resources>
