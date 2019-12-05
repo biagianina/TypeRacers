@@ -7,7 +7,6 @@ namespace TypeRacers.Server
 {
     public class TypeRacersServer
     {
-        //Console app for an echo server
         static void Main()
         {
             //starting the server

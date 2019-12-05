@@ -16,6 +16,7 @@ namespace TypeRacers.Client
 
         public TypeRacersClient()
         {
+           
            client = new TcpClient("localhost", 80);
             
         }
