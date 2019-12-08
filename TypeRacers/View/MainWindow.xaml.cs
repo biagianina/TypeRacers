@@ -36,7 +36,7 @@ namespace TypeRacers.View
             btnContest.Visibility = Visibility.Collapsed;
             btnPractice.Visibility = Visibility.Collapsed;
         }
-
+       
         private void Practice_Click(object sender, RoutedEventArgs e)
         {
             MainMenu.Content = new PracticePage();

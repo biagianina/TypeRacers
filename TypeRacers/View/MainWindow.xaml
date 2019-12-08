@@ -7,8 +7,8 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Frame x:Name="MainMenu"
-               NavigationUIVisibility="Hidden">
-               
+               >
+
         </Frame>
         <TextBlock Name="txt_welcomingmessage" Text="Welcome to your typing contest!"
                    Foreground="BlueViolet"
