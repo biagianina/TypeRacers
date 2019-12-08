@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Documents;
@@ -8,7 +9,6 @@ using System.Windows.Media;
 namespace TypeRacers.ViewModel
 {
     //a class to hold the logic
-    //updst
     internal class ViewModel : INotifyPropertyChanged
     {
         string text = "";
@@ -18,7 +18,7 @@ namespace TypeRacers.ViewModel
         readonly Model.Model model;
         int correctChars;
         int incorrectChars;
-        string progress;
+        string progress ="";
         private bool allTextTyped;
 
         public ViewModel()
@@ -56,10 +56,10 @@ namespace TypeRacers.ViewModel
         }
 
         public string Progress
-        {            
+        {
             get
             {
-               return progress = (spaceIndex * 100 / TextToType.Length).ToString() + "%";
+                return progress = (spaceIndex * 100 / TextToType.Length).ToString() + "%";
             }
         }
         public string CurrentInputText
@@ -83,6 +83,7 @@ namespace TypeRacers.ViewModel
                     TriggerPropertyChanged(nameof(Progress));
                     dataValidation = new InputCharacterValidation(TextToType.Substring(spaceIndex));
                     text = "";
+                    SendProgress();
                 }
 
                 //determine number o characters taht are valid/invalid to form substrings
@@ -97,6 +98,11 @@ namespace TypeRacers.ViewModel
 
                 TriggerPropertyChanged(nameof(CurrentInputText));
             }
+        }
+
+        private void SendProgress()
+        {
+            model.GetClient.SendMessageToServer(progress);
         }
 
         public bool AllTextTyped
