@@ -11,8 +11,9 @@ namespace TypeRacers.Client
 {
     public class TypeRacersClient
     {
-        readonly TcpClient client ;
+        readonly TcpClient client;
         private NetworkStream stream;
+
 
         public TypeRacersClient()
         {
@@ -21,16 +22,17 @@ namespace TypeRacers.Client
            stream = client.GetStream();
 
         }
+         
         public void SendMessageToServer(string progress)
         {
             byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(progress);
             stream.Write(bytesToSend, 0, bytesToSend.Length);
 
         }
+
         //returns a string to connect to the MVVM
         public string GetMessageFromServer()
-        {
-            
+        {          
             try
             {
                 byte[] inStream = new byte[10025];

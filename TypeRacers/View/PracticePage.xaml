@@ -51,7 +51,7 @@
             Name="validationCheck"
             Grid.Column="1"
             Grid.Row="2"
-            Text="{Binding Progress , Mode=OneWay}" />
+            Text="{Binding CurrentWordLength , Mode=OneWay}" />
         <TextBox
             Name="userInput"
             Grid.Column="1"

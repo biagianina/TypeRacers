@@ -17,9 +17,9 @@ namespace TypeRacers.View
     /// <summary>
     /// Interaction logic for VersusWindow.xaml
     /// </summary>
-    public partial class VersusPage : Page
+    public partial class VersusWindow : Window
     {
-        public VersusPage()
+        public VersusWindow()
         {
             InitializeComponent();
         }
