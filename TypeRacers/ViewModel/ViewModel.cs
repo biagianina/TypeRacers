@@ -9,6 +9,7 @@ using System.Windows.Media;
 namespace TypeRacers.ViewModel
 {
     //a class to hold the logic
+    //updst
     internal class ViewModel : INotifyPropertyChanged
     {
         string text = "";
