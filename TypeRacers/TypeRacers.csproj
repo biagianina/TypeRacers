@@ -72,18 +72,6 @@
     <Compile Include="View\VersusWindow.xaml.cs">
       <DependentUpon>VersusWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="View\ContestPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\MainWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\PracticePage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Compile Include="System\Collections\ObjectModel\ObservableCollection.cs" />
     <Compile Include="ViewModel\TextBlockExtensions.cs" />
     <Compile Include="ViewModel\ViewModel.cs" />
