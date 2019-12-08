@@ -17,6 +17,7 @@ namespace TypeRacers.Server
         {
             IPAddress ip = Dns.GetHostEntry("localhost").AddressList[0];
             TcpListener server = new TcpListener(ip, 80);
+
             try
             {
                 server.Start();
@@ -29,9 +30,28 @@ namespace TypeRacers.Server
             while (true)
             {
                 TcpClient client = server.AcceptTcpClient();
-                HandleClient cl = new HandleClient(); //server sends a message to a new connected client
-                cl.StartClient(client);
+
+                try
+                {
+                    NetworkStream networkStream = client.GetStream();
+                    byte[] broadcastBytes = Encoding.ASCII.GetBytes(new ContestText().GetText()); //generates random text from text document
+                    networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
+
+                    byte[] buffer = new byte[client.ReceiveBufferSize];
+
+                    //---read incoming stream---
+                    int bytesRead = networkStream.Read(buffer, 0, client.ReceiveBufferSize);
+
+                    //---convert the data received into a string---
+                    string dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                }
+                catch (Exception)
+                {
+                    throw new Exception("unable to connect");
+                }
             }
         }
+
+
     }
 }

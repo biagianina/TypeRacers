@@ -82,6 +82,7 @@ namespace TypeRacers.ViewModel
                     TriggerPropertyChanged(nameof(Progress));
                     dataValidation = new InputCharacterValidation(TextToType.Substring(spaceIndex));
                     text = "";
+                    model.GetClient.SendMessageToServer(progress);
                 }
 
                 //determine number o characters taht are valid/invalid to form substrings

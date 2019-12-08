@@ -23,7 +23,6 @@ namespace TypeRacers.Server
                 NetworkStream networkStream = clientSocket.GetStream();
                 byte[] broadcastBytes = Encoding.ASCII.GetBytes(new ContestText().GetText()); //generates random text from text document
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
-                networkStream.Flush();
             }
             catch (Exception)
             {

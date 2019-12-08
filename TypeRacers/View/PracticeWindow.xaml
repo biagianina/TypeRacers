@@ -58,6 +58,6 @@
             IsReadOnly="{Binding AllTextTyped}"
             Text="{Binding CurrentInputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             Background="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}" />
-            
+
     </Grid>
 </Window>
