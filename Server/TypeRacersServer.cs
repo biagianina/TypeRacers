@@ -17,7 +17,6 @@ namespace TypeRacers.Server
         {
             IPAddress ip = Dns.GetHostEntry("localhost").AddressList[0];
             TcpListener server = new TcpListener(ip, 80);
-
             try
             {
                 server.Start();
@@ -31,9 +30,11 @@ namespace TypeRacers.Server
             while (true)
             {
                 TcpClient client = server.AcceptTcpClient();
+                Console.WriteLine("New clien accepted");
+                HandleClient cl = new HandleClient(); //server sends a message to a new connected client
+                cl.StartClient(client);
+                Console.WriteLine("Handled client");
             }
         }
-
-
     }
 }
