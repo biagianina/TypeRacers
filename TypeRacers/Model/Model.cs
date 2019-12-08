@@ -8,7 +8,6 @@ namespace TypeRacers.Model
     {
         //returns the text sent from the server
 
-
         public string TextFromServer
         {
             get
