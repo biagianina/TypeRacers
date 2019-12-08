@@ -26,11 +26,14 @@ namespace TypeRacers.Server
                 throw new Exception(exception.Message);
             }
 
+            Console.WriteLine("Server started");
             while (true)
             {
                 TcpClient client = server.AcceptTcpClient();
+                Console.WriteLine("New clien accepted");
                 HandleClient cl = new HandleClient(); //server sends a message to a new connected client
                 cl.StartClient(client);
+                Console.WriteLine("Handled client");
             }
         }
     }
