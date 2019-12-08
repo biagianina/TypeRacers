@@ -30,7 +30,7 @@ namespace TypeRacers.Server
             while (true)
             {
                 TcpClient client = server.AcceptTcpClient();
-                Console.WriteLine("New clien accepted");
+                Console.WriteLine("New client accepted");
                 HandleClient cl = new HandleClient(); //server sends a message to a new connected client
                 cl.StartClient(client);
                 Console.WriteLine("Handled client");
