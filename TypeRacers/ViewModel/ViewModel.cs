@@ -19,6 +19,7 @@ namespace TypeRacers.ViewModel
         int incorrectChars;
         string progress;
         private bool allTextTyped;
+        int currentWord;
 
         public ViewModel()
         {
@@ -54,6 +55,11 @@ namespace TypeRacers.ViewModel
                 };
         }
 
+        public int CurrentWordLength
+        {
+            get => TextToType.Split()[currentWord++].Length;
+        }
+
         public string Progress
         {            
             get
@@ -79,6 +85,7 @@ namespace TypeRacers.ViewModel
                 if (isValid && value.EndsWith(" ") || text.Length + spaceIndex == TextToType.Length)
                 {
                     spaceIndex += text.Length;
+                    TriggerPropertyChanged(nameof(CurrentWordLength));
                     TriggerPropertyChanged(nameof(Progress));
                     dataValidation = new InputCharacterValidation(TextToType.Substring(spaceIndex));
                     text = "";
