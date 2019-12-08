@@ -69,9 +69,21 @@
     <Compile Include="View\PracticePage.xaml.cs">
       <DependentUpon>PracticePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\VersusWindow.xaml.cs">
-      <DependentUpon>VersusWindow.xaml</DependentUpon>
+    <Compile Include="View\VersusPage.xaml.cs">
+      <DependentUpon>VersusPage.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\ContestPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PracticePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Compile Include="System\Collections\ObjectModel\ObservableCollection.cs" />
     <Compile Include="ViewModel\TextBlockExtensions.cs" />
     <Compile Include="ViewModel\ViewModel.cs" />
@@ -80,7 +92,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\VersusWindow.xaml">
+    <Page Include="View\VersusPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
