@@ -24,4 +24,5 @@ namespace TypeRacers.Server
             return File.ReadAllLines(ExePath);
         }
     }
+    
 }

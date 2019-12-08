@@ -60,15 +60,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="View\ContestPage.xaml.cs">
-      <DependentUpon>ContestPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\PracticePage.xaml.cs">
-      <DependentUpon>PracticePage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\VersusWindow.xaml.cs">
       <DependentUpon>VersusWindow.xaml</DependentUpon>
     </Compile>
