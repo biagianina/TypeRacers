@@ -14,5 +14,7 @@ namespace TypeRacers.Model
                 return new TypeRacersClient()?.GetMessageFromServer();
             }
         }
+
+        public TypeRacersClient GetClient { get; } = new TypeRacersClient();
     }
 }
