@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Documents;
@@ -116,8 +115,6 @@ namespace TypeRacers.ViewModel
                     text = "";
 
                     ReportProgress();
-
-                    SendProgress();
                     
                 }
                 
@@ -183,6 +180,7 @@ namespace TypeRacers.ViewModel
 
                 else 
                 {
+                    TypingAlert = false;
                     correctChars = text.Length;
                     incorrectChars = 0;
                 }
