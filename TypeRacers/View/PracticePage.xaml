@@ -47,11 +47,9 @@
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    TextWrapping="Wrap" />
-        <TextBox
-            Name="validationCheck"
-            Grid.Column="1"
-            Grid.Row="2"
-            Text="{Binding Progress , Mode=OneWay}" />
+        <Popup IsOpen="true">
+            <TextBlock Text="Too many typing errors! Check your spelling"/>
+        </Popup>
         <TextBox
             Name="userInput"
             Grid.Column="1"

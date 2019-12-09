@@ -23,11 +23,11 @@ namespace TypeRacers.Client
 
         }
          
-        public void SendMessageToServer(string progress)
+        public void SendProgressToServer(string progress)
         {
+            //writing the progress to stream
             byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(progress);
             stream.Write(bytesToSend, 0, bytesToSend.Length);
-
         }
 
         //returns a string to connect to the MVVM
