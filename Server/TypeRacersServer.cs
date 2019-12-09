@@ -40,12 +40,16 @@ namespace TypeRacers.Server
 
                     byte[] buffer = new byte[client.ReceiveBufferSize];
 
-                    //---read incoming stream---
-                    int bytesRead = networkStream.Read(buffer, 0, client.ReceiveBufferSize);
+                    while (client.Connected)
+                    {
+                        //---read incoming stream---
+                        int bytesRead = networkStream.Read(buffer, 0, client.ReceiveBufferSize);
 
-                    //---convert the data received into a string---
-                    string dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                    Console.WriteLine("Client said: " + dataReceived);
+                        //---convert the data received into a string---
+                        string dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                        Console.WriteLine("Client said: " + dataReceived);
+                    }
+
                 }
                 catch (Exception)
                 {

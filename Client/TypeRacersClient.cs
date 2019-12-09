@@ -27,6 +27,7 @@ namespace TypeRacers.Client
         {
             byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(progress);
             stream.Write(bytesToSend, 0, bytesToSend.Length);
+            stream.Flush();
 
         }
 

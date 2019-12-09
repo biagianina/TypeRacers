@@ -20,7 +20,6 @@ namespace TypeRacers.ViewModel
         int correctChars;
         int incorrectChars;
         string progress ="";
-        private bool allTextTyped;
 
         public ViewModel()
         {
@@ -93,7 +92,7 @@ namespace TypeRacers.ViewModel
                 //makes textbox readonly when all text is typed
                 if (spaceIndex == TextToType.Length)
                 {
-                    allTextTyped = true;
+                    AllTextTyped = true;
                     TriggerPropertyChanged(nameof(AllTextTyped));
                 }
 
@@ -106,10 +105,7 @@ namespace TypeRacers.ViewModel
             model.GetClient.SendMessageToServer(progress);
         }
 
-        public bool AllTextTyped
-        {
-            get => allTextTyped;
-        }
+        public bool AllTextTyped { get; private set; }
 
         private void HighlightText()
         {
