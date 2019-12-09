@@ -26,7 +26,7 @@ namespace TypeRacers.View
 
         private void Contest_Click(object sender, RoutedEventArgs e)
         {
-            MainMenu.Content = new ContestPage();
+            MainMenu.Content = new VersusPage();
             HideElements();
         }
 
