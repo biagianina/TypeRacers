@@ -19,13 +19,30 @@ namespace TypeRacers.ViewModel
         int correctChars;
         int incorrectChars;
         string progress ="";
-        private bool allTextTyped;
+        int currentWordIndex;
+        private bool alert = false;
 
         public ViewModel()
         {
             model = new Model.Model();
             TextToType = model.TextFromServer;
             dataValidation = new InputCharacterValidation(TextToType);
+        }
+
+        public bool TypingAlert
+        {
+            get => alert;
+
+            set
+            {
+                if (alert == value)
+                {
+                    return;
+                }
+
+                alert = value;
+                TriggerPropertyChanged(nameof(TypingAlert));
+            }
         }
 
         public bool IsValid
@@ -49,9 +66,10 @@ namespace TypeRacers.ViewModel
         public IEnumerable<Inline> Inlines
         {
             get => new[] { new Run() { Text = TextToType.Substring(0, spaceIndex) , Foreground = Brushes.Green},
-                new Run() { Text = TextToType.Substring(spaceIndex, correctChars) , Foreground = Brushes.Green},
-                new Run() { Text = TextToType.Substring(correctChars + spaceIndex, incorrectChars) , Background = Brushes.IndianRed},
-                new Run() { Text = TextToType.Substring(correctChars + incorrectChars + spaceIndex) , Foreground = Brushes.Black}
+                new Run() { Text = TextToType.Substring(spaceIndex, correctChars), Foreground = Brushes.Green, TextDecorations = TextDecorations.Underline},
+                new Run() { Text = TextToType.Substring(correctChars + spaceIndex, incorrectChars) ,TextDecorations = TextDecorations.Underline, Background = Brushes.IndianRed},
+                new Run() {Text = TextToType.Substring(spaceIndex + correctChars + incorrectChars, CurrentWordLength - correctChars - incorrectChars), TextDecorations = TextDecorations.Underline},
+                new Run() {Text = TextToType.Substring(spaceIndex + CurrentWordLength) }
                 };
         }
 
@@ -62,6 +80,12 @@ namespace TypeRacers.ViewModel
                 return progress = (spaceIndex * 100 / TextToType.Length).ToString() + "%";
             }
         }
+
+        public int CurrentWordLength
+        {
+            get => TextToType.Split()[currentWordIndex].Length;
+        }
+
         public string CurrentInputText
         {
             get => text;
@@ -77,24 +101,33 @@ namespace TypeRacers.ViewModel
                 IsValid = dataValidation.ValidateWord(CurrentInputText, CurrentInputText.Length);
 
                 //clears at space, holds space indexes, initialize validation with the substring remained after typing some valid characters/words
-                if (isValid && value.EndsWith(" ") || text.Length + spaceIndex == TextToType.Length)
+                if (isValid && value.EndsWith(" ") || isValid && text.Length + spaceIndex == TextToType.Length)
                 {
                     spaceIndex += text.Length;
+                    
                     TriggerPropertyChanged(nameof(Progress));
+                    if (currentWordIndex < TextToType.Split().Length - 1)
+                    {
+                        currentWordIndex++;
+                    }
+
                     dataValidation = new InputCharacterValidation(TextToType.Substring(spaceIndex));
                     text = "";
                     SendProgress();
+                    
+                }
+                
+                if (spaceIndex == TextToType.Length)
+                {
+                    AllTextTyped = true;
+                    TriggerPropertyChanged(nameof(AllTextTyped));
                 }
 
+                TriggerPropertyChanged(nameof(CurrentWordLength));
                 //determine number o characters taht are valid/invalid to form substrings
                 HighlightText();
 
                 //makes textbox readonly when all text is typed
-                if (spaceIndex == TextToType.Length)
-                {
-                    allTextTyped = true;
-                    TriggerPropertyChanged(nameof(AllTextTyped));
-                }
 
                 TriggerPropertyChanged(nameof(CurrentInputText));
             }
@@ -105,10 +138,7 @@ namespace TypeRacers.ViewModel
             model.GetClient.SendMessageToServer(progress);
         }
 
-        public bool AllTextTyped
-        {
-            get => allTextTyped;
-        }
+        public bool AllTextTyped { get; private set; }
 
         private void HighlightText()
         {
@@ -123,6 +153,12 @@ namespace TypeRacers.ViewModel
                 if (!isValid)
                 {
                     incorrectChars++;
+                    if (CurrentWordLength - correctChars - incorrectChars < 0)
+                    {
+                        TypingAlert = true;
+                        text = text.Substring(0, correctChars);
+                        incorrectChars = 0;
+                    }
                 }
 
             }
