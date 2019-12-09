@@ -19,13 +19,14 @@ namespace TypeRacers.ViewModel
         int correctChars;
         int incorrectChars;
         string progress ="";
+
         int currentWordIndex;
         private bool alert = false;
 
         public ViewModel()
         {
             model = new Model.Model();
-            TextToType = model.TextFromServer;
+            TextToType = model.GetMessageFromServer();
             dataValidation = new InputCharacterValidation(TextToType);
         }
 
@@ -113,6 +114,9 @@ namespace TypeRacers.ViewModel
 
                     dataValidation = new InputCharacterValidation(TextToType.Substring(spaceIndex));
                     text = "";
+
+                    ReportProgress();
+
                     SendProgress();
                     
                 }
@@ -121,6 +125,7 @@ namespace TypeRacers.ViewModel
                 {
                     AllTextTyped = true;
                     TriggerPropertyChanged(nameof(AllTextTyped));
+
                 }
 
                 TriggerPropertyChanged(nameof(CurrentWordLength));
@@ -129,13 +134,20 @@ namespace TypeRacers.ViewModel
 
                 //makes textbox readonly when all text is typed
 
+                if (spaceIndex == TextToType.Length)
+                {
+                    AllTextTyped = true;
+                    TriggerPropertyChanged(nameof(AllTextTyped));
+                }
+
+
                 TriggerPropertyChanged(nameof(CurrentInputText));
             }
         }
 
-        private void SendProgress()
+        private void ReportProgress()
         {
-            model.GetClient.SendMessageToServer(progress);
+            model.ReportProgress(progress);
         }
 
         public bool AllTextTyped { get; private set; }
