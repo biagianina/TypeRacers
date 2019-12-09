@@ -6,16 +6,16 @@ namespace TypeRacers.Model
 {
     public class Model
     {
-        NetworkHandler nwCommunication = new NetworkHandler();
+        NetworkHandler networkHandler = new NetworkHandler();
 
         public string GetMessageFromServer()
         {
-            return nwCommunication.GetMessageFromServer();
+            return networkHandler.GetMessageFromServer();
         }
 
         public void ReportProgress(string message)
         {
-            nwCommunication.SendProgressToServer(message);
+            networkHandler.SendProgressToServer(message);
         }
     }
 }
