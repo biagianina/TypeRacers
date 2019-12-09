@@ -45,7 +45,7 @@ namespace TypeRacers.Server
                         //---read incoming stream---
                         int bytesRead = networkStream.Read(buffer, 0, client.ReceiveBufferSize);
 
-                        //---convert the data received into a string---
+                        //recieving the progress
                         string dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
                         Console.WriteLine("Client said: " + dataReceived);
                     }

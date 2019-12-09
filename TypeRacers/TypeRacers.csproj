@@ -60,6 +60,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="INetworkHandler.cs" />
+    <Compile Include="NetworkHandler.cs" />
     <Compile Include="View\ContestPage.xaml.cs">
       <DependentUpon>ContestPage.xaml</DependentUpon>
     </Compile>

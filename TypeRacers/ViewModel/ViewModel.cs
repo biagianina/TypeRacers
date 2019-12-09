@@ -24,7 +24,7 @@ namespace TypeRacers.ViewModel
         public ViewModel()
         {
             model = new Model.Model();
-            TextToType = model.TextFromServer;
+            TextToType = model.GetMessageFromServer();
             dataValidation = new InputCharacterValidation(TextToType);
         }
 
@@ -83,7 +83,7 @@ namespace TypeRacers.ViewModel
                     TriggerPropertyChanged(nameof(Progress));
                     dataValidation = new InputCharacterValidation(TextToType.Substring(spaceIndex));
                     text = "";
-                    SendProgress();
+                    ReportProgress();
                 }
 
                 //determine number o characters taht are valid/invalid to form substrings
@@ -100,9 +100,9 @@ namespace TypeRacers.ViewModel
             }
         }
 
-        private void SendProgress()
+        private void ReportProgress()
         {
-            model.GetClient.SendMessageToServer(progress);
+            model.ReportProgress(progress);
         }
 
         public bool AllTextTyped { get; private set; }
