@@ -117,7 +117,6 @@ namespace TypeRacers.ViewModel
 
                     ReportProgress();
 
-                    SendProgress();
                     
                 }
                 
