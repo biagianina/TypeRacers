@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Documents;
@@ -11,40 +12,37 @@ namespace TypeRacers.ViewModel
     internal class ViewModel : INotifyPropertyChanged
     {
         string text = "";
-        InputCharacterValidation dataValidation;
+        InputCharacterValidation userInputValidator;
         bool isValid;
         int spaceIndex;
         readonly Model.Model model;
         int correctChars;
         int incorrectChars;
         string progress ="";
-
         int currentWordIndex;
         private bool alert = false;
-
+        
         public ViewModel()
         {
             model = new Model.Model();
             TextToType = model.GetMessageFromServer();
-            dataValidation = new InputCharacterValidation(TextToType);
+            userInputValidator = new InputCharacterValidation(TextToType);
         }
-
-        public bool TypingAlert
+      
+        //property that uses the extensions from TextBlockExtensions class
+        //(https://stackoverflow.com/questions/10623850/text-from-code-code-behind-into-textblock-with-different-font-style
+        //    this would be the code behind, using extensions binded to xaml you do the same but in ViewModel)        
+        public IEnumerable<Inline> Inlines
         {
-            get => alert;
-
-            set
-            {
-                if (alert == value)
-                {
-                    return;
-                }
-
-                alert = value;
-                TriggerPropertyChanged(nameof(TypingAlert));
-            }
+            get => new[] { new Run() { Text = TextToType.Substring(0, spaceIndex) , Foreground = Brushes.Green},
+                new Run() { Text = TextToType.Substring(spaceIndex, correctChars), Foreground = Brushes.Green, TextDecorations = TextDecorations.Underline},
+                new Run() { Text = TextToType.Substring(correctChars + spaceIndex, incorrectChars), TextDecorations = TextDecorations.Underline, Background = Brushes.IndianRed},
+                new Run() {Text = TextToType.Substring(spaceIndex + correctChars + incorrectChars, CurrentWordLength - correctChars - incorrectChars), TextDecorations = TextDecorations.Underline},
+                new Run() {Text = TextToType.Substring(spaceIndex + CurrentWordLength) }
+                };
         }
 
+        //holds the value of user input validation
         public bool IsValid
         {
             get => isValid;
@@ -60,30 +58,22 @@ namespace TypeRacers.ViewModel
             }
         }
 
-        //property that uses the extensions from TextBlockExtensions class
-        //(https://stackoverflow.com/questions/10623850/text-from-code-code-behind-into-textblock-with-different-font-style
-        //    this would be the code behind, using extensions binded to xaml you do the same but in ViewModel)
-        public IEnumerable<Inline> Inlines
-        {
-            get => new[] { new Run() { Text = TextToType.Substring(0, spaceIndex) , Foreground = Brushes.Green},
-                new Run() { Text = TextToType.Substring(spaceIndex, correctChars), Foreground = Brushes.Green, TextDecorations = TextDecorations.Underline},
-                new Run() { Text = TextToType.Substring(correctChars + spaceIndex, incorrectChars) ,TextDecorations = TextDecorations.Underline, Background = Brushes.IndianRed},
-                new Run() {Text = TextToType.Substring(spaceIndex + correctChars + incorrectChars, CurrentWordLength - correctChars - incorrectChars), TextDecorations = TextDecorations.Underline},
-                new Run() {Text = TextToType.Substring(spaceIndex + CurrentWordLength) }
-                };
-        }
-
         public string Progress
         {
             get
             {
+                if (AllTextTyped)
+                {
+                    return progress = "100%";
+                }
+
                 return progress = (spaceIndex * 100 / TextToType.Length).ToString() + "%";
             }
         }
 
         public int CurrentWordLength
         {
-            get => TextToType.Split()[currentWordIndex].Length;
+            get => TextToType.Split()[currentWordIndex].Length;//length of current word
         }
 
         public string CurrentInputText
@@ -98,47 +88,43 @@ namespace TypeRacers.ViewModel
                 text = value;
 
                 //validate current word
-                IsValid = dataValidation.ValidateWord(CurrentInputText, CurrentInputText.Length);
+                IsValid = userInputValidator.ValidateWord(CurrentInputText, CurrentInputText.Length);
 
-                //clears at space, holds space indexes, initialize validation with the substring remained after typing some valid characters/words
-                if (isValid && value.EndsWith(" ") || isValid && text.Length + spaceIndex == TextToType.Length)
-                {
-                    spaceIndex += text.Length;
-                    
-                    TriggerPropertyChanged(nameof(Progress));
-                    if (currentWordIndex < TextToType.Split().Length - 1)
-                    {
-                        currentWordIndex++;
-                    }
+                CheckUserInput(text);
 
-                    dataValidation = new InputCharacterValidation(TextToType.Substring(spaceIndex));
-                    text = "";
+                TriggerPropertyChanged(nameof(Progress));//recalculates progress 
 
-                    ReportProgress();
-                    
-                }
-                
-                if (spaceIndex == TextToType.Length)
-                {
-                    AllTextTyped = true;
-                    TriggerPropertyChanged(nameof(AllTextTyped));
-
-                }
-
-                TriggerPropertyChanged(nameof(CurrentWordLength));
-                //determine number o characters taht are valid/invalid to form substrings
+                TriggerPropertyChanged(nameof(CurrentWordLength));//moves to next word
+               
+                //determine number of characters that are valid/invalid to form substrings
                 HighlightText();
 
-                //makes textbox readonly when all text is typed
+                TriggerPropertyChanged(nameof(CurrentInputText));
+            }
+        }
 
-                if (spaceIndex == TextToType.Length)
+        private void CheckUserInput(string value)
+        {
+            //checks if current word is typed, clears textbox, reintializes remaining text to the validation, sends progress 
+            if (isValid && value.EndsWith(" "))
+            {
+                spaceIndex += text.Length;
+
+                if (currentWordIndex < TextToType.Split().Length - 1)
                 {
-                    AllTextTyped = true;
-                    TriggerPropertyChanged(nameof(AllTextTyped));
+                    currentWordIndex++;
                 }
 
-
-                TriggerPropertyChanged(nameof(CurrentInputText));
+                userInputValidator = new InputCharacterValidation(TextToType.Substring(spaceIndex));
+                text = "";
+                ReportProgress();
+            }
+            //checks if current word is the last one
+            if (IsValid && text.Length + spaceIndex == TextToType.Length)
+            {
+                AllTextTyped = true;
+                TriggerPropertyChanged(nameof(AllTextTyped));
+                ReportProgress();
             }
         }
 
@@ -155,6 +141,7 @@ namespace TypeRacers.ViewModel
             {
                 if (isValid)
                 {
+                    TypingAlert = false;
                     correctChars = text.Length;
                     incorrectChars = 0;
                 }
@@ -190,6 +177,23 @@ namespace TypeRacers.ViewModel
         }
 
         public string TextToType { get; }
+
+        //determines if a popup alert should apear, bindedin open property of popup xaml
+        public bool TypingAlert
+        {
+            get => alert;
+
+            set
+            {
+                if (alert == value)
+                {
+                    return;
+                }
+
+                alert = value;
+                TriggerPropertyChanged(nameof(TypingAlert));
+            }
+        }
 
         //property to color the background of the input textbox when invalid char is typed
         //binded in the input textbox (how to found in the tutorial WPF MVVM Step by Step (chanel .Net Interview Preparation)

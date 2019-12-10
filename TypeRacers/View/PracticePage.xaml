@@ -47,7 +47,7 @@
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    TextWrapping="Wrap" />
-        <Popup IsOpen="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}" Width="300" Height="50">
+        <Popup IsOpen="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}" Width="300" Height="50" PlacementTarget="{Binding ElementName=displayText}" Placement="Top">
             <TextBlock Background="AliceBlue" Text="Too many typing errors! Check your spelling"/>
         </Popup>
         <TextBox
