@@ -9,7 +9,7 @@ using System.Windows.Media;
 namespace TypeRacers.ViewModel
 {
     //a class to hold the logic
-    internal class ViewModel : INotifyPropertyChanged
+    internal class BaseViewModel : INotifyPropertyChanged
     {
         string text = "";
         InputCharacterValidation userInputValidator;
@@ -22,7 +22,7 @@ namespace TypeRacers.ViewModel
         int currentWordIndex;
         private bool alert = false;
         
-        public ViewModel()
+        public BaseViewModel()
         {
             model = new Model.Model();
             TextToType = model.GetMessageFromServer();
@@ -89,11 +89,11 @@ namespace TypeRacers.ViewModel
 
                 //validate current word
                 IsValid = userInputValidator.ValidateWord(CurrentInputText, CurrentInputText.Length);
-
+                
                 CheckUserInput(text);
 
-                TriggerPropertyChanged(nameof(Progress));//recalculates progress 
-
+               
+                
                 TriggerPropertyChanged(nameof(CurrentWordLength));//moves to next word
                
                 //determine number of characters that are valid/invalid to form substrings
@@ -117,6 +117,7 @@ namespace TypeRacers.ViewModel
 
                 userInputValidator = new InputCharacterValidation(TextToType.Substring(spaceIndex));
                 text = "";
+                TriggerPropertyChanged(nameof(Progress));//recalculates progress 
                 ReportProgress();
             }
             //checks if current word is the last one
@@ -124,8 +125,11 @@ namespace TypeRacers.ViewModel
             {
                 AllTextTyped = true;
                 TriggerPropertyChanged(nameof(AllTextTyped));
+                TriggerPropertyChanged(nameof(Progress));//recalculates progress 
                 ReportProgress();
             }
+
+            
         }
 
         private void ReportProgress()
