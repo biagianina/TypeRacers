@@ -62,6 +62,8 @@
     </ApplicationDefinition>
     <Compile Include="INetworkHandler.cs" />
     <Compile Include="NetworkHandler.cs" />
+    <Compile Include="ViewModel\PracticeViewModel.cs" />
+    <Compile Include="ViewModel\RaceViewModel.cs" />
     <Compile Include="View\ContestPage.xaml.cs">
       <DependentUpon>ContestPage.xaml</DependentUpon>
     </Compile>
@@ -88,7 +90,7 @@
     </Page>
     <Compile Include="System\Collections\ObjectModel\ObservableCollection.cs" />
     <Compile Include="ViewModel\TextBlockExtensions.cs" />
-    <Compile Include="ViewModel\ViewModel.cs" />
+    <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="Model\Model.cs" />
     <Compile Include="View\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>

@@ -55,10 +55,7 @@ namespace TypeRacers.Server
                 {
                     throw new Exception("unable to connect");
                 }
-
             }
         }
-
-
     }
 }
