@@ -46,8 +46,12 @@
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    TextWrapping="Wrap" />
-        <Popup IsOpen="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}" Width="300" Height="50" PlacementTarget="{Binding ElementName=displayText}" Placement="Top">
-            <TextBlock Background="AliceBlue" Text="Too many typing errors! Check your spelling"/>
+        <Popup IsOpen="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}" Width="auto" Height="20" HorizontalAlignment="Center" PlacementTarget="{Binding ElementName=displayText}" Placement="Top" AllowsTransparency="True" PopupAnimation="Fade">
+            <Border Background="AntiqueWhite"
+                    CornerRadius="5"
+                    BorderThickness="1">
+                <TextBlock Text="Too many typing errors! Check your spelling" />
+            </Border>
         </Popup>
         <TextBox
             Name="userInput"
