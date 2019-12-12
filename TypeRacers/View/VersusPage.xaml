@@ -54,7 +54,32 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
             TextWrapping="Wrap" />
+        <Popup IsOpen="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}"
+               Width="auto"
+               Height="auto"
+               PlacementTarget="{Binding ElementName=displayText}"
+               Placement="Top"
+               AllowsTransparency="True"
+               PopupAnimation="Fade">
+            <Grid Width="200"
+                  Height="100"
+                  HorizontalAlignment="Right">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid Background="Aquamarine">
+                    <Label Content="Check your spelling!"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+                </Grid>
+                <Polygon Grid.Row="1"
+                         Points="0,0 15,0, 0,30"
+                         Stroke="Aquamarine"
+                         Fill="Aquamarine" />
+            </Grid>
 
+        </Popup>
         <TextBox
             Name="userInput"
             Grid.Column="1"
