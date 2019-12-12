@@ -128,7 +128,7 @@ namespace TypeRacers.ViewModel
             }
         }
 
-        private void ReportProgress()
+        public void ReportProgress()
         {
             model.ReportProgress(progress);
         }
