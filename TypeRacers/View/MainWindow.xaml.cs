@@ -22,7 +22,6 @@ namespace TypeRacers.View
         public MainWindow()
         {
             InitializeComponent();
-            MainMenu.NavigationService.Navigate(new MainPage());
         }
     }
 }
