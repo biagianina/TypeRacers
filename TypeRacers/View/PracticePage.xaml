@@ -3,14 +3,13 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:TypeRacers.View"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:vm="clr-namespace:TypeRacers.ViewModel"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Practice">
     <Page.Resources>
-        <vm:ViewModel
+        <vm:PracticeViewModel
             x:Key="ViewModel" />
     </Page.Resources>
 
@@ -47,8 +46,12 @@
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    TextWrapping="Wrap" />
-        <Popup IsOpen="true">
-            <TextBlock Text="Too many typing errors! Check your spelling"/>
+        <Popup IsOpen="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}" Width="auto" Height="20" HorizontalAlignment="Center" PlacementTarget="{Binding ElementName=displayText}" Placement="Top" AllowsTransparency="True" PopupAnimation="Fade">
+            <Border Background="AntiqueWhite"
+                    CornerRadius="5"
+                    BorderThickness="1">
+                <TextBlock Text="Too many typing errors! Check your spelling" />
+            </Border>
         </Popup>
         <TextBox
             Name="userInput"

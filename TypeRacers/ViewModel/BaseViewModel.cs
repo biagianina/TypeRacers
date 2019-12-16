@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace TypeRacers.ViewModel
 {
-    //a class to hold the logic
+    //a class to hold the base logic
     internal class BaseViewModel : INotifyPropertyChanged
     {
         string text = "";
@@ -89,10 +89,8 @@ namespace TypeRacers.ViewModel
 
                 //validate current word
                 IsValid = userInputValidator.ValidateWord(CurrentInputText, CurrentInputText.Length);
-
+                
                 CheckUserInput(text);
-
-                TriggerPropertyChanged(nameof(Progress));//recalculates progress 
 
                 TriggerPropertyChanged(nameof(CurrentWordLength));//moves to next word
                
@@ -117,6 +115,7 @@ namespace TypeRacers.ViewModel
 
                 userInputValidator = new InputCharacterValidation(TextToType.Substring(spaceIndex));
                 text = "";
+                TriggerPropertyChanged(nameof(Progress));//recalculates progress 
                 ReportProgress();
             }
             //checks if current word is the last one
@@ -124,6 +123,7 @@ namespace TypeRacers.ViewModel
             {
                 AllTextTyped = true;
                 TriggerPropertyChanged(nameof(AllTextTyped));
+                TriggerPropertyChanged(nameof(Progress));//recalculates progress 
                 ReportProgress();
             }
         }
@@ -156,7 +156,6 @@ namespace TypeRacers.ViewModel
                         incorrectChars = 0;
                     }
                 }
-
             }
             else
             {
