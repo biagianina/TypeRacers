@@ -18,7 +18,6 @@ namespace TypeRacers.ViewModel
         readonly Model.Model model;
         int correctChars;
         int incorrectChars;
-        string progress ="";
         int currentWordIndex;
         private bool alert = false;
         
@@ -64,10 +63,10 @@ namespace TypeRacers.ViewModel
             {
                 if (AllTextTyped)
                 {
-                    return progress = "100%";
+                    return "100%";
                 }
 
-                return progress = (spaceIndex * 100 / TextToType.Length).ToString() + "%";
+                return (spaceIndex * 100 / TextToType.Length).ToString() + "%";
             }
         }
 
@@ -130,7 +129,7 @@ namespace TypeRacers.ViewModel
 
         public void ReportProgress()
         {
-            model.ReportProgress(progress);
+            model.ReportProgress(Progress);
         }
 
         public bool AllTextTyped { get; private set; }

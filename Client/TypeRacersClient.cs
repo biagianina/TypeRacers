@@ -17,16 +17,14 @@ namespace TypeRacers.Client
 
         public TypeRacersClient()
         {
-           
            client = new TcpClient("localhost", 80);
            stream = client.GetStream();
-
         }
          
         public void SendProgressToServer(string progress)
         {
             //writing the progress to stream
-            byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(progress);
+            byte[] bytesToSend = Encoding.ASCII.GetBytes(progress);
             stream.Write(bytesToSend, 0, bytesToSend.Length);
         }
 
