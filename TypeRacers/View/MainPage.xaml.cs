@@ -27,21 +27,14 @@ namespace TypeRacers.View
 
         private void Contest_Click(object sender, RoutedEventArgs e)
         {
-            MainMenu.NavigationService.Navigate(new VersusPage());
-            HideElements();
-        }
-
-        private void HideElements()
-        {
-            txt_welcomingmessage.Visibility = Visibility.Collapsed;
-            btnContest.Visibility = Visibility.Collapsed;
-            btnPractice.Visibility = Visibility.Collapsed;
+            NavigationService nav = NavigationService.GetNavigationService(this);
+            nav.Navigate(new Uri("View/VersusPage.xaml", UriKind.RelativeOrAbsolute));
         }
 
         private void Practice_Click(object sender, RoutedEventArgs e)
         {
-            MainMenu.NavigationService.Navigate(new PracticePage());
-            HideElements();
+            NavigationService nav = NavigationService.GetNavigationService(this);
+            nav.Navigate(new Uri("View/PracticePage.xaml", UriKind.RelativeOrAbsolute));
         }
     }
 }

@@ -8,7 +8,15 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MainPage">
 
-    <StackPanel>
+    <StackPanel RenderTransformOrigin="0.507,1.031">
+        <StackPanel.RenderTransform>
+            <TransformGroup>
+                <ScaleTransform/>
+                <SkewTransform AngleX="-0.254"/>
+                <RotateTransform/>
+                <TranslateTransform X="-2.053"/>
+            </TransformGroup>
+        </StackPanel.RenderTransform>
 
         <TextBlock Name="txt_welcomingmessage" Text="Welcome to your typing contest!"
                    Foreground="BlueViolet"
@@ -16,20 +24,18 @@
                    FontSize="30" Margin="10,25,-10,0">
 
         </TextBlock>
-
-        <Button x:Name="btnContest" Content="Enter Race"
-                Foreground="YellowGreen"
+        <Button x:Name="btnRace" Content="Enter Race"
+                 Foreground="YellowGreen"
                 FontSize="30"
                 Background="White"
                 Margin="326,132,308,223"
-                BorderThickness="0"
-                Click="Contest_Click">
-        </Button>
-        <Button x:Name ="btnPractice" Content="Practice"
+                BorderThickness="0" Click="Contest_Click"
+                />
+        <Button Content="Practice"
                 Foreground="YellowGreen"
                 FontSize="30" Background="White"
-                Margin="100,100,288,120"
-                BorderThickness="0"  
-                Click="Practice_Click" RenderTransformOrigin="0.73,-6.372"/>
+                Margin="326,-120,308,120"
+                BorderThickness="0" Click="Practice_Click"  />
+
     </StackPanel>
 </Page>

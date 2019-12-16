@@ -23,8 +23,6 @@ namespace TypeRacers.View
         public PracticePage()
         {
             InitializeComponent();
-            var main = new MainWindow();
-            main.MainMenu.NavigationService.GoBack();
         }
     }
 }
