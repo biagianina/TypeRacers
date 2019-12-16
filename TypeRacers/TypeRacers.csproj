@@ -72,9 +72,6 @@
     <Compile Include="View\PracticePage.xaml.cs">
       <DependentUpon>PracticePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\PracticeWindow.xaml.cs">
-      <DependentUpon>PracticeWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\VersusPage.xaml.cs">
       <DependentUpon>VersusPage.xaml</DependentUpon>
     </Compile>
@@ -98,10 +95,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\PracticeWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="View\VersusPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

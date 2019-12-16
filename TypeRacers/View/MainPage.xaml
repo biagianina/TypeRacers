@@ -15,7 +15,7 @@
         <TextBlock Name="txt_welcomingmessage" Text="Welcome to your typing contest!"
                    Foreground="BlueViolet"
                    TextAlignment="Center"
-                   FontSize="30" Margin="10,25,-10,-25">
+                   FontSize="30" Margin="10,25,-10,0">
 
         </TextBlock>
 
