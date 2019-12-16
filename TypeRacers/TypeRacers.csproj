@@ -76,6 +76,10 @@
     <Compile Include="View\VersusPage.xaml.cs">
       <DependentUpon>VersusPage.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\ContestPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
