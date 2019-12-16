@@ -53,7 +53,7 @@ namespace TypeRacers.Server
                 }
                 catch (Exception)
                 {
-                    throw new Exception("unable to connect");
+                    Console.WriteLine("Client disconnected");
                 }
             }
         }

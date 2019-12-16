@@ -5,6 +5,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:vm="clr-namespace:TypeRacers.ViewModel"
+      xmlns:local="clr-namespace:TypeRacers.View"
       mc:Ignorable="d"
       d:DesignHeight="450"
       d:DesignWidth="800"
@@ -27,6 +28,7 @@
             <RowDefinition Height="20" />
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
+       
         <TextBlock vm:TextBlockExtensions.BindableInlines="{Binding Inlines, UpdateSourceTrigger=PropertyChanged}"
                    FontFamily="Times New Roman"
                    Name="displayText"

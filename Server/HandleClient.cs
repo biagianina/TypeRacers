@@ -26,7 +26,7 @@ namespace TypeRacers.Server
             }
             catch (Exception)
             {
-                throw new Exception("unable to connect");
+                throw new Exception("Client disconnected");
             }
         }
     }
