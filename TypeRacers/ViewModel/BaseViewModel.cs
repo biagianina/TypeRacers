@@ -14,32 +14,34 @@ namespace TypeRacers.ViewModel
         string text = "";
         InputCharacterValidation userInputValidator;
         bool isValid;
-        int spaceIndex;
-        readonly Model.Model model;
-        int correctChars;
-        int incorrectChars;
-        string progress ="";
-        int currentWordIndex;
+        string progress = "";
         private bool alert = false;
-        
+
         public BaseViewModel()
         {
-            model = new Model.Model();
-            TextToType = model.GetMessageFromServer();
+           
             userInputValidator = new InputCharacterValidation(TextToType);
         }
-      
+
+
         //property that uses the extensions from TextBlockExtensions class
         //(https://stackoverflow.com/questions/10623850/text-from-code-code-behind-into-textblock-with-different-font-style
         //    this would be the code behind, using extensions binded to xaml you do the same but in ViewModel)        
-        public IEnumerable<Inline> Inlines
+        public static IEnumerable<Inline> Inlines
         {
-            get => new[] { new Run() { Text = TextToType.Substring(0, spaceIndex) , Foreground = Brushes.Green},
-                new Run() { Text = TextToType.Substring(spaceIndex, correctChars), Foreground = Brushes.Green, TextDecorations = TextDecorations.Underline},
-                new Run() { Text = TextToType.Substring(correctChars + spaceIndex, incorrectChars), TextDecorations = TextDecorations.Underline, Background = Brushes.IndianRed},
-                new Run() {Text = TextToType.Substring(spaceIndex + correctChars + incorrectChars, CurrentWordLength - correctChars - incorrectChars), TextDecorations = TextDecorations.Underline},
-                new Run() {Text = TextToType.Substring(spaceIndex + CurrentWordLength) }
+            get
+            {
+                return new[] { new Run() { Text = TextToType.Substring(0, SpaceIndex) , Foreground = Brushes.Green},
+                new Run() { Text = TextToType.Substring(SpaceIndex, CorrectChars), Foreground = Brushes.Green, TextDecorations = TextDecorations.Underline},
+                new Run() { Text = TextToType.Substring(CorrectChars + SpaceIndex, IncorrectChars), TextDecorations = TextDecorations.Underline, Background = Brushes.IndianRed},
+                new Run() {Text = TextToType.Substring(SpaceIndex + CorrectChars + IncorrectChars, CurrentWordLength - CorrectChars - IncorrectChars), TextDecorations = TextDecorations.Underline},
+                new Run() {Text = TextToType.Substring(SpaceIndex + CurrentWordLength) },
                 };
+            }
+            set
+            {
+
+            }
         }
 
         //holds the value of user input validation
@@ -53,12 +55,13 @@ namespace TypeRacers.ViewModel
                     return;
 
                 isValid = value;
+
                 TriggerPropertyChanged(nameof(IsValid));
                 TriggerPropertyChanged(nameof(InputBackgroundColor));
             }
         }
 
-        public string Progress
+        public virtual string Progress
         {
             get
             {
@@ -67,13 +70,14 @@ namespace TypeRacers.ViewModel
                     return progress = "100%";
                 }
 
-                return progress = (spaceIndex * 100 / TextToType.Length).ToString() + "%";
+                return progress = (SpaceIndex * 100 / TextToType.Length).ToString() + "%";
             }
         }
 
-        public int CurrentWordLength
+        public static int CurrentWordLength
         {
-            get => TextToType.Split()[currentWordIndex].Length;//length of current word
+            get => TextToType.Split()[CurrentWordIndex].Length;//length of current word
+
         }
 
         public string CurrentInputText
@@ -89,11 +93,11 @@ namespace TypeRacers.ViewModel
 
                 //validate current word
                 IsValid = userInputValidator.ValidateWord(CurrentInputText, CurrentInputText.Length);
-                
+
                 CheckUserInput(text);
 
                 TriggerPropertyChanged(nameof(CurrentWordLength));//moves to next word
-               
+
                 //determine number of characters that are valid/invalid to form substrings
                 HighlightText();
 
@@ -106,20 +110,20 @@ namespace TypeRacers.ViewModel
             //checks if current word is typed, clears textbox, reintializes remaining text to the validation, sends progress 
             if (isValid && value.EndsWith(" "))
             {
-                spaceIndex += text.Length;
+                SpaceIndex += text.Length;
 
-                if (currentWordIndex < TextToType.Split().Length - 1)
+                if (CurrentWordIndex < TextToType.Split().Length - 1)
                 {
-                    currentWordIndex++;
+                    CurrentWordIndex++;
                 }
 
-                userInputValidator = new InputCharacterValidation(TextToType.Substring(spaceIndex));
+                userInputValidator = new InputCharacterValidation(TextToType.Substring(SpaceIndex));
                 text = "";
                 TriggerPropertyChanged(nameof(Progress));//recalculates progress 
                 ReportProgress();
             }
             //checks if current word is the last one
-            if (IsValid && text.Length + spaceIndex == TextToType.Length)
+            if (IsValid && text.Length + SpaceIndex == TextToType.Length)
             {
                 AllTextTyped = true;
                 TriggerPropertyChanged(nameof(AllTextTyped));
@@ -130,7 +134,7 @@ namespace TypeRacers.ViewModel
 
         private void ReportProgress()
         {
-            model.ReportProgress(progress);
+             
         }
 
         public bool AllTextTyped { get; private set; }
@@ -142,18 +146,18 @@ namespace TypeRacers.ViewModel
                 if (isValid)
                 {
                     TypingAlert = false;
-                    correctChars = text.Length;
-                    incorrectChars = 0;
+                    CorrectChars = text.Length;
+                    IncorrectChars = 0;
                 }
 
                 if (!isValid)
                 {
-                    incorrectChars++;
-                    if (CurrentWordLength - correctChars - incorrectChars < 0)
+                    IncorrectChars++;
+                    if (CurrentWordLength - CorrectChars - IncorrectChars < 0)
                     {
                         TypingAlert = true;
-                        text = text.Substring(0, correctChars);
-                        incorrectChars = 0;
+                        text = text.Substring(0, CorrectChars);
+                        IncorrectChars = 0;
                     }
                 }
             }
@@ -161,21 +165,33 @@ namespace TypeRacers.ViewModel
             {
                 if (!isValid && !string.IsNullOrEmpty(text))
                 {
-                    incorrectChars--;
+                    IncorrectChars--;
                 }
 
-                else 
+                else
                 {
                     TypingAlert = false;
-                    correctChars = text.Length;
-                    incorrectChars = 0;
+                    CorrectChars = text.Length;
+                    IncorrectChars = 0;
                 }
             }
 
             TriggerPropertyChanged(nameof(Inlines)); //new Inlines formed at each char in input
         }
 
-        public string TextToType { get; }
+        public static string TextToType
+        {
+            get
+            {
+
+                return "text";
+            }
+
+            set
+            {
+
+            }
+        }
 
         //determines if a popup alert should apear, bindedin open property of popup xaml
         public bool TypingAlert
@@ -212,6 +228,11 @@ namespace TypeRacers.ViewModel
                 return default;
             }
         }
+
+        public static int SpaceIndex { get; set; }
+        public static int IncorrectChars { get; set; }
+        public static int CorrectChars { get; set; }
+        public static int CurrentWordIndex { get; set; }
 
         //INotifyPropertyChanged code - basic 
         public event PropertyChangedEventHandler PropertyChanged;

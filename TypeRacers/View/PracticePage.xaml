@@ -1,65 +1,20 @@
-﻿<Page x:Class="TypeRacers.View.PracticePage"
-      x:Name="pagePractice"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:vm="clr-namespace:TypeRacers.ViewModel"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="Practice">
-    <Page.Resources>
-        <vm:PracticeViewModel
-            x:Key="ViewModel" />
-    </Page.Resources>
-    
-    <Grid DataContext="{StaticResource ViewModel}">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition
-                Width="10" />
-            <ColumnDefinition
-                Width="*" />
-            <ColumnDefinition
-                Width="10" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition
-                Height="10" />
-            <RowDefinition
-                Height="*" />
-            <RowDefinition
-                Height="20" />
-            <RowDefinition
-                Height="20" />
-            <RowDefinition
-                Height="20" />
-            <RowDefinition
-                Height="40" />
-        </Grid.RowDefinitions>
-        <TextBlock vm:TextBlockExtensions.BindableInlines="{Binding Inlines, UpdateSourceTrigger=PropertyChanged}"
-        FontFamily="Times New Roman"
-                   Name="displayText"
-                   Grid.Column="1"
-                   Grid.Row="1"
-                   FontSize="30"
-                   TextAlignment="Center"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   TextWrapping="Wrap" />
-        <Popup IsOpen="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}" Width="auto" Height="20" HorizontalAlignment="Center" PlacementTarget="{Binding ElementName=displayText}" Placement="Top" AllowsTransparency="True" PopupAnimation="Fade">
-            <Border Background="AntiqueWhite"
-                    CornerRadius="5"
-                    BorderThickness="1">
-                <TextBlock Text="Too many typing errors! Check your spelling" />
-            </Border>
-        </Popup>
-        <TextBox
-            Name="userInput"
-            Grid.Column="1"
-            Grid.Row="3"
-            IsReadOnly="{Binding AllTextTyped}"
-            Text="{Binding CurrentInputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            Background="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}" />
+﻿<Page
+    x:Class="TypeRacers.View.PracticePage"
+    x:Name="pagePractice"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:vm="clr-namespace:TypeRacers.ViewModel"
+    xmlns:local="clr-namespace:TypeRacers.View"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Title="Practice">
 
+    <Grid>
+        <local:BaseUserControl>
+            
+        </local:BaseUserControl>
     </Grid>
 </Page>
