@@ -11,30 +11,18 @@
     d:DesignHeight="450"
     d:DesignWidth="800">
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition
-                Width="10" />
-            <ColumnDefinition
-                Width="*" />
-            <ColumnDefinition
-                Width="10" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition
-                Height="10" />
-            <RowDefinition
-                Height="*" />
-            <RowDefinition
-                Height="40" />
-        </Grid.RowDefinitions>
+    <StackPanel>
+        <TextBlock
+            FontFamily="Times New Roman"
+            Name="progress"
+            FontSize="30"
+            Text="Opponent's progress"
+            Margin="0,0,0,50" />
 
         <local:IOUserControl
-            Grid.Column="1"
-            Grid.Row="1"
             VerticalAlignment="Bottom">
 
         </local:IOUserControl>
 
-    </Grid>
+    </StackPanel>
 </Page>

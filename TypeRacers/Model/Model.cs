@@ -6,11 +6,11 @@ namespace TypeRacers.Model
 {
     public class Model
     {
-        readonly NetworkHandler networkHandler = new NetworkHandler();
+        //readonly NetworkHandler networkHandler = new NetworkHandler();
      
         public void ReportProgress(string message)
         {
-            networkHandler.SendProgressToServer(message);
+            ////networkHandler.SendProgressToServer(message);
         }
 
         public string GetGeneratedTextToTypeLocally()
