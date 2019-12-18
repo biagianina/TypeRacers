@@ -18,6 +18,12 @@
         DataContext="{StaticResource ViewModel}">
         <StackPanel>
             <TextBlock
+                FontFamily="Times New Roman"
+                Name="progress"
+                FontSize="30"
+                Text="{Binding Progress, StringFormat='Your progress: {0}'}"
+                Margin="0,0,0,50" />
+            <TextBlock
                 vm:TextBlockExtensions.BindableInlines="{Binding Inlines, UpdateSourceTrigger=PropertyChanged}"
                 Margin="0,0,0,100"
                 FontFamily="Times New Roman"

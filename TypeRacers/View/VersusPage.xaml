@@ -5,23 +5,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="clr-namespace:TypeRacers.ViewModel"
     xmlns:local="clr-namespace:TypeRacers.View"
     mc:Ignorable="d"
     Title="VersusPage"
     d:DesignHeight="450"
     d:DesignWidth="800">
-    <Page.Resources>
-        <vm:RaceViewModel
-            x:Key="ViewModel" />
-    </Page.Resources>
-    <Grid
-        DataContext="{StaticResource ViewModel}">
+
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition
                 Width="10" />
-            <ColumnDefinition
-                Width="auto" />
             <ColumnDefinition
                 Width="*" />
             <ColumnDefinition
@@ -31,64 +24,17 @@
             <RowDefinition
                 Height="10" />
             <RowDefinition
-                Height="auto" />
-            <RowDefinition
-                Height="auto" />
-            <RowDefinition
-                Height="auto" />
-            <RowDefinition
                 Height="*" />
-            <RowDefinition
-                Height="auto" />
-            <RowDefinition
-                Height="20" />
             <RowDefinition
                 Height="40" />
         </Grid.RowDefinitions>
-        <local:IOUserControl Grid.Column="1"
-                             Grid.Row="4"
-                             Grid.ColumnSpan="2">
-            
+
+        <local:IOUserControl
+            Grid.Column="1"
+            Grid.Row="1"
+            VerticalAlignment="Bottom">
+
         </local:IOUserControl>
-
-        <Label
-            Grid.Column="1"
-            Grid.Row="1"
-            Content="You: "
-            FontSize="30" />
-
-        <Label
-            Grid.Column="2"
-            Grid.Row="1"
-            Name="yourProgressTextBlock"
-            Content="{Binding Progress, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-            FontSize="30" />
-
-        <Label
-            Grid.Column="1"
-            Grid.Row="2"
-            Content="1st opponent: "
-            FontSize="30" />
-
-        <Label
-            Grid.Column="2"
-            Grid.Row="2"
-            Name="firstOpponentProgressTextBlock"
-            Content="{Binding Progress, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-            FontSize="30" />
-
-        <Label
-            Grid.Column="1"
-            Grid.Row="3"
-            Content="2nd opponent: "
-            FontSize="30" />
-
-        <Label
-            Grid.Column="2"
-            Grid.Row="3"
-            Name="secondOpponentProgressTextBlock"
-            Content="{Binding Progress, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-            FontSize="30" />
 
     </Grid>
 </Page>

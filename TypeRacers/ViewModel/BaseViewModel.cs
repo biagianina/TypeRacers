@@ -114,7 +114,6 @@ namespace TypeRacers.ViewModel
                 userInputValidator = new InputCharacterValidation(TextToType.Substring(spaceIndex));
                 text = "";
                 TriggerPropertyChanged(nameof(Progress));//recalculates progress 
-                ReportProgress();
             }
             //checks if current word is the last one
             if (IsValid && text.Length + spaceIndex == TextToType.Length)
@@ -122,7 +121,6 @@ namespace TypeRacers.ViewModel
                 AllTextTyped = true;
                 TriggerPropertyChanged(nameof(AllTextTyped));
                 TriggerPropertyChanged(nameof(Progress));//recalculates progress 
-                ReportProgress();
             }
         }
 

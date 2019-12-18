@@ -16,6 +16,7 @@ namespace TypeRacers
         {
             client = new TypeRacersClient();
         }
+
       
         public void SendProgressToServer(string progress)
         {
