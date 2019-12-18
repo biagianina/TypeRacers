@@ -23,24 +23,5 @@ namespace TypeRacers.View
         {
             InitializeComponent();
         }
-
-        private void Contest_Click(object sender, RoutedEventArgs e)
-        {
-            MainMenu.Content = new VersusPage();
-            HideElements();
-        }
-
-        private void HideElements()
-        {
-            txt_welcomingmessage.Visibility = Visibility.Collapsed;
-            btnContest.Visibility = Visibility.Collapsed;
-            btnPractice.Visibility = Visibility.Collapsed;
-        }
-
-        private void Practice_Click(object sender, RoutedEventArgs e)
-        {
-            MainMenu.Content = new PracticePage();
-            HideElements();
-        }
     }
 }

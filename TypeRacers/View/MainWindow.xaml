@@ -6,32 +6,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Frame x:Name="MainMenu"
-               NavigationUIVisibility="Hidden">
-               
-        </Frame>
-        <TextBlock Name="txt_welcomingmessage" Text="Welcome to your typing contest!"
-                   Foreground="BlueViolet"
-                   TextAlignment="Center"
-                   FontSize="30" Margin="10,25,-10,-25">
-            
-        </TextBlock>
-
-        <Button x:Name="btnContest" Content="Enter Race"
-                Foreground="YellowGreen"
-                FontSize="30"
-                Background="White"
-                Margin="326,132,308,223"
-                BorderThickness="0"
-                Click="Contest_Click">
-        </Button>
-
-        <Button Name ="btnPractice" Content="Practice"
-                Foreground="YellowGreen"
-                FontSize="30" Background="White"
-                Margin="308,213,284,140"
-                BorderThickness="0"  RenderTransformOrigin="0.556,2.03"
-                Click="Practice_Click">
-        </Button>
+        <Frame x:Name="MainMenu"/>
+        
     </Grid>
 </Window>
