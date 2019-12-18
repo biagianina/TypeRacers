@@ -12,5 +12,10 @@ namespace TypeRacers.Model
         {
             networkHandler.SendProgressToServer(message);
         }
+
+        public string GetGeneratedTextToTypeLocally()
+        {
+            return LocalGeneratedText.GetText();
+        }
     }
 }

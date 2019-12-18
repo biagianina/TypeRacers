@@ -19,10 +19,11 @@ namespace TypeRacers.ViewModel
         int incorrectChars;
         int currentWordIndex;
         private bool alert = false;
+        Model.Model model = new Model.Model();
         
         public BaseViewModel()
         {
-            TextToType = new ContestText().GetText();
+            TextToType = model.GetGeneratedTextToTypeLocally();
             userInputValidator = new InputCharacterValidation(TextToType);
         }
       
