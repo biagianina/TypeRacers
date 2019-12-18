@@ -15,7 +15,6 @@ namespace TypeRacers.ViewModel
         InputCharacterValidation userInputValidator;
         bool isValid;
         int spaceIndex;
-        readonly Model.Model model;
         int correctChars;
         int incorrectChars;
         int currentWordIndex;
@@ -23,8 +22,7 @@ namespace TypeRacers.ViewModel
         
         public BaseViewModel()
         {
-            model = new Model.Model();
-            TextToType = model.GetMessageFromServer();
+            TextToType = new ContestText().GetText();
             userInputValidator = new InputCharacterValidation(TextToType);
         }
       
@@ -129,6 +127,7 @@ namespace TypeRacers.ViewModel
 
         public void ReportProgress()
         {
+            Model.Model model = new Model.Model();
             model.ReportProgress(Progress);
         }
 

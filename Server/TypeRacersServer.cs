@@ -35,21 +35,16 @@ namespace TypeRacers.Server
                 try
                 {
                     NetworkStream networkStream = client.GetStream();
-                    byte[] broadcastBytes = Encoding.ASCII.GetBytes(new ContestText().GetText()); //generates random text from text document
-                    networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
-
+                   
                     byte[] buffer = new byte[client.ReceiveBufferSize];
 
-                    while (client.Connected)
-                    {
-                        //---read incoming stream---
-                        int bytesRead = networkStream.Read(buffer, 0, client.ReceiveBufferSize);
+                    //---read incoming stream---
+                    int bytesRead = networkStream.Read(buffer, 0, client.ReceiveBufferSize);
 
-                        //recieving the progress
-                        string dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                        Console.WriteLine("Client said: " + dataReceived);
-                    }
-
+                    //recieving the progress
+                    string dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                    Console.WriteLine("Client said: " + dataReceived);
+                    client.Close();
                 }
                 catch (Exception)
                 {

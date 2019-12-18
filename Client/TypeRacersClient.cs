@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
-using TypeRacers;
+
 
 namespace TypeRacers.Client
 {
@@ -26,22 +21,6 @@ namespace TypeRacers.Client
             //writing the progress to stream
             byte[] bytesToSend = Encoding.ASCII.GetBytes(progress);
             stream.Write(bytesToSend, 0, bytesToSend.Length);
-        }
-
-        //returns a string to connect to the MVVM
-        public string GetMessageFromServer()
-        {          
-            try
-            {
-                byte[] inStream = new byte[10025];
-                var read = stream.Read(inStream, 0, inStream.Length);
-                
-                return Encoding.ASCII.GetString(inStream, 0, read);
-            }
-            catch (Exception)
-            {
-                throw new Exception();
-            }
         }
     }
 }

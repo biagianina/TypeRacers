@@ -6,13 +6,8 @@ namespace TypeRacers.Model
 {
     public class Model
     {
-        NetworkHandler networkHandler = new NetworkHandler();
-
-        public string GetMessageFromServer()
-        {
-            return networkHandler.GetMessageFromServer();
-        }
-
+        readonly NetworkHandler networkHandler = new NetworkHandler();
+     
         public void ReportProgress(string message)
         {
             networkHandler.SendProgressToServer(message);

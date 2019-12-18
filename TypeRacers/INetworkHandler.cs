@@ -9,8 +9,6 @@ namespace TypeRacers
     //interface for network handler
     interface INetworkHandler
     {
-        string GetMessageFromServer();
-
-        void SendProgressToServer(string progress);
+               void SendProgressToServer(string progress);
     }
 }
