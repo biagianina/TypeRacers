@@ -82,7 +82,7 @@
     <Compile Include="NetworkHandler.cs" />
     <Compile Include="ViewModel\GetPhrases.cs" />
     <Compile Include="ViewModel\PracticeViewModel.cs" />
-    <Compile Include="ViewModel\RaceViewModel.cs" />
+    <Compile Include="ViewModel\VersusViewModel.cs" />
     <Compile Include="View\IOUserControl.xaml.cs">
       <DependentUpon>IOUserControl.xaml</DependentUpon>
     </Compile>
