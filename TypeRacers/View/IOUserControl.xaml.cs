@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace TypeRacers.View
 {
     /// <summary>
-    /// Interaction logic for ContestPage.xaml
+    /// Interaction logic for IOUserControl.xaml
     /// </summary>
-    public partial class ContestPage : Page
+    public partial class IOUserControl : UserControl
     {
-        public ContestPage()
+        public IOUserControl()
         {
             InitializeComponent();
         }
