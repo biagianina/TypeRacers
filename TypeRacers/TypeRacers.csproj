@@ -79,9 +79,9 @@
     <Compile Include="NetworkHandler.cs" />
     <Compile Include="ViewModel\GetPhrases.cs" />
     <Compile Include="ViewModel\PracticeViewModel.cs" />
-    <Compile Include="ViewModel\VersusViewModel.cs" />
-    <Compile Include="View\BaseUserControl.xaml.cs">
-      <DependentUpon>BaseUserControl.xaml</DependentUpon>
+    <Compile Include="ViewModel\RaceViewModel.cs" />
+    <Compile Include="View\ContestPage.xaml.cs">
+      <DependentUpon>ContestPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -95,7 +95,7 @@
     <Compile Include="View\VersusPage.xaml.cs">
       <DependentUpon>VersusPage.xaml</DependentUpon>
     </Compile>
-    <Page Include="View\BaseUserControl.xaml">
+    <Page Include="View\ContestPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

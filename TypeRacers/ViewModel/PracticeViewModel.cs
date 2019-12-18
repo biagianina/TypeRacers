@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TypeRacers.ViewModel
 {
-    class PracticeViewModel
+    class PracticeViewModel : BaseViewModel
     {
     }
 }
