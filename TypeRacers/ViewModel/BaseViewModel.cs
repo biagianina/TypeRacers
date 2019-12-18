@@ -128,8 +128,8 @@ namespace TypeRacers.ViewModel
 
         public void ReportProgress()
         {
-            Model.Model model = new Model.Model();
-            model.ReportProgress(Progress);
+            Model.Model newModel = new Model.Model();
+            newModel.ReportProgress(Progress);
         }
 
         public bool AllTextTyped { get; private set; }
