@@ -12,7 +12,7 @@
         <vm:PracticeViewModel
             x:Key="ViewModel" />
     </Page.Resources>
-    
+
     <Grid DataContext="{StaticResource ViewModel}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition
