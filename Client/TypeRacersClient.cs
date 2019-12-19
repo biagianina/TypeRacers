@@ -6,21 +6,20 @@ namespace TypeRacers.Client
 {
     public class TypeRacersClient
     {
-        readonly TcpClient client;
-        private NetworkStream stream;
+        TcpClient client;
+        NetworkStream stream;
 
-
-        public TypeRacersClient()
-        {
-           client = new TcpClient("localhost", 80);
-           stream = client.GetStream();
-        }
-         
+        public string Name { get; set; }
+   
         public void SendProgressToServer(string progress)
         {
+            //connecting to server
+            client = new TcpClient("localhost", 80);
+            stream = client.GetStream();
             //writing the progress to stream
-            byte[] bytesToSend = Encoding.ASCII.GetBytes(progress);
+            byte[] bytesToSend = Encoding.ASCII.GetBytes(progress + "$" + Name + "#");
             stream.Write(bytesToSend, 0, bytesToSend.Length);
+            stream.Flush();
         }
     }
 }
