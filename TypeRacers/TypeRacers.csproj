@@ -77,6 +77,7 @@
     </ApplicationDefinition>
     <Compile Include="INetworkHandler.cs" />
     <Compile Include="NetworkHandler.cs" />
+    <Compile Include="ViewModel\FirstViewModel.cs" />
     <Compile Include="ViewModel\GetPhrases.cs" />
     <Compile Include="ViewModel\PracticeViewModel.cs" />
     <Compile Include="ViewModel\RaceViewModel.cs" />
@@ -88,6 +89,9 @@
     </Compile>
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\FirstPage.xaml.cs">
+      <DependentUpon>FirstPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\PracticePage.xaml.cs">
       <DependentUpon>PracticePage.xaml</DependentUpon>
@@ -104,6 +108,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\FirstPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

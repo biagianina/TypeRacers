@@ -4,13 +4,18 @@ using TypeRacers.Client;
 
 namespace TypeRacers.Model
 {
-    public class Model
+    public static class Model
     {
-        readonly NetworkHandler networkHandler = new NetworkHandler();
+        readonly static NetworkHandler networkHandler = new NetworkHandler();
      
-        public void ReportProgress(string message)
+        public static void ReportProgress(string message)
         {
             networkHandler.SendProgressToServer(message);
+        }
+
+        internal static void NameClient(string username)
+        {
+            networkHandler.NameClient(username);
         }
     }
 }

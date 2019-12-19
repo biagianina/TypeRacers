@@ -127,8 +127,7 @@ namespace TypeRacers.ViewModel
 
         public void ReportProgress()
         {
-            Model.Model model = new Model.Model();
-            model.ReportProgress(Progress);
+            Model.Model.ReportProgress(Progress);
         }
 
         public bool AllTextTyped { get; private set; }
@@ -159,7 +158,7 @@ namespace TypeRacers.ViewModel
             {
                 if (!isValid && !string.IsNullOrEmpty(text))
                 {
-                    incorrectChars--;
+                  incorrectChars--;
                 }
 
                 else 
@@ -170,7 +169,7 @@ namespace TypeRacers.ViewModel
                 }
             }
 
-            TriggerPropertyChanged(nameof(Inlines)); //new Inlines formed at each char in input
+             TriggerPropertyChanged(nameof(Inlines)); //new Inlines formed at each char in input
         }
 
         public string TextToType { get; }
