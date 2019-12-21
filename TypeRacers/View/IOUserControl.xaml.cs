@@ -24,5 +24,71 @@ namespace TypeRacers.View
         {
             InitializeComponent();
         }
+
+        //dp for typed text properties
+        public static DependencyProperty IOUCInlinesProperty = DependencyProperty.Register("IOUCInlines", typeof(IEnumerable<Inline>), typeof(IOUserControl));
+
+        public IEnumerable<Inline> IOUCInlines
+        {
+            get { return (IEnumerable<Inline>)GetValue(IOUCInlinesProperty); }
+            set
+            {
+                SetValue(IOUCInlinesProperty, value);
+            }
+        }
+
+        //dp for textbox text
+        public static DependencyProperty IOUCCurrentInputTextProperty = DependencyProperty.Register("IOUCCurrentInputText", typeof(string), typeof(IOUserControl));
+
+        public string IOUCCurrentInputText
+        {
+            get { return (string)GetValue(IOUCCurrentInputTextProperty); }
+            set
+            {
+                SetValue(IOUCCurrentInputTextProperty, value);
+            }
+        }
+
+        //dp for all text typed
+        public static DependencyProperty IOUCAllTextTypedProperty = DependencyProperty.Register("IOUCAllTextTyped", typeof(bool), typeof(IOUserControl));
+
+        public bool IOUCAllTextTyped
+        {
+            get { return (bool)GetValue(IOUCAllTextTypedProperty); }
+            set
+            {
+                SetValue(IOUCAllTextTypedProperty, value);
+            }
+        }
+
+        //dp for background color in text box
+        public static DependencyProperty IOUCBackgroundColorProperty = DependencyProperty.Register("IOUCBackgroundColor", typeof(string), typeof(IOUserControl));
+
+        public string IOUCBackgroundColor
+        {
+            get { return (string)GetValue(IOUCBackgroundColorProperty); }
+            set
+            {
+                SetValue(IOUCBackgroundColorProperty, value);
+            }
+        }
+
+
+        public static DependencyProperty IOUCTypingAlertProperty = DependencyProperty.Register("IOUCTypingAlert", typeof(string), typeof(IOUserControl));
+
+        public string IOUCTypingAlert
+        {
+            get { return (string)GetValue(IOUCTypingAlertProperty); }
+            set
+            {
+                SetValue(IOUCTypingAlertProperty, value);
+            }
+        }
+
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+        }
+
     }
 }

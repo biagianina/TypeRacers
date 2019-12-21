@@ -9,68 +9,58 @@
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
-    <UserControl.Resources>
-        <vm:BaseViewModel
-            x:Key="ViewModel" />
-    </UserControl.Resources>
 
-    <Grid
-        DataContext="{StaticResource ViewModel}">
-        <StackPanel>
-            <TextBlock
-                FontFamily="Times New Roman"
-                Name="progress"
-                FontSize="30"
-                Text="{Binding Progress, StringFormat='Your progress: {0}'}"
-                Margin="0,0,0,50" />
-            <TextBlock
-                vm:TextBlockExtensions.BindableInlines="{Binding Inlines, UpdateSourceTrigger=PropertyChanged}"
-                Margin="0,0,0,100"
-                FontFamily="Times New Roman"
-                Name="displayText"
-                FontSize="30"
-                TextAlignment="Center"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                TextWrapping="Wrap" />
-            <Popup
-                IsOpen="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}"
-                Width="auto"
-                Height="auto"
-                PlacementTarget="{Binding ElementName=displayText}"
-                Placement="Top"
-                AllowsTransparency="True"
-                PopupAnimation="Fade">
+    <StackPanel
+        DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:IOUserControl}}">
+        
+        <TextBlock
+            vm:TextBlockExtensions.BindableInlines="{Binding IOUCInlines}"
+            Margin="0,0,0,100"
+            FontFamily="Times New Roman"
+            Name="displayText"
+            FontSize="30"
+            TextAlignment="Center"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            TextWrapping="Wrap" />
+        <Popup
+            IsOpen="{Binding IOUCTypingAlert, UpdateSourceTrigger=PropertyChanged}"
+            Width="auto"
+            Height="auto"
+            PlacementTarget="{Binding ElementName=displayText}"
+            Placement="Top"
+            AllowsTransparency="True"
+            PopupAnimation="Fade">
+            <Grid
+                Width="200"
+                Height="100"
+                HorizontalAlignment="Right">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition
+                        Height="Auto" />
+                </Grid.RowDefinitions>
                 <Grid
-                    Width="200"
-                    Height="100"
-                    HorizontalAlignment="Right">
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition
-                            Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid
-                        Background="Aquamarine">
-                        <Label
-                            Content="Check your spelling!"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center" />
-                    </Grid>
-                    <Polygon
-                        Grid.Row="1"
-                        Points="0,0 15,0, 0,30"
-                        Stroke="Aquamarine"
-                        Fill="Aquamarine" />
+                    Background="Aquamarine">
+                    <Label
+                        Content="Check your spelling!"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
                 </Grid>
+                <Polygon
+                    Grid.Row="1"
+                    Points="0,0 15,0, 0,30"
+                    Stroke="Aquamarine"
+                    Fill="Aquamarine" />
+            </Grid>
 
-            </Popup>
-            <TextBox
-                Margin="0,0,0,50"
-                Name="userInput"
-                IsReadOnly="{Binding AllTextTyped}"
-                Text="{Binding CurrentInputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                Background="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}" />
-        </StackPanel>
-    </Grid>
+        </Popup>
+        <TextBox
+            Margin="0,0,0,50"
+            IsReadOnly="{Binding IOUCAllTextTyped}"
+            Text="{Binding IOUCCurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+            Background="{Binding IOUCBackgroundColor, UpdateSourceTrigger=PropertyChanged}" />
+
+    </StackPanel>
+
 </UserControl>

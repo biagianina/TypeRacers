@@ -6,16 +6,28 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:TypeRacers.View"
+    xmlns:vm="clr-namespace:TypeRacers.ViewModel"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800"
     Title="Practice">
+    <Page.Resources>
+        <vm:PracticeViewModel
+            x:Key="ViewModel" />
+    </Page.Resources>
 
-    <StackPanel>
+
+    <Grid
+        DataContext="{StaticResource ViewModel}">
         <local:IOUserControl
-            VerticalAlignment="Bottom">
-
+            Margin="30"
+            IOUCInlines="{Binding Inlines}"
+            IOUCAllTextTyped="{Binding AllTextTyped}"
+            IOUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+            IOUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
+            IOUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}"
+            VerticalContentAlignment="Bottom">
         </local:IOUserControl>
 
-    </StackPanel>
+    </Grid>
 </Page>

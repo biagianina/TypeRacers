@@ -17,5 +17,10 @@ namespace TypeRacers.Model
         {
             return LocalGeneratedText.GetText();
         }
+
+        public string GetGeneratedTextToTypeFromServer()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
