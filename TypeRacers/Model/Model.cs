@@ -10,9 +10,13 @@ namespace TypeRacers.Model
      
         public void ReportProgress(string message)
         {
-            ////networkHandler.SendProgressToServer(message);
+            ////report progress locally
         }
 
+        public void ReportProgressToServer(string message)
+        {
+            ////networkHandler.SendProgressToServer(message);
+        }
         public string GetGeneratedTextToTypeLocally()
         {
             return LocalGeneratedText.GetText();

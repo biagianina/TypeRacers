@@ -8,9 +8,9 @@ using System.Windows.Media;
 
 namespace TypeRacers.ViewModel
 {
-    class PracticeViewModel : IViewModel, INotifyPropertyChanged
+    class PracticeViewModel : ITextToType, INotifyPropertyChanged
     {
-        string textToType = string.Empty;
+        string textToType;
         InputCharacterValidation userInputValidator;
         bool isValid;
         int spaceIndex;
@@ -63,12 +63,10 @@ namespace TypeRacers.ViewModel
                 return (spaceIndex * 100 / TextToType.Length).ToString() + "%";
             }
         }
-
         public int CurrentWordLength
         {
             get => TextToType.Split()[currentWordIndex].Length;//length of current word
         }
-
         public bool AllTextTyped { get; set; }
         //determines if a popup alert should apear, bindedin open property of popup xaml
         public bool TypingAlert
@@ -86,7 +84,6 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(TypingAlert));
             }
         }
-
         public string InputBackgroundColor
         {
             get
@@ -129,8 +126,6 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(CurrentInputText));
             }
         }
-
-
         public void CheckUserInput(string value)
         {
             //checks if current word is typed, clears textbox, reintializes remaining text to the validation, sends progress 

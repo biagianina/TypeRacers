@@ -13,12 +13,12 @@
     Title="Practice">
     <Page.Resources>
         <vm:PracticeViewModel
-            x:Key="ViewModel" />
+            x:Key="PracticeVM" />
     </Page.Resources>
 
 
     <Grid
-        DataContext="{StaticResource ViewModel}">
+        DataContext="{StaticResource PracticeVM}">
         <local:IOUserControl
             Margin="30"
             IOUCInlines="{Binding Inlines}"
