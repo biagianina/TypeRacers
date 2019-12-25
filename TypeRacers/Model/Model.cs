@@ -6,11 +6,11 @@ namespace TypeRacers.Model
 {
     public static class Model
     {
-        readonly NetworkHandler networkHandler = new NetworkHandler();
+        readonly static NetworkHandler networkHandler = new NetworkHandler();
 
-        public static void ReportProgressToServer(string message)
+        public static void ReportProgress(int message)
         {
-            ////networkHandler.SendProgressToServer(message);
+            networkHandler.SendProgressToServer(message.ToString());
         }
         public static string GetGeneratedTextToTypeLocally()
         {
@@ -19,7 +19,11 @@ namespace TypeRacers.Model
 
         public static string GetGeneratedTextToTypeFromServer()
         {
-            throw new NotImplementedException();
+            return networkHandler.GetTextFromServer();
+        }
+        internal static void NameClient(string username)
+        {
+            networkHandler.NameClient(username);
         }
     }
 }

@@ -54,9 +54,11 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+      <HintPath>...\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -76,20 +78,22 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="INetworkHandler.cs" />
+    <Compile Include="Model\LocalGeneratedText.cs" />
     <Compile Include="NetworkHandler.cs" />
+
+    <Compile Include="ViewModel\ITextToType.cs" />
+
     <Compile Include="ViewModel\FirstViewModel.cs" />
-    <Compile Include="ViewModel\GetPhrases.cs" />
+
     <Compile Include="ViewModel\PracticeViewModel.cs" />
-    <Compile Include="ViewModel\RaceViewModel.cs" />
-    <Compile Include="View\ContestPage.xaml.cs">
-      <DependentUpon>ContestPage.xaml</DependentUpon>
+    <Compile Include="ViewModel\VersusViewModel.cs" />
+    <Compile Include="View\ReadAndTypeUserControl.xaml.cs">
+      <DependentUpon>ReadAndTypeUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
+
     <Compile Include="View\FirstPage.xaml.cs">
       <DependentUpon>FirstPage.xaml</DependentUpon>
     </Compile>
@@ -99,7 +103,7 @@
     <Compile Include="View\VersusPage.xaml.cs">
       <DependentUpon>VersusPage.xaml</DependentUpon>
     </Compile>
-    <Page Include="View\ContestPage.xaml">
+    <Page Include="View\ReadAndTypeUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -107,10 +111,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\MainWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+
     <Page Include="View\FirstPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -121,7 +122,6 @@
     </Page>
     <Compile Include="System\Collections\ObjectModel\ObservableCollection.cs" />
     <Compile Include="ViewModel\TextBlockExtensions.cs" />
-    <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="Model\Model.cs" />
     <Compile Include="View\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
