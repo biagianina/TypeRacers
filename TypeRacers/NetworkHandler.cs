@@ -17,6 +17,10 @@ namespace TypeRacers
             client = new TypeRacersClient();
         }
 
+        public string GetTextFromServer()
+        {
+            return client.GetMessageFromServer();
+        }
       
         public void SendProgressToServer(string progress)
         {

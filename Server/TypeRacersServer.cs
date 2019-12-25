@@ -38,8 +38,11 @@ namespace TypeRacers.Server
                 try
                 {
                     NetworkStream networkStream = client.GetStream();
-                   
+                    byte[] broadcastBytes = Encoding.ASCII.GetBytes(ServerGeneratedText.GetText()); //generates random text from text document
+                    networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
+
                     byte[] buffer = new byte[client.ReceiveBufferSize];
+
                     int bytesRead = networkStream.Read(buffer, 0, client.ReceiveBufferSize);
                     string dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
                     while (!dataReceived[bytesRead - 1].Equals('#'))

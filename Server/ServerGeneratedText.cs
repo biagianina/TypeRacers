@@ -8,10 +8,10 @@ namespace TypeRacers.Server
     public class ServerGeneratedText
     {
         //Path for the .txt document
-        private readonly string ExePath = AppDomain.CurrentDomain.BaseDirectory + "Texts.txt";
+        private static readonly string ExePath = AppDomain.CurrentDomain.BaseDirectory + "Texts.txt";
 
         //Genertes random lines from the text document
-        public string GetText()
+        public static string GetText()
         {
             List<string> lines = GetLines().ToList();
             var random = new Random();
@@ -19,7 +19,7 @@ namespace TypeRacers.Server
             return lines[randomLine];
         }
 
-        private IEnumerable<string> GetLines()
+        private static IEnumerable<string> GetLines()
         {
             return File.ReadAllLines(ExePath);
         }
