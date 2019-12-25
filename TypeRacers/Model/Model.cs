@@ -6,23 +6,18 @@ namespace TypeRacers.Model
 {
     public class Model
     {
-        //readonly NetworkHandler networkHandler = new NetworkHandler();
-     
-        public void ReportProgress(string message)
-        {
-            ////report progress locally
-        }
+        readonly NetworkHandler networkHandler = new NetworkHandler();
 
-        public void ReportProgressToServer(string message)
+        public static void ReportProgressToServer(string message)
         {
             ////networkHandler.SendProgressToServer(message);
         }
-        public string GetGeneratedTextToTypeLocally()
+        public static string GetGeneratedTextToTypeLocally()
         {
             return LocalGeneratedText.GetText();
         }
 
-        public string GetGeneratedTextToTypeFromServer()
+        public static string GetGeneratedTextToTypeFromServer()
         {
             throw new NotImplementedException();
         }

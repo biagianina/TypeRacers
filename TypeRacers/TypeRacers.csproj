@@ -83,8 +83,8 @@
     <Compile Include="ViewModel\ITextToType.cs" />
     <Compile Include="ViewModel\PracticeViewModel.cs" />
     <Compile Include="ViewModel\VersusViewModel.cs" />
-    <Compile Include="View\IOUserControl.xaml.cs">
-      <DependentUpon>IOUserControl.xaml</DependentUpon>
+    <Compile Include="View\ReadAndTypeUserControl.xaml.cs">
+      <DependentUpon>ReadAndTypeUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -95,7 +95,7 @@
     <Compile Include="View\VersusPage.xaml.cs">
       <DependentUpon>VersusPage.xaml</DependentUpon>
     </Compile>
-    <Page Include="View\IOUserControl.xaml">
+    <Page Include="View\ReadAndTypeUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

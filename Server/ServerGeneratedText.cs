@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace TypeRacers.Server
 {
-    public class ContestText
+    public class ServerGeneratedText
     {
         //Path for the .txt document
         private readonly string ExePath = AppDomain.CurrentDomain.BaseDirectory + "Texts.txt";

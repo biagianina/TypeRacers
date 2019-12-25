@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using TypeRacers.Model;
 
 namespace TypeRacers.ViewModel
 {
@@ -18,19 +19,17 @@ namespace TypeRacers.ViewModel
         int incorrectChars;
         int currentWordIndex;
         private bool alert;
-        Model.Model model;
 
         public PracticeViewModel()
         {
-            model = new Model.Model();
-            TextToType = model.GetGeneratedTextToTypeLocally();
+            TextToType = Model.Model.GetGeneratedTextToTypeLocally();
             userInputValidator = new InputCharacterValidation(TextToType);
         }
 
         public IEnumerable<Inline> Inlines
         {
-            get => new[] { new Run() { Text = TextToType.Substring(0, spaceIndex) , Foreground = Brushes.Green},
-                new Run() { Text = TextToType.Substring(spaceIndex, correctChars), Foreground = Brushes.Green, TextDecorations = TextDecorations.Underline},
+            get => new[] { new Run() { Text = TextToType.Substring(0, spaceIndex) , Foreground = Brushes.Gold},
+                new Run() { Text = TextToType.Substring(spaceIndex, correctChars), Foreground = Brushes.Gold, TextDecorations = TextDecorations.Underline},
                 new Run() { Text = TextToType.Substring(correctChars + spaceIndex, incorrectChars), TextDecorations = TextDecorations.Underline, Background = Brushes.IndianRed},
                 new Run() {Text = TextToType.Substring(spaceIndex + correctChars + incorrectChars, CurrentWordLength - correctChars - incorrectChars), TextDecorations = TextDecorations.Underline},
                 new Run() {Text = TextToType.Substring(spaceIndex + CurrentWordLength) }
@@ -51,16 +50,16 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(InputBackgroundColor));
             }
         }
-        public string Progress
+        public int Progress
         {
             get
             {
                 if (AllTextTyped)
                 {
-                    return "100%";
+                    return 100;
                 }
 
-                return (spaceIndex * 100 / TextToType.Length).ToString() + "%";
+                return (spaceIndex * 100 / TextToType.Length);
             }
         }
         public int CurrentWordLength
@@ -190,11 +189,6 @@ namespace TypeRacers.ViewModel
             }
 
             TriggerPropertyChanged(nameof(Inlines)); //new Inlines formed at each char in input
-        }
-
-        public void ReportProgress()
-        {
-            throw new NotImplementedException();
         }
 
         //INotifyPropertyChanged code - basic 

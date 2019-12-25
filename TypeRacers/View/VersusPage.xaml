@@ -19,10 +19,10 @@
             Text="Opponent's progress"
             Margin="0,0,0,50" />
 
-        <local:IOUserControl
+        <local:ReadAndTypeUserControl
             VerticalAlignment="Bottom">
 
-        </local:IOUserControl>
+        </local:ReadAndTypeUserControl>
 
     </StackPanel>
 </Page>

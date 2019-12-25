@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="TypeRacers.View.IOUserControl"
+    x:Class="TypeRacers.View.ReadAndTypeUserControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,12 +11,24 @@
     d:DesignWidth="800">
 
     <StackPanel
-        DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:IOUserControl}}">
+        DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ReadAndTypeUserControl}}">
+
+        <TextBlock
+            Text="{Binding RATUCProgress, 
+                 StringFormat='Your progress: {0} %'}"
+            FontFamily="Arial"
+            Foreground="White"
+            Margin="25"
+            Name="progress"
+            FontSize="30"
+            TextAlignment="Left"
+            HorizontalAlignment="Left" />
         
         <TextBlock
-            vm:TextBlockExtensions.BindableInlines="{Binding IOUCInlines}"
-            Margin="0,0,0,100"
-            FontFamily="Times New Roman"
+            vm:TextBlockExtensions.BindableInlines="{Binding RATUCInlines}"
+            Margin="0,0,0,50"
+            FontFamily="Arial"
+            Foreground="White"
             Name="displayText"
             FontSize="30"
             TextAlignment="Center"
@@ -24,7 +36,7 @@
             VerticalAlignment="Center"
             TextWrapping="Wrap" />
         <Popup
-            IsOpen="{Binding IOUCTypingAlert, UpdateSourceTrigger=PropertyChanged}"
+            IsOpen="{Binding RATUCTypingAlert, UpdateSourceTrigger=PropertyChanged}"
             Width="auto"
             Height="auto"
             PlacementTarget="{Binding ElementName=displayText}"
@@ -57,9 +69,10 @@
         </Popup>
         <TextBox
             Margin="0,0,0,50"
-            IsReadOnly="{Binding IOUCAllTextTyped}"
-            Text="{Binding IOUCCurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-            Background="{Binding IOUCBackgroundColor, UpdateSourceTrigger=PropertyChanged}" />
+            Foreground="White"
+            IsReadOnly="{Binding RATUCAllTextTyped}"
+            Text="{Binding RATUCCurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+            Background="{Binding RATUCBackgroundColor, UpdateSourceTrigger=PropertyChanged}" />
 
     </StackPanel>
 
