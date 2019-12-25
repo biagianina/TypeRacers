@@ -22,5 +22,10 @@ namespace TypeRacers
         {
             client.SendProgressToServer(progress);
         }
+
+        public void NameClient(string username)
+        {
+            client.Name = username;
+        }
     }
 }

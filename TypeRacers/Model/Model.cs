@@ -4,7 +4,7 @@ using TypeRacers.Client;
 
 namespace TypeRacers.Model
 {
-    public class Model
+    public static class Model
     {
         readonly NetworkHandler networkHandler = new NetworkHandler();
 
