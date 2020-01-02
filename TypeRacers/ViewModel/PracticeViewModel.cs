@@ -125,10 +125,6 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(CurrentInputText));
             }
         }
-        public void ReportProgress()
-        {
-            Model.Model.ReportProgress(Progress);
-        }
         public void CheckUserInput(string value)
         {
             //checks if current word is typed, clears textbox, reintializes remaining text to the validation, sends progress 
@@ -142,9 +138,8 @@ namespace TypeRacers.ViewModel
                 }
 
                 userInputValidator = new InputCharacterValidation(TextToType.Substring(spaceIndex));
-                textToType = "";
+                textToType = string.Empty;
                 TriggerPropertyChanged(nameof(Progress));//recalculates progress 
-                ReportProgress();
             }
             //checks if current word is the last one
             if (IsValid && textToType.Length + spaceIndex == TextToType.Length)
@@ -152,7 +147,6 @@ namespace TypeRacers.ViewModel
                 AllTextTyped = true;
                 TriggerPropertyChanged(nameof(AllTextTyped));
                 TriggerPropertyChanged(nameof(Progress));//recalculates progress 
-                ReportProgress();
             }
         }
         public void HighlightText()

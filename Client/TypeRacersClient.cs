@@ -31,7 +31,7 @@ namespace TypeRacers.Client
             {
                 byte[] inStream = new byte[10025];
                 var read = stream.Read(inStream, 0, inStream.Length);
-
+                client.Close();
                 return Encoding.ASCII.GetString(inStream, 0, read);
             }
             catch (Exception)

@@ -34,7 +34,7 @@ namespace TypeRacers.Server
             while (true)
             {
                 TcpClient client = server.AcceptTcpClient();
-                Console.WriteLine("New client accepted");
+                Console.WriteLine("client connected");
                 try
                 {
                     NetworkStream networkStream = client.GetStream();
@@ -54,6 +54,7 @@ namespace TypeRacers.Server
 
                     CheckUsername(dataReceived, players);
                     client.Close();
+                    Console.WriteLine("disconnected");
                 }
                 catch (Exception)
                 {
