@@ -29,14 +29,17 @@ namespace TypeRacers.Client
             stream = client.GetStream();
             try
             {
+                byte[] bytesToSend = Encoding.ASCII.GetBytes("0" + "$" + Name + "#");
+                stream.Write(bytesToSend, 0, bytesToSend.Length);
+
                 byte[] inStream = new byte[10025];
-                var read = stream.Read(inStream, 0, inStream.Length);
+                int read = stream.Read(inStream, 0, inStream.Length);
                 client.Close();
                 return Encoding.ASCII.GetString(inStream, 0, read);
             }
             catch (Exception)
             {
-                throw new Exception();
+                throw new Exception("Lost connection with server");
             }
         }
     }
