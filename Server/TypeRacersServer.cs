@@ -19,7 +19,10 @@ namespace TypeRacers.Server
             //starting the server
             ServerSetup();
         }
+
+        //to avoid generating different texts from users in same competition
         public static string CompetitionText { get; } = ServerGeneratedText.GetText();
+        
         public static void ServerSetup()
         {
 
@@ -33,11 +36,11 @@ namespace TypeRacers.Server
             }
             catch (Exception)
             {
-                throw new Exception("Server disconnected");
+                throw new Exception("Server setup failed");
             }
 
             Console.WriteLine("Server started");
-            CommunicationSetup();
+            CommunicationSetup();//separated the communication from server starter
         }
 
         private static void CommunicationSetup()
@@ -48,24 +51,24 @@ namespace TypeRacers.Server
 
                 try
                 {
+                    //creates the stream
                     NetworkStream networkStream = client.GetStream();
-
+                    //reads from stream
                     byte[] buffer = new byte[client.ReceiveBufferSize];
-
-                    int bytesRead = networkStream.Read(buffer, 0, client.ReceiveBufferSize);
+                    int bytesRead = networkStream.Read(buffer, 0, buffer.Length);
                     string dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                    //solution to get get complete messages
                     while (!dataReceived[bytesRead - 1].Equals('#'))
-                    //---read incoming stream---
                     {
                         bytesRead = networkStream.Read(buffer, 0, client.ReceiveBufferSize);
                         dataReceived += Encoding.ASCII.GetString(buffer, dataReceived.Length, bytesRead);
                     }
-
+                    
                     CheckUsername(dataReceived, players);
-                   
+                    //this bool is set in order to do the text to type sending only once
                     if (newClient)
                     {
-                        byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText); //generates random text from text document
+                        byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "#"); //generates random text from text document
                         networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
                     }
 
@@ -80,8 +83,9 @@ namespace TypeRacers.Server
             }
         }
 
+        //this method determines if a player is new or is already playing and is just sending progress
         private static void CheckUsername(string dataReceived, Hashtable players)
-        {
+        {   
             string progress = dataReceived.Substring(0, dataReceived.IndexOf('$'));
             string username = string.Concat(dataReceived.Substring(dataReceived.IndexOf('$') + 1).Except("#"));
           
