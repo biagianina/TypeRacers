@@ -10,8 +10,85 @@
     d:DesignHeight="450"
     d:DesignWidth="800">
 
+    <UserControl.Resources>
+        <Style
+            x:Key="SliderThumbStyle"
+            TargetType="Thumb"
+            >
+            <Style.Setters>
+                <Setter
+                    Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate >
+                            <StackPanel
+                                Width="160"
+                                Height="80"
+                                Background="#00000000"
+                                Orientation="Horizontal">
+                                <Image
+                                    Width="150"
+                                    Height="150"
+                                    Margin="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Source="pack://application:,,,/TypeRacers;component/Images/red_car.png" />
+
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style.Setters>
+        </Style>
+
+        <Style
+            TargetType="Slider"
+            x:Key="SliderStyle">
+            <Setter
+                Property="OverridesDefaultStyle"
+                Value="true" />
+            <Setter
+                Property="Template">
+                <Setter.Value>
+                    <ControlTemplate
+                        TargetType="Slider">
+                        <Grid>
+                            <Border
+                                Name="PART_Border"
+                                BorderBrush="Black"
+                                BorderThickness="1"
+                                Padding="2"
+                                Width="{TemplateBinding Width}"
+                                Height="{TemplateBinding Height}"
+                                Opacity="0"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center" />
+                            <Track
+                                Name="PART_Track"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                Width="{TemplateBinding Width}"
+                                Height="{TemplateBinding Height}">
+                                <Track.Thumb>
+                                    <Thumb
+                                        Style="{StaticResource SliderThumbStyle}" />
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    
     <StackPanel
         DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ReadAndTypeUserControl}}">
+
+        <Slider
+            IsHitTestVisible="False"
+            Focusable="False"
+            Style="{StaticResource SliderStyle}"
+            Maximum="100"
+            Value="{Binding RATUCProgress, Mode=OneWay}" />
 
         <TextBlock
             Text="{Binding RATUCProgress, 
@@ -23,7 +100,7 @@
             FontSize="30"
             TextAlignment="Left"
             HorizontalAlignment="Left" />
-        
+
         <TextBlock
             vm:TextBlockExtensions.BindableInlines="{Binding RATUCInlines}"
             Margin="0,0,0,50"
