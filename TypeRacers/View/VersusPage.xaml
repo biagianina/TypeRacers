@@ -18,7 +18,7 @@
             x:Key="VersusVM" />
     </Page.Resources>
 
-    <Grid 
+    <Grid
         DataContext="{StaticResource VersusVM}">
         <local:ReadAndTypeUserControl
             Margin="30"

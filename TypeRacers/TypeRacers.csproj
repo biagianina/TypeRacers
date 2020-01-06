@@ -96,6 +96,9 @@
     <Compile Include="View\PracticePage.xaml.cs">
       <DependentUpon>PracticePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\SearchingOpponentsPage.xaml.cs">
+      <DependentUpon>SearchingOpponentsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\VersusPage.xaml.cs">
       <DependentUpon>VersusPage.xaml</DependentUpon>
     </Compile>
@@ -122,6 +125,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\SearchingOpponentsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\VersusPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -11,7 +11,7 @@ namespace TypeRacers.Client
     {
         TcpClient client;
         NetworkStream stream;
-        private List<string> opponents;
+        public List<string> Opponents { get; set; }
         public string Name { get; set; }
    
         public void SendProgressToServer(string progress)
@@ -33,14 +33,15 @@ namespace TypeRacers.Client
                 byte[] inStream = new byte[client.ReceiveBufferSize];
                 int read = stream.Read(inStream, 0, inStream.Length);
                 string text = Encoding.ASCII.GetString(inStream, 0, read);
+
                 while (!text[read - 1].Equals('#'))
                 {
                     read = stream.Read(inStream, 0, inStream.Length);
                     text += Encoding.ASCII.GetString(inStream, text.Length, read);
                 }
                 client.Close();
-                opponents = text.Split('/').ToList();
-                opponents.Remove("#");
+                Opponents = text.Split('/').ToList();
+                Opponents.Remove("#");
             }
             catch (Exception)
             {
