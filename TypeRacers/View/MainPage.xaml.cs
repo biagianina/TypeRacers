@@ -28,7 +28,7 @@ namespace TypeRacers.View
         private void Contest_Click(object sender, RoutedEventArgs e)
         {
             NavigationService nav = NavigationService.GetNavigationService(this);
-            nav.Navigate(new Uri("View/VersusPage.xaml", UriKind.RelativeOrAbsolute));
+            nav.Navigate(new Uri("View/SearchingOpponentsPage.xaml", UriKind.RelativeOrAbsolute));
         }
 
         private void Practice_Click(object sender, RoutedEventArgs e)

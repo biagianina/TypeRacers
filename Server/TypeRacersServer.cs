@@ -25,14 +25,14 @@ namespace TypeRacers.Server
 
         //to avoid generating different texts from users in same competition
         public static string CompetitionText { get; } = ServerGeneratedText.GetText();
-        
+
         public static void ServerSetup()
         {
 
             ip = Dns.GetHostEntry("localhost").AddressList[0];
             server = new TcpListener(ip, 80);
             players = new Hashtable();
-   
+
             try
             {
                 server.Start();
@@ -66,11 +66,12 @@ namespace TypeRacers.Server
                         bytesRead = networkStream.Read(buffer, 0, client.ReceiveBufferSize);
                         dataReceived += Encoding.ASCII.GetString(buffer, dataReceived.Length, bytesRead);
                     }
-                    
+
                     CheckUsername(dataReceived, players);
                     //this bool is set in order to do the text to type sending only once
-                   
+
                     client.Close();
+
 
                     Console.WriteLine("Disconnected client");
                 }
@@ -95,23 +96,23 @@ namespace TypeRacers.Server
                 {
                     if (!a.Key.ToString().Equals(currentClient))
                     {
-                        opponents += a.Key + ": " + a.Value + "/" ;
+                        opponents += a.Key + ": " + a.Value + "/";
                     }
                 }
 
-                byte[] broadcastBytes = Encoding.ASCII.GetBytes(opponents + "#"); 
+                byte[] broadcastBytes = Encoding.ASCII.GetBytes(opponents + "#");
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
             }
         }
 
         //this method determines if a player is new or is already playing and is just sending progress
         private static void CheckUsername(string dataReceived, Hashtable players)
-        {   
+        {
             string progress = dataReceived.Substring(0, dataReceived.IndexOf('$'));
             string username = dataReceived.Substring(dataReceived.IndexOf('$') + 1);
             currentClient = username.Substring(0, username.Length - 1);
-            Console.WriteLine(username +" connected");
-           
+            Console.WriteLine(username + " connected");
+
             if (players.ContainsKey(currentClient))
             {
                 newClient = false;

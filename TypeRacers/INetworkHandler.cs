@@ -10,5 +10,9 @@ namespace TypeRacers
     interface INetworkHandler
     { 
         void SendProgressToServer(string progress);
+
+        string GetTextFromServer();
+
+        List<string> GetOpponents();
     }
 }

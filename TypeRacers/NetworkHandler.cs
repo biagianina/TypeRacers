@@ -1,4 +1,5 @@
-﻿using TypeRacers.Client;
+﻿using System.Collections.Generic;
+using TypeRacers.Client;
 
 namespace TypeRacers
 {
@@ -11,6 +12,11 @@ namespace TypeRacers
             client = new TypeRacersClient();
         }
 
+
+        public List<string> GetOpponents()
+        {
+            return client.Opponents;
+        }
         public string GetTextFromServer()
         {
             return client.GetMessageFromServer();
