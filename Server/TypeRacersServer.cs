@@ -71,7 +71,8 @@ namespace TypeRacers.Server
                     //this bool is set in order to do the text to type sending only once
 
                     client.Close();
-                    Console.WriteLine("Data receieved" + dataReceived);
+
+
                     Console.WriteLine("Disconnected client");
                 }
                 catch (Exception)
