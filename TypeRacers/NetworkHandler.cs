@@ -12,10 +12,9 @@ namespace TypeRacers
             client = new TypeRacersClient();
         }
 
-
         public List<string> GetOpponents()
         {
-            return client.Opponents;
+            return client.GetOpponentsProgress();
         }
         public string GetTextFromServer()
         {

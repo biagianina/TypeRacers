@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-
+using System.Timers;
 
 namespace TypeRacers.Client
 {
@@ -11,25 +12,44 @@ namespace TypeRacers.Client
     {
         TcpClient client;
         NetworkStream stream;
-        public List<string> Opponents { get; set; }
+        private List<string> Opponents { get; set; }
+
+        private string LocalPlayerProgress { get; set; }
         public string Name { get; set; }
-   
+
+        public TypeRacersClient()
+        {
+            Opponents = new List<string>();
+        }
         public void SendProgressToServer(string progress)
         {
+            //connecting to server
+
+            client = new TcpClient("localhost", 80);
+            stream = client.GetStream();
+
+            //getting the current progress from versus view model
+            LocalPlayerProgress = progress;
+            //writing the progress to stream
+            byte[] bytesToSend = Encoding.ASCII.GetBytes(LocalPlayerProgress + "$" + Name + "#");
+            stream.Write(bytesToSend, 0, bytesToSend.Length);
+            Opponents = GetOpponentsProgress();
+            stream.Flush();
+        }
+
+        //receiving the opponents and their progress in a List
+        public List<string> GetOpponentsProgress()
+        {
+
             //connecting to server
             client = new TcpClient("localhost", 80);
             stream = client.GetStream();
             //writing the progress to stream
-            byte[] bytesToSend = Encoding.ASCII.GetBytes(progress + "$" + Name + "#");
+            byte[] bytesToSend = Encoding.ASCII.GetBytes(LocalPlayerProgress + "$" + Name + "#");
             stream.Write(bytesToSend, 0, bytesToSend.Length);
-            GetOpponentsProgress();
-            stream.Flush();
-        }
 
-        private void GetOpponentsProgress()
-        {
             try
-            {                
+            {
                 byte[] inStream = new byte[client.ReceiveBufferSize];
                 int read = stream.Read(inStream, 0, inStream.Length);
                 string text = Encoding.ASCII.GetString(inStream, 0, read);
@@ -40,19 +60,23 @@ namespace TypeRacers.Client
                     text += Encoding.ASCII.GetString(inStream, text.Length, read);
                 }
                 client.Close();
-                Opponents = text.Split('/').ToList();
-                Opponents.Remove("#");
+                var currentOpponents = text.Split('/').ToList();
+                currentOpponents.Remove("#");
+                return currentOpponents;
             }
             catch (Exception)
             {
                 throw new Exception("Lost connection with server");
             }
+
         }
 
         public string GetMessageFromServer()
         {
+            //connecting to server
             client = new TcpClient("localhost", 80);
             stream = client.GetStream();
+
             try
             {
                 byte[] bytesToSend = Encoding.ASCII.GetBytes("0" + "$" + Name + "#");
@@ -61,6 +85,7 @@ namespace TypeRacers.Client
                 byte[] inStream = new byte[client.ReceiveBufferSize];
                 int read = stream.Read(inStream, 0, inStream.Length);
                 string text = Encoding.ASCII.GetString(inStream, 0, read);
+
                 while (!text[read - 1].Equals('#'))
                 {
                     read = stream.Read(inStream, 0, inStream.Length);
@@ -74,5 +99,6 @@ namespace TypeRacers.Client
                 throw new Exception("Lost connection with server");
             }
         }
+
     }
 }

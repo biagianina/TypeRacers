@@ -71,8 +71,7 @@ namespace TypeRacers.Server
                     //this bool is set in order to do the text to type sending only once
 
                     client.Close();
-
-
+                    Console.WriteLine("info: " + dataReceived);
                     Console.WriteLine("Disconnected client");
                 }
                 catch (Exception)
@@ -88,22 +87,29 @@ namespace TypeRacers.Server
             {
                 byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "#"); //generates random text from text document
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
+                //SendOpponents();//sending current connected opponents to connected client
             }
             else
             {
-                string opponents = "";
-                foreach (DictionaryEntry a in players)
-                {
-                    if (!a.Key.ToString().Equals(currentClient))
-                    {
-                        opponents += a.Key + ": " + a.Value + "/";
-                    }
-                }
-
-                byte[] broadcastBytes = Encoding.ASCII.GetBytes(opponents + "#");
-                networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
+                SendOpponents();
             }
         }
+
+        private static void SendOpponents()
+        {
+            string opponents = string.Empty;
+            foreach (DictionaryEntry a in players)
+            {
+                if (!a.Key.ToString().Equals(currentClient))
+                {
+                    opponents += a.Key + ": " + a.Value + "/";
+                }
+            }
+
+            byte[] broadcastBytes = Encoding.ASCII.GetBytes(opponents + "#");
+            networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
+        }
+
 
         //this method determines if a player is new or is already playing and is just sending progress
         private static void CheckUsername(string dataReceived, Hashtable players)
