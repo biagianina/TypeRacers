@@ -12,7 +12,7 @@
     Title="Versus"
     d:DesignHeight="450"
     d:DesignWidth="800">
-    
+
     <Page.Resources>
         <vm:VersusViewModel
             x:Key="VersusVM" />
@@ -20,17 +20,47 @@
 
     <Grid
         DataContext="{StaticResource VersusVM}">
-        <local:ReadAndTypeUserControl
-            Margin="30"
-            RATUCInlines="{Binding Inlines}"
-            RATUCAllTextTyped="{Binding AllTextTyped}"
-            RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-            RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
-            RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}"
-            RATUCProgress="{Binding Progress}"
-            VerticalContentAlignment="Bottom">
 
-        </local:ReadAndTypeUserControl>
+        <StackPanel>
+            <StackPanel
+                Orientation="Vertical"
+                HorizontalAlignment="Right"
+                Margin="10">
+                <TextBlock
+                    FontFamily="Times New Roman"
+                    FontSize="12"
+                    Foreground="White"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Text="Searching for opponents...." />
+                <TextBlock
+                    FontFamily="Times New Roman"
+                    FontSize="12"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Center"
+                    Foreground="White"
+                    Text="{Binding OpponentsCount, UpdateSourceTrigger=PropertyChanged,
+                            StringFormat='Number of players: {0}'}" />
 
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel VerticalAlignment="Bottom">
+            <local:CarAndProgressUserControl CAPUCProgress="{Binding Progress}">
+                
+            </local:CarAndProgressUserControl>
+            <local:ReadAndTypeUserControl
+                Margin="20"
+                RATUCInlines="{Binding Inlines}"
+                RATUCAllTextTyped="{Binding AllTextTyped}"
+                RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
+                RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}"
+               >
+
+            </local:ReadAndTypeUserControl>
+
+        </StackPanel>
+       
     </Grid>
 </Page>

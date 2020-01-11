@@ -14,5 +14,6 @@ namespace TypeRacers
         string GetTextFromServer();
 
         List<string> GetOpponents();
+
     }
 }
