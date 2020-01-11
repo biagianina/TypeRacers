@@ -57,7 +57,7 @@
         </StackPanel>
 
         <local:ReadAndTypeUserControl
-            Margin="30"
+            Margin="20"
             RATUCInlines="{Binding Inlines}"
             RATUCAllTextTyped="{Binding AllTextTyped}"
             RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"

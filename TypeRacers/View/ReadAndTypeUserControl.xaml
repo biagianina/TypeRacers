@@ -83,23 +83,39 @@
     <StackPanel
         DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ReadAndTypeUserControl}}">
 
-        <Slider
-            IsHitTestVisible="False"
-            Focusable="False"
-            Style="{StaticResource SliderStyle}"
-            Maximum="100"
-            Value="{Binding RATUCProgress, Mode=OneWay}" />
+        <StackPanel>
 
-        <TextBlock
-            Text="{Binding RATUCProgress, 
-                 StringFormat='Your progress: {0} %'}"
-            FontFamily="Arial"
-            Foreground="White"
-            Margin="25"
-            Name="progress"
-            FontSize="30"
-            TextAlignment="Left"
-            HorizontalAlignment="Left" />
+            <Line
+                Stroke="#ff9900"
+                StrokeDashArray="2 2"
+                StrokeThickness="3"
+                X2="10000" />
+            
+            <TextBlock
+                Text="{Binding RATUCProgress, 
+                 StringFormat='You: {0} %'}"
+                FontFamily="Arial"
+                Foreground="White"
+                Margin="5"
+                FontSize="15"
+                TextAlignment="Left"
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Bottom"/>
+            <Slider
+                IsHitTestVisible="False"
+                Focusable="False"
+                Style="{StaticResource SliderStyle}"
+                Maximum="100"
+                Value="{Binding RATUCProgress, Mode=OneWay}" />
+
+            <Line
+                Stroke="#ff9900"
+                StrokeDashArray="2 2"
+                StrokeThickness="3"
+                X2="10000" />
+
+        </StackPanel>
+        
 
         <TextBlock
             vm:TextBlockExtensions.BindableInlines="{Binding RATUCInlines}"

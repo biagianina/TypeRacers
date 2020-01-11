@@ -231,7 +231,7 @@ namespace TypeRacers.ViewModel
                 // here I am performing the task
                 //getting the opponents each second for 30 seconds from server through Client
                 Opponents = Model.Model.GetOpponents();
-                OpponentsCount = Opponents.Count + 1; // +1 because we start at 0 index
+                OpponentsCount = Opponents.Count; // +1 because we start at 0 index
                 //updating the properties each second
                 TriggerPropertyChanged(nameof(Opponents));
                 TriggerPropertyChanged(nameof(OpponentsCount));
