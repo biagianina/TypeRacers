@@ -19,17 +19,24 @@
     </Page.Resources>
     <Grid DataContext="{StaticResource PracticeVM}">
 
-        <local:ReadAndTypeUserControl
-            Margin="30"
-            RATUCInlines="{Binding Inlines}"
-            RATUCAllTextTyped="{Binding AllTextTyped}"
-            RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-            RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
-            RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}"
-            RATUCProgress="{Binding Progress}"
-            VerticalContentAlignment="Bottom">
-            
-        </local:ReadAndTypeUserControl>
+        <StackPanel
+            VerticalAlignment="Bottom">
+
+            <local:CarAndProgressUserControl CAPUCProgress="{Binding Progress}">
+                
+            </local:CarAndProgressUserControl>
+            <local:ReadAndTypeUserControl
+                Margin="20"
+                RATUCInlines="{Binding Inlines}"
+                RATUCAllTextTyped="{Binding AllTextTyped}"
+                RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
+                RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}"
+                VerticalContentAlignment="Bottom">
+
+            </local:ReadAndTypeUserControl>
+        </StackPanel>
+      
     </Grid>
 
 </Page>

@@ -21,22 +21,11 @@
     <Grid
         DataContext="{StaticResource VersusVM}">
 
-        <StackPanel
-            HorizontalAlignment="Right"
-            Margin="10">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition
-                        Width="1*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition
-                        Height="1*" />
-                    <RowDefinition
-                        Height="1*" />
-                    <RowDefinition
-                        Height="1*" />
-                </Grid.RowDefinitions>
+        <StackPanel>
+            <StackPanel
+                Orientation="Vertical"
+                HorizontalAlignment="Right"
+                Margin="10">
                 <TextBlock
                     FontFamily="Times New Roman"
                     FontSize="12"
@@ -49,24 +38,29 @@
                     FontSize="12"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Center"
-                    Grid.Row="1"
                     Foreground="White"
                     Text="{Binding OpponentsCount, UpdateSourceTrigger=PropertyChanged,
                             StringFormat='Number of players: {0}'}" />
-            </Grid>
+
+            </StackPanel>
         </StackPanel>
 
-        <local:ReadAndTypeUserControl
-            Margin="20"
-            RATUCInlines="{Binding Inlines}"
-            RATUCAllTextTyped="{Binding AllTextTyped}"
-            RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-            RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
-            RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}"
-            RATUCProgress="{Binding Progress}"
-            VerticalContentAlignment="Bottom">
+        <StackPanel VerticalAlignment="Bottom">
+            <local:CarAndProgressUserControl CAPUCProgress="{Binding Progress}">
+                
+            </local:CarAndProgressUserControl>
+            <local:ReadAndTypeUserControl
+                Margin="20"
+                RATUCInlines="{Binding Inlines}"
+                RATUCAllTextTyped="{Binding AllTextTyped}"
+                RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
+                RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}"
+               >
 
-        </local:ReadAndTypeUserControl>
+            </local:ReadAndTypeUserControl>
 
+        </StackPanel>
+       
     </Grid>
 </Page>

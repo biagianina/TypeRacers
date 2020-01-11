@@ -86,18 +86,6 @@ namespace TypeRacers.View
         }
 
 
-
-        public static DependencyProperty RATUCProgressProperty = DependencyProperty.Register("RATUCProgress", typeof(int), typeof(ReadAndTypeUserControl));
-
-        public int RATUCProgress
-        {
-            get { return (int)GetValue(RATUCProgressProperty); }
-            set
-            {
-                SetValue(RATUCProgressProperty, value);
-            }
-        }
-
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
