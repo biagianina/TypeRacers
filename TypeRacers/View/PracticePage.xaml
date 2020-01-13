@@ -22,19 +22,16 @@
         <StackPanel
             VerticalAlignment="Bottom">
 
-            <local:CarAndProgressUserControl CAPUCProgress="{Binding Progress}">
-                
-            </local:CarAndProgressUserControl>
-            <local:ReadAndTypeUserControl
-                Margin="20"
-                RATUCInlines="{Binding Inlines}"
-                RATUCAllTextTyped="{Binding AllTextTyped}"
-                RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
-                RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}"
-                VerticalContentAlignment="Bottom">
+            <local:CarAndProgressUserControl CAPUCProgress="{Binding Progress}"
+                                             CAPUCSliderStyle="{StaticResource OrangeSliderStyle}" />
 
-            </local:ReadAndTypeUserControl>
+            <local:ReadAndTypeUserControl Margin="20"
+                                          RATUCInlines="{Binding Inlines}"
+                                          RATUCAllTextTyped="{Binding AllTextTyped}"
+                                          RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                          RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
+                                          RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}"
+                                          VerticalContentAlignment="Bottom" />
         </StackPanel>
       
     </Grid>
