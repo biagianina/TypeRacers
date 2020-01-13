@@ -102,7 +102,7 @@ namespace TypeRacers.Server
             {
                 if (!a.Key.ToString().Equals(currentClient))
                 {
-                    opponents += a.Key + ": " + a.Value + "/";
+                    opponents += a.Key + ":" + a.Value + "/";
                 }
             }
 

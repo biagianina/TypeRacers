@@ -28,6 +28,7 @@
             </Grid.RowDefinitions>
             <local:CarAndProgressUserControl Grid.Row="1"
                                              VerticalAlignment="Center"
+                                             CAPUCName="Your progress"
                                              CAPUCProgress="{Binding Progress}"
                                              CAPUCSliderStyle="{StaticResource OrangeSliderStyle}" />
 

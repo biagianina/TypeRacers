@@ -9,7 +9,7 @@ namespace TypeRacers.Model
     {
         readonly static NetworkHandler networkHandler = new NetworkHandler();
 
-        public static List<string> GetOpponents()
+        public static List<Tuple<string, string>> GetOpponents()
         {
             return networkHandler.GetOpponents();
         }

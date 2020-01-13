@@ -24,6 +24,17 @@ namespace TypeRacers.View
                 SetValue(CAPUCProgressProperty, value);
             }
         }
+
+        public static DependencyProperty CAPUCNameProperty = DependencyProperty.Register("CAPUCName", typeof(string), typeof(CarAndProgressUserControl));
+
+        public string CAPUCName
+        {
+            get { return (string)GetValue(CAPUCProgressProperty); }
+            set
+            {
+                SetValue(CAPUCProgressProperty, value);
+            }
+        }
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);

@@ -12,14 +12,14 @@ namespace TypeRacers.Client
     {
         TcpClient client;
         NetworkStream stream;
-        private List<string> Opponents { get; set; }
+        private List<Tuple<string, string>> Opponents { get; set; }
 
         private string LocalPlayerProgress { get; set; }
         public string Name { get; set; }
 
         public TypeRacersClient()
         {
-            Opponents = new List<string>();
+            Opponents = new List<Tuple<string, string>>();
         }
         public void SendProgressToServer(string progress)
         {
@@ -38,9 +38,8 @@ namespace TypeRacers.Client
         }
 
         //receiving the opponents and their progress in a List
-        public List<string> GetOpponentsProgress()
+        public List<Tuple<string, string>> GetOpponentsProgress()
         {
-
             //connecting to server
             client = new TcpClient("localhost", 80);
             stream = client.GetStream();
@@ -62,7 +61,14 @@ namespace TypeRacers.Client
                 client.Close();
                 var currentOpponents = text.Split('/').ToList();
                 currentOpponents.Remove("#");
-                return currentOpponents;
+                List<Tuple<string, string>> opponents = new List<Tuple<string, string>>();
+                foreach (var v in currentOpponents)
+                {
+                    var nameAndProgress = v.Split(':');
+                    opponents.Add(new Tuple<string, string>(nameAndProgress[0], nameAndProgress[1]));
+                }
+
+                return opponents;
             }
             catch (Exception)
             {

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Timers;
 using System.Windows;
 using System.Windows.Documents;
@@ -57,7 +59,8 @@ namespace TypeRacers.ViewModel
                 new Run() {Text = TextToType.Substring(spaceIndex + CurrentWordLength) }
                 };
         }
-        public List<string> Opponents { get; set; }
+        public IEnumerable<Tuple<string, string>> Opponents { get; private set; }
+
         public int OpponentsCount { get; set; }
         public bool IsValid
         {
@@ -153,6 +156,8 @@ namespace TypeRacers.ViewModel
         public void ReportProgress()
         {
             Model.Model.ReportProgress(Progress);
+            Opponents = Model.Model.GetOpponents();
+            TriggerPropertyChanged(nameof(Opponents));
         }
         public void CheckUserInput(string value)
         {
@@ -223,7 +228,7 @@ namespace TypeRacers.ViewModel
         private void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
             timer.Stop();
-            if (elapsedTime > totalTime)
+            if (elapsedTime > totalTime || OpponentsCount == 3)
             {
                 //enabling input
                 CanUserType = true;
@@ -236,7 +241,8 @@ namespace TypeRacers.ViewModel
                 // here I am performing the task
                 //getting the opponents each second for 30 seconds from server through Client
                 Opponents = Model.Model.GetOpponents();
-                OpponentsCount = Opponents.Count + 1; // +1 because we start at 0 index
+                TriggerPropertyChanged(nameof(Opponents));
+                OpponentsCount = Opponents.Count() + 1; // +1 because we start at 0 index
                 //updating the properties each second
                 TriggerPropertyChanged(nameof(Opponents));
                 TriggerPropertyChanged(nameof(OpponentsCount));

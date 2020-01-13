@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TypeRacers.Client;
 
 namespace TypeRacers
@@ -12,7 +13,7 @@ namespace TypeRacers
             client = new TypeRacersClient();
         }
 
-        public List<string> GetOpponents()
+        public List<Tuple<string, string>> GetOpponents()
         {
             return client.GetOpponentsProgress();
         }
