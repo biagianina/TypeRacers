@@ -26,6 +26,7 @@
                                              CAPUCSliderStyle="{StaticResource OrangeSliderStyle}" />
 
             <local:ReadAndTypeUserControl Margin="20"
+                                          RATUCCanType="True"
                                           RATUCInlines="{Binding Inlines}"
                                           RATUCAllTextTyped="{Binding AllTextTyped}"
                                           RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"

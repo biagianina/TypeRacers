@@ -65,6 +65,7 @@
                                               VerticalAlignment="Center"
                                               Margin="20"
                                               RATUCInlines="{Binding Inlines}"
+                                              RATUCCanType="{Binding CanUserType}"
                                               RATUCAllTextTyped="{Binding AllTextTyped}"
                                               RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                               RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
