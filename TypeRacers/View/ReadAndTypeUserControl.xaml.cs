@@ -85,6 +85,17 @@ namespace TypeRacers.View
             }
         }
 
+        public readonly static DependencyProperty RATUCCanTypeProperty = DependencyProperty.Register("RATUCCanType", typeof(bool), typeof(ReadAndTypeUserControl));
+
+        public bool RATUCCanType
+        {
+            get { return (bool)GetValue(RATUCCanTypeProperty); }
+            set
+            {
+                SetValue(RATUCCanTypeProperty, value);
+            }
+        }
+
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {

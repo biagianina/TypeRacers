@@ -59,6 +59,7 @@
         <TextBox
             Margin="0,0,0,50"
             Foreground="White"
+            IsEnabled="{Binding RATUCCanType}"
             IsReadOnly="{Binding RATUCAllTextTyped}"
             Text="{Binding RATUCCurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
             Background="{Binding RATUCBackgroundColor, UpdateSourceTrigger=PropertyChanged}" />
