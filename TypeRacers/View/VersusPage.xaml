@@ -16,12 +16,23 @@
             x:Key="VersusVM"/>
     </Page.Resources>
 
-    <Grid
-        DataContext="{StaticResource VersusVM}">
-
-        <StackPanel Width="auto"
+    <Grid Width="auto"
+          Height="auto"
+          DataContext="{StaticResource VersusVM}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0"
+                    VerticalAlignment="Center"
+                    Width="auto"
                     Height="auto">
-            <StackPanel Width="auto"
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Width="auto"
                         Height="auto"
                         Orientation="Vertical"
                 HorizontalAlignment="Right"
@@ -43,7 +54,7 @@
                             StringFormat='Number of players: {0}'}" />
             </StackPanel>
 
-            <StackPanel VerticalAlignment="Bottom">
+            <StackPanel Grid.Row="2" VerticalAlignment="Center">
                 <local:CarAndProgressUserControl CAPUCProgress="{Binding Progress}"
                                                  CAPUCSliderStyle="{StaticResource GreenSliderStyle}" />
 
@@ -59,10 +70,10 @@
 
 
             </StackPanel>
-            <StackPanel>
+        </Grid>
+        <Grid Grid.Row="1" VerticalAlignment="Center">
                 <local:ReadAndTypeUserControl Width="auto"
                                               Height="auto"
-                                              VerticalAlignment="Center"
                                               Margin="20"
                                               RATUCInlines="{Binding Inlines}"
                                               RATUCCanType="{Binding CanUserType}"
@@ -70,11 +81,7 @@
                                               RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                               RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
                                               RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}">
-
                 </local:ReadAndTypeUserControl>
-
-            </StackPanel>
-        </StackPanel>
- 
+            </Grid>
     </Grid>
 </Page>

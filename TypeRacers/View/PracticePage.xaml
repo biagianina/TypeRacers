@@ -18,23 +18,27 @@
             x:Key="PracticeVM" />
     </Page.Resources>
     <Grid DataContext="{StaticResource PracticeVM}">
-
-        <StackPanel
-            VerticalAlignment="Bottom">
-
-            <local:CarAndProgressUserControl CAPUCProgress="{Binding Progress}"
+      
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20" />
+               <RowDefinition Height="*" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="20" />
+            </Grid.RowDefinitions>
+            <local:CarAndProgressUserControl Grid.Row="1"
+                                             VerticalAlignment="Center"
+                                             CAPUCProgress="{Binding Progress}"
                                              CAPUCSliderStyle="{StaticResource OrangeSliderStyle}" />
 
-            <local:ReadAndTypeUserControl Margin="20"
+            <local:ReadAndTypeUserControl Grid.Row="3"
+                                          Margin="20"
                                           RATUCCanType="True"
                                           RATUCInlines="{Binding Inlines}"
                                           RATUCAllTextTyped="{Binding AllTextTyped}"
                                           RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                           RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
                                           RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}"
-                                          VerticalContentAlignment="Bottom" />
-        </StackPanel>
-      
-    </Grid>
-
+                                          VerticalContentAlignment="Top" />
+        </Grid>
 </Page>

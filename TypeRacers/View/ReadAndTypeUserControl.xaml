@@ -6,64 +6,61 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:TypeRacers.View"
     xmlns:vm="clr-namespace:TypeRacers.ViewModel"
-    mc:Ignorable="d"
-    d:DesignHeight="450"
-    d:DesignWidth="800">
+    mc:Ignorable="d">
 
-    <StackPanel
-        DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ReadAndTypeUserControl}}">
+    <Grid VerticalAlignment="Bottom"
+          DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ReadAndTypeUserControl}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
 
-        <TextBlock
-            vm:TextBlockExtensions.BindableInlines="{Binding RATUCInlines}"
-            Margin="0,0,0,50"
-            FontFamily="Arial"
-            Foreground="White"
-            Name="displayText"
-            FontSize="30"
-            TextAlignment="Center"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            TextWrapping="Wrap" />
-        <Popup
-            IsOpen="{Binding RATUCTypingAlert, UpdateSourceTrigger=PropertyChanged}"
-            Width="auto"
-            Height="auto"
-            PlacementTarget="{Binding ElementName=displayText}"
-            Placement="Top"
-            AllowsTransparency="True"
-            PopupAnimation="Fade">
-            <Grid
-                Width="200"
-                Height="100"
-                HorizontalAlignment="Right">
+
+
+        <TextBlock vm:TextBlockExtensions.BindableInlines="{Binding RATUCInlines}"
+                   Grid.Row="0"
+                   FontFamily="Arial"
+                   Foreground="White"
+                   Name="displayText"
+                   FontSize="30"
+                   TextAlignment="Center"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   TextWrapping="Wrap" />
+        <Popup IsOpen="{Binding RATUCTypingAlert, UpdateSourceTrigger=PropertyChanged}"
+               Width="auto"
+               Height="auto"
+               PlacementTarget="{Binding ElementName=displayText}"
+               Placement="Top"
+               AllowsTransparency="True"
+               PopupAnimation="Fade">
+            <Grid Width="auto"
+                  Height="auto"
+                  HorizontalAlignment="Right">
                 <Grid.RowDefinitions>
                     <RowDefinition />
-                    <RowDefinition
-                        Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Grid
-                    Background="Aquamarine">
-                    <Label
-                        Content="Check your spelling!"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
+                <Grid Background="Aquamarine">
+                    <Label Content="Check your spelling!"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
                 </Grid>
-                <Polygon
-                    Grid.Row="1"
-                    Points="0,0 15,0, 0,30"
-                    Stroke="Aquamarine"
-                    Fill="Aquamarine" />
+                <Polygon Grid.Row="1"
+                         Points="0,0 15,0, 0,30"
+                         Stroke="Aquamarine"
+                         Fill="Aquamarine" />
             </Grid>
-
         </Popup>
-        <TextBox
-            Margin="0,0,0,50"
-            Foreground="White"
-            IsEnabled="{Binding RATUCCanType}"
-            IsReadOnly="{Binding RATUCAllTextTyped}"
-            Text="{Binding RATUCCurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-            Background="{Binding RATUCBackgroundColor, UpdateSourceTrigger=PropertyChanged}" />
-
-    </StackPanel>
-
+        
+        <TextBox Grid.Row="2"
+                 VerticalAlignment="Bottom"
+                 Foreground="White"
+                 IsEnabled="{Binding RATUCCanType}"
+                 IsReadOnly="{Binding RATUCAllTextTyped}"
+                 Text="{Binding RATUCCurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                 Background="{Binding RATUCBackgroundColor, UpdateSourceTrigger=PropertyChanged}" />
+    </Grid>
 </UserControl>
