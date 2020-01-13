@@ -26,14 +26,14 @@ namespace TypeRacers.View
         }
 
         //dp for typed text properties
-        public readonly static DependencyProperty RATUCInlinesPropery = DependencyProperty.Register("RATUCInlines", typeof(IEnumerable<Inline>), typeof(ReadAndTypeUserControl));
+        public readonly static DependencyProperty RATUCInlinesProperty = DependencyProperty.Register("RATUCInlines", typeof(IEnumerable<Inline>), typeof(ReadAndTypeUserControl));
 
         public IEnumerable<Inline> RATUCInlines
         {
-            get { return (IEnumerable<Inline>)GetValue(RATUCInlinesPropery); }
+            get { return (IEnumerable<Inline>)GetValue(RATUCInlinesProperty); }
             set
             {
-                SetValue(RATUCInlinesPropery, value);
+                SetValue(RATUCInlinesProperty, value);
             }
         }
 

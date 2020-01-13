@@ -41,5 +41,15 @@ namespace TypeRacers.View
             base.OnPropertyChanged(e);
         }
 
+        public static DependencyProperty CAPUCSliderStyleProperty = DependencyProperty.Register("CAPUCSliderStyle", typeof(Style), typeof(CarAndProgressUserControl));
+
+        public Style CAPUCSliderStyle
+        {
+            get { return (Style)GetValue(CAPUCSliderStyleProperty); }
+            set
+            {
+                SetValue(CAPUCSliderStyleProperty, value);
+            }
+        }
     }
 }
