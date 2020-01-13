@@ -43,6 +43,9 @@ namespace TypeRacers.ViewModel
             timer = new Timer(interval);
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Enabled = true;
+
+            //disabling input
+            CanUserType = false;
         }
 
      
@@ -73,6 +76,7 @@ namespace TypeRacers.ViewModel
             }
         }
 
+        public bool CanUserType { get; set; }
         public int Progress
         {
             get
@@ -223,6 +227,9 @@ namespace TypeRacers.ViewModel
             timer.Stop();
             if (elapsedTime > totalTime)
             {
+                //enabling input
+                CanUserType = true;
+                TriggerPropertyChanged(nameof(CanUserType));
                 //we stop the timer after 30 seconds
                 return;
             }
