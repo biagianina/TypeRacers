@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Timers;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using TypeRacers.Model;
 
 namespace TypeRacers.ViewModel
 {
     class VersusViewModel : ITextToType, INotifyPropertyChanged
     {
+
         string textToType;
         InputCharacterValidation userInputValidator;
         bool isValid;
@@ -19,14 +21,35 @@ namespace TypeRacers.ViewModel
         int incorrectChars;
         int currentWordIndex;
         private bool alert;
+        Timer timer;
+        static int interval = 1000; // 1 second
+        static int totalTime = 30000; // 30 seconds or 30000 ms
+        static int elapsedTime = 0; // Elapsed time in ms
+
 
         public VersusViewModel()
         {
             TextToType = Model.Model.GetGeneratedTextToTypeFromServer();
             userInputValidator = new InputCharacterValidation(TextToType);
+
+            //first time getting opponents
+            Opponents = Model.Model.GetOpponents();
+            OpponentsCount = 1;
+            //we now start searching opponents for 30 seconds
+            Model.Model.GetOpponents();
+
+            //searching for opponents after the message has been recieved each 30 seconds with the timer
+            //changes are performed in OnTimedEvent
+            timer = new Timer(interval);
+            timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+            timer.Enabled = true;
+
+            //disabling input
+            CanUserType = false;
         }
 
-
+     
+      
         public IEnumerable<Inline> Inlines
         {
             get => new[] { new Run() { Text = TextToType.Substring(0, spaceIndex) , Foreground = Brushes.Gold},
@@ -36,7 +59,9 @@ namespace TypeRacers.ViewModel
                 new Run() {Text = TextToType.Substring(spaceIndex + CurrentWordLength) }
                 };
         }
+        public IEnumerable<Tuple<string, string>> Opponents { get; private set; }
 
+        public int OpponentsCount { get; set; }
         public bool IsValid
         {
             get => isValid;
@@ -51,6 +76,8 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(InputBackgroundColor));
             }
         }
+
+        public bool CanUserType { get; set; }
         public int Progress
         {
             get
@@ -68,7 +95,7 @@ namespace TypeRacers.ViewModel
             get => TextToType.Split()[currentWordIndex].Length;//length of current word
         }
         public bool AllTextTyped { get; set; }
-        //determines if a popup alert should apear, bindedin open property of popup xaml
+        //determines if a popup alert should apear, binded in open property of popup xaml
         public bool TypingAlert
         {
             get => alert;
@@ -129,6 +156,8 @@ namespace TypeRacers.ViewModel
         public void ReportProgress()
         {
             Model.Model.ReportProgress(Progress);
+            Opponents = Model.Model.GetOpponents();
+            TriggerPropertyChanged(nameof(Opponents));
         }
         public void CheckUserInput(string value)
         {
@@ -194,6 +223,34 @@ namespace TypeRacers.ViewModel
             }
 
             TriggerPropertyChanged(nameof(Inlines)); //new Inlines formed at each char in input
+        }
+
+        private void OnTimedEvent(object sender, ElapsedEventArgs e)
+        {
+            timer.Stop();
+            if (elapsedTime > totalTime || OpponentsCount == 3)
+            {
+                //enabling input
+                CanUserType = true;
+                TriggerPropertyChanged(nameof(CanUserType));
+                //we stop the timer after 30 seconds
+                return;
+            }
+            else
+            {
+                // here I am performing the task
+                //getting the opponents each second for 30 seconds from server through Client
+                Opponents = Model.Model.GetOpponents();
+                TriggerPropertyChanged(nameof(Opponents));
+                OpponentsCount = Opponents.Count() + 1; // +1 because we start at 0 index
+                //updating the properties each second
+                TriggerPropertyChanged(nameof(Opponents));
+                TriggerPropertyChanged(nameof(OpponentsCount));
+                timer.Enabled = true;
+            }
+
+            elapsedTime += interval;
+
         }
 
         //INotifyPropertyChanged code - basic 

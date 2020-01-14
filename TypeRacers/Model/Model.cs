@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using TypeRacers.Client;
 
@@ -7,6 +8,11 @@ namespace TypeRacers.Model
     public static class Model
     {
         readonly static NetworkHandler networkHandler = new NetworkHandler();
+
+        public static List<Tuple<string, string>> GetOpponents()
+        {
+            return networkHandler.GetOpponents();
+        }
 
         public static void ReportProgress(int message)
         {

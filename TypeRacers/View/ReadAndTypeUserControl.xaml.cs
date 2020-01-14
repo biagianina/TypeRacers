@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace TypeRacers.View
 {
@@ -26,14 +16,14 @@ namespace TypeRacers.View
         }
 
         //dp for typed text properties
-        public readonly static DependencyProperty RATUCInlinesPropery = DependencyProperty.Register("RATUCInlines", typeof(IEnumerable<Inline>), typeof(ReadAndTypeUserControl));
+        public readonly static DependencyProperty RATUCInlinesProperty = DependencyProperty.Register("RATUCInlines", typeof(IEnumerable<Inline>), typeof(ReadAndTypeUserControl));
 
         public IEnumerable<Inline> RATUCInlines
         {
-            get { return (IEnumerable<Inline>)GetValue(RATUCInlinesPropery); }
+            get { return (IEnumerable<Inline>)GetValue(RATUCInlinesProperty); }
             set
             {
-                SetValue(RATUCInlinesPropery, value);
+                SetValue(RATUCInlinesProperty, value);
             }
         }
 
@@ -85,18 +75,17 @@ namespace TypeRacers.View
             }
         }
 
+        public readonly static DependencyProperty RATUCCanTypeProperty = DependencyProperty.Register("RATUCCanType", typeof(bool), typeof(ReadAndTypeUserControl));
 
-
-        public static DependencyProperty RATUCProgressProperty = DependencyProperty.Register("RATUCProgress", typeof(int), typeof(ReadAndTypeUserControl));
-
-        public int RATUCProgress
+        public bool RATUCCanType
         {
-            get { return (int)GetValue(RATUCProgressProperty); }
+            get { return (bool)GetValue(RATUCCanTypeProperty); }
             set
             {
-                SetValue(RATUCProgressProperty, value);
+                SetValue(RATUCCanTypeProperty, value);
             }
         }
+
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {

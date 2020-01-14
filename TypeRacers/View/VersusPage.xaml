@@ -8,29 +8,83 @@
     xmlns:local="clr-namespace:TypeRacers.View"
     xmlns:vm="clr-namespace:TypeRacers.ViewModel"
     mc:Ignorable="d"
-    Background="#004c99"
     Title="Versus"
-    d:DesignHeight="450"
-    d:DesignWidth="800">
-    
+    Style="{StaticResource AppStyle}">
+
     <Page.Resources>
         <vm:VersusViewModel
-            x:Key="VersusVM" />
+            x:Key="VersusVM"/>
     </Page.Resources>
 
-    <Grid 
-        DataContext="{StaticResource VersusVM}">
-        <local:ReadAndTypeUserControl
-            Margin="30"
-            RATUCInlines="{Binding Inlines}"
-            RATUCAllTextTyped="{Binding AllTextTyped}"
-            RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-            RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
-            RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}"
-            RATUCProgress="{Binding Progress}"
-            VerticalContentAlignment="Bottom">
+    <Grid Width="auto"
+          Height="auto"
+          DataContext="{StaticResource VersusVM}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0"
+                    VerticalAlignment="Center"
+                    Width="auto"
+                    Height="auto">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Width="auto"
+                        Height="auto"
+                        Orientation="Vertical"
+                HorizontalAlignment="Right"
+                Margin="10">
+                <TextBlock
+                    FontFamily="Times New Roman"
+                    FontSize="12"
+                    Foreground="White"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Text="Searching for opponents...." />
+                <TextBlock
+                    FontFamily="Times New Roman"
+                    FontSize="12"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Center"
+                    Foreground="White"
+                    Text="{Binding OpponentsCount, UpdateSourceTrigger=PropertyChanged,
+                            StringFormat='Number of players: {0}'}" />
+            </StackPanel>
 
-        </local:ReadAndTypeUserControl>
+            <StackPanel Grid.Row="2" VerticalAlignment="Center">
+                <local:CarAndProgressUserControl CAPUCProgress="{Binding Progress}"
+                                                 CAPUCName="You"
+                                                 CAPUCSliderStyle="{StaticResource GreenSliderStyle}" />
 
+
+
+                <local:CarAndProgressUserControl CAPUCName="{Binding Opponents[0].Item1, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCProgress="{Binding Opponents[0].Item2, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCSliderStyle="{StaticResource OrangeSliderStyle}" />
+
+
+
+                <local:CarAndProgressUserControl  CAPUCName="{Binding Opponents[1].Item1,  UpdateSourceTrigger=PropertyChanged}"
+                                                  CAPUCProgress="{Binding Opponents[1].Item2,  UpdateSourceTrigger=PropertyChanged}"
+                                                  CAPUCSliderStyle="{StaticResource PinkSliderStyle}" />
+
+
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1" VerticalAlignment="Center">
+                <local:ReadAndTypeUserControl Width="auto"
+                                              Height="auto"
+                                              Margin="20"
+                                              RATUCInlines="{Binding Inlines}"
+                                              RATUCCanType="{Binding CanUserType}"
+                                              RATUCAllTextTyped="{Binding AllTextTyped}"
+                                              RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                              RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
+                                              RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}">
+                </local:ReadAndTypeUserControl>
+            </Grid>
     </Grid>
 </Page>

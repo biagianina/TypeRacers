@@ -23,5 +23,6 @@ namespace TypeRacers.View
         {
             InitializeComponent();
         }
+
     }
 }
