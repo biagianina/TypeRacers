@@ -74,7 +74,8 @@
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1" VerticalAlignment="Center">
-                <local:ReadAndTypeUserControl Width="auto"
+                <local:ReadAndTypeUserControl x:Name="UserCTRL"
+                                              Width="auto"
                                               Height="auto"
                                               Margin="20"
                                               RATUCInlines="{Binding Inlines}"
@@ -85,29 +86,34 @@
                                               RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}">
                 </local:ReadAndTypeUserControl>
             </Grid>
-        <Popup IsOpen="{Binding CanUserType, UpdateSourceTrigger=PropertyChanged}"
-               Width="auto"
-               Height="auto"
-               PlacementTarget="{Binding CurrentInputText}"
+        <Popup Name="GetReadyPopUp"
+               IsOpen="{Binding CanUserType, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+               Opened="GetReadyPopUp_Opened"
+               StaysOpen="False"
                Placement="Center"
-               AllowsTransparency="True"
-               PopupAnimation="Fade">
+               VerticalAlignment="Center"
+               HorizontalAlignment="Center"
+               AllowsTransparency="True">
+
             <Grid Width="auto"
-                  Height="auto"
-                  HorizontalAlignment="Right">
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid Background="Aquamarine">
+                  Height="auto"                  >
+                <StackPanel Background="SkyBlue">
                     <Label Content="GET READY TO START!"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center" />
-                </Grid>
-                <Polygon Grid.Row="1"
-                         Points="0,0 15,0, 0,30"
-                         Stroke="Aquamarine"
-                         Fill="Aquamarine" />
+                    <Image Width="80"
+                           Height="70"
+                           Margin="2"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Source="pack://application:,,,/TypeRacers;component/Images/start.png" />
+                    <Label Name="Timer"
+                           Margin="5"
+                           FontSize="20"
+                           Content="5"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+                </StackPanel>
             </Grid>
         </Popup>
     </Grid>

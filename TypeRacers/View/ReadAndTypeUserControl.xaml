@@ -55,10 +55,11 @@
             </Grid>
         </Popup>
         
-        <TextBox Grid.Row="2"
+        <TextBox Name="inputTextbox"
+                 Grid.Row="2"
                  VerticalAlignment="Bottom"
                  Foreground="White"
-                 IsEnabled="{Binding RATUCCanType}"
+                 IsEnabled="False"
                  IsReadOnly="{Binding RATUCAllTextTyped}"
                  Text="{Binding RATUCCurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                  Background="{Binding RATUCBackgroundColor, UpdateSourceTrigger=PropertyChanged}" />
