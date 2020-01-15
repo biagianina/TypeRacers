@@ -30,7 +30,8 @@ namespace TypeRacers.Server
         {
 
             ip = Dns.GetHostEntry("localhost").AddressList[0];
-            server = new TcpListener(ip, 80);
+            server = new TcpListener(IPAddress.IPv6Any, 80);
+            server.Server.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
             players = new Hashtable();
 
             try
