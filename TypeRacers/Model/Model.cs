@@ -13,7 +13,10 @@ namespace TypeRacers.Model
         {
             return networkHandler.GetOpponents();
         }
-
+        public static void SubscribeToSearchingOpponents(Action<List<Tuple<string, string>>> updateFunction)
+        {
+            networkHandler.SubscribeToSearchingOpponentsTimer(updateFunction);
+        }
         public static void ReportProgress(int message)
         {
             networkHandler.SendProgressToServer(message.ToString());
