@@ -116,7 +116,7 @@ namespace TypeRacers.Client
                 foreach (var v in currentOpponents)
                 {
                     var nameAndProgress = v.Split(':');
-                    opponents.Add(new Tuple<string, string>(nameAndProgress[0], nameAndProgress[1]));
+                    opponents.Add(new Tuple<string, string>(nameAndProgress.FirstOrDefault(), nameAndProgress.LastOrDefault()));
                 }
 
                 return opponents;
