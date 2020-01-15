@@ -215,6 +215,7 @@ namespace TypeRacers.ViewModel
         {
             Opponents = updatedOpponents;
             OpponentsCount = Opponents.Count() + 1;
+            TriggerPropertyChanged(nameof(OpponentsCount));
             if (OpponentsCount == 3)
             {
                 //enabling input
@@ -224,7 +225,7 @@ namespace TypeRacers.ViewModel
                 return;
             }
             TriggerPropertyChanged(nameof(Opponents));
-            TriggerPropertyChanged(nameof(OpponentsCount));
+
         }
         //INotifyPropertyChanged code - basic 
         public event PropertyChangedEventHandler PropertyChanged;

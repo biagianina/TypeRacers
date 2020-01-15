@@ -19,7 +19,6 @@ namespace TypeRacers.Client
         List<Tuple<string, string>> opponents;
         public delegate void TimerTickHandler(List<Tuple<string, string>> newOpponents);
         public event TimerTickHandler OpponentsChanged;
-
         public TypeRacersClient()
         {
             opponents = new List<Tuple<string, string>>();
@@ -35,6 +34,7 @@ namespace TypeRacers.Client
                 OnOpponentsChanged(opponents);
             }
         }
+
         private string LocalPlayerProgress { get; set; }
         public string Name { get; set; }
         public void StartTimerForSearchingOpponents()
@@ -116,7 +116,7 @@ namespace TypeRacers.Client
                 foreach (var v in currentOpponents)
                 {
                     var nameAndProgress = v.Split(':');
-                    opponents.Add(new Tuple<string, string>(nameAndProgress[0], nameAndProgress[1]));
+                    opponents.Add(new Tuple<string, string>(nameAndProgress.FirstOrDefault(), nameAndProgress.LastOrDefault()));
                 }
 
                 return opponents;
