@@ -5,6 +5,7 @@ using TypeRacers.Client;
 
 namespace TypeRacers.Model
 {
+    //to remove static methods
     public static class Model
     {
         readonly static NetworkHandler networkHandler = new NetworkHandler();
