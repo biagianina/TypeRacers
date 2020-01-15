@@ -22,18 +22,19 @@ namespace TypeRacers.ViewModel
         int currentWordIndex;
         private bool alert;
         static int elapsedTime = 0; // Elapsed time in ms
-
+        Model.Model model;
 
         public VersusViewModel()
         {
-            TextToType = Model.Model.GetGeneratedTextToTypeFromServer();
+            model = new Model.Model();
+            TextToType = model.GetGeneratedTextToTypeFromServer();
             userInputValidator = new InputCharacterValidation(TextToType);
 
             // first time getting opponents
-            Opponents = Model.Model.GetOpponents();
+            Opponents = model.GetOpponents();
             //start searching for 30 seconds
-            Model.Model.StartSearchingOpponents();
-            Model.Model.SubscribeToSearchingOpponents(UpdateOpponents);
+            model.StartSearchingOpponents();
+            model.SubscribeToSearchingOpponents(UpdateOpponents);
             CanUserType = false;
         }
 
@@ -147,8 +148,8 @@ namespace TypeRacers.ViewModel
         }
         public void ReportProgress()
         {
-            Model.Model.ReportProgress(Progress);
-            Opponents = Model.Model.GetOpponents();
+            model.ReportProgress(Progress);
+            Opponents = model.GetOpponents();
             TriggerPropertyChanged(nameof(Opponents));
         }
         public void CheckUserInput(string value)

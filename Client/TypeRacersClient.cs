@@ -19,10 +19,8 @@ namespace TypeRacers.Client
         List<Tuple<string, string>> opponents;
         public delegate void TimerTickHandler(List<Tuple<string, string>> newOpponents);
         public event TimerTickHandler OpponentsChanged;
-        public TypeRacersClient()
+        static TypeRacersClient()
         {
-            opponents = new List<Tuple<string, string>>();
-       
         }
 
         private List<Tuple<string, string>> Opponents
@@ -36,13 +34,18 @@ namespace TypeRacers.Client
         }
 
         private string LocalPlayerProgress { get; set; }
-        public string Name { get; set; }
+        public static string Name { get; set; }
         public void StartTimerForSearchingOpponents()
         {
             timer = new Timer(interval);
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Enabled = true;
 
+        }
+
+        public void NameClient(string username)
+        {
+            Name = username;
         }
 
         void OnTimedEvent(object sender, ElapsedEventArgs e)

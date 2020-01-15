@@ -5,33 +5,32 @@ using TypeRacers.Client;
 
 namespace TypeRacers.Model
 {
-    //to remove static methods
-    public static class Model
+    public class Model
     {
         readonly static NetworkHandler networkHandler = new NetworkHandler();
 
-        public static List<Tuple<string, string>> GetOpponents()
+        public List<Tuple<string, string>> GetOpponents()
         {
             return networkHandler.GetOpponents();
         }
-        public static void StartSearchingOpponents()
+        public void StartSearchingOpponents()
         {
             networkHandler.StartSearchingOpponents();
         }
-        public static void SubscribeToSearchingOpponents(Action<List<Tuple<string, string>>> updateFunction)
+        public void SubscribeToSearchingOpponents(Action<List<Tuple<string, string>>> updateFunction)
         {
             networkHandler.SubscribeToSearchingOpponentsTimer(updateFunction);
         }
-        public static void ReportProgress(int message)
+        public void ReportProgress(int message)
         {
             networkHandler.SendProgressToServer(message.ToString());
         }
-        public static string GetGeneratedTextToTypeLocally()
+        public string GetGeneratedTextToTypeLocally()
         {
             return LocalGeneratedText.GetText();
         }
 
-        public static string GetGeneratedTextToTypeFromServer()
+        public string GetGeneratedTextToTypeFromServer()
         {
             return networkHandler.GetTextFromServer();
         }
