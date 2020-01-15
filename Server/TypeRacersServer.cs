@@ -57,7 +57,7 @@ namespace TypeRacers.Server
                     //creates the stream
                     networkStream = client.GetStream();
                     //reads from stream
-                    byte[] buffer = new byte[client.ReceiveBufferSize];
+                    byte[] buffer = new byte[1024];
                     int bytesRead = networkStream.Read(buffer, 0, buffer.Length);
                     string dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
                     //solution to get get complete messages

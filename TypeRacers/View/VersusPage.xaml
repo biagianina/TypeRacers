@@ -16,8 +16,7 @@
             x:Key="VersusVM"/>
     </Page.Resources>
 
-    <Grid Width="auto"
-          Height="auto"
+    <Grid Height="auto"
           DataContext="{StaticResource VersusVM}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -86,5 +85,30 @@
                                               RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}">
                 </local:ReadAndTypeUserControl>
             </Grid>
+        <Popup IsOpen="{Binding CanUserType, UpdateSourceTrigger=PropertyChanged}"
+               Width="auto"
+               Height="auto"
+               PlacementTarget="{Binding CurrentInputText}"
+               Placement="Center"
+               AllowsTransparency="True"
+               PopupAnimation="Fade">
+            <Grid Width="auto"
+                  Height="auto"
+                  HorizontalAlignment="Right">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid Background="Aquamarine">
+                    <Label Content="GET READY TO START!"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+                </Grid>
+                <Polygon Grid.Row="1"
+                         Points="0,0 15,0, 0,30"
+                         Stroke="Aquamarine"
+                         Fill="Aquamarine" />
+            </Grid>
+        </Popup>
     </Grid>
 </Page>
