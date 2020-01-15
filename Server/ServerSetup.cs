@@ -9,7 +9,6 @@ namespace TypeRacers.Server
     class ServerSetup
     {
         private bool newClient;
-        private IPAddress ip;
         private TcpListener server;
         private Hashtable players;
         private NetworkStream networkStream;
@@ -19,7 +18,6 @@ namespace TypeRacers.Server
 
         public void Setup()
         {
-            ip = Dns.GetHostEntry("localhost").AddressList[0];
             server = new TcpListener(IPAddress.IPv6Any, 80);
             server.Server.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
             players = new Hashtable();
@@ -59,9 +57,11 @@ namespace TypeRacers.Server
                     }
 
                     CheckUsername(dataReceived, players);
-                    //this bool is set in order to do the text to type sending only once
-
-                    client.Close();
+                    //check if reading from the stream has been done on the other end in order to close client
+                    if (networkStream.DataAvailable)
+                    { 
+                        client.Close(); 
+                    }
                     Console.WriteLine("info: " + dataReceived);
                     Console.WriteLine("Disconnected client");
                 }

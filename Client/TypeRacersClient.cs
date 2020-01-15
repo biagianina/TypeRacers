@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -12,25 +11,18 @@ namespace TypeRacers.Client
     {
         TcpClient client;
         NetworkStream stream;
-        static int interval = 1000; // 1 second
-        static int totalTime = 30000; // 30 seconds or 30000 ms
+        static readonly int interval = 1000; // 1 second
+        static readonly int totalTime = 30000; // 30 seconds or 30000 ms
         static int elapsedTime = 0; // Elapsed time in ms
         Timer timer;
         List<Tuple<string, string>> opponents;
         public delegate void TimerTickHandler(List<Tuple<string, string>> newOpponents);
         public event TimerTickHandler OpponentsChanged;
-        static TypeRacersClient()
+      
+        private void SetOpponents(List<Tuple<string, string>> value)
         {
-        }
-
-        private List<Tuple<string, string>> Opponents
-        {
-            get => opponents;
-            set
-            {
-                opponents = value;
-                OnOpponentsChanged(opponents);
-            }
+            opponents = value;
+            OnOpponentsChanged(opponents);
         }
 
         private string LocalPlayerProgress { get; set; }
@@ -60,12 +52,11 @@ namespace TypeRacers.Client
             {
                 // here I am performing the task
                 //getting the opponents each second for 30 seconds from server through Client
-                Opponents = GetOpponentsProgress();
+                SetOpponents(GetOpponentsProgress());
                 timer.Enabled = true;
             }
 
             elapsedTime += interval;
-    
         }
 
         protected void OnOpponentsChanged(List<Tuple<string, string>> newOpponents)
@@ -78,7 +69,6 @@ namespace TypeRacers.Client
         public void SendProgressToServer(string progress)
         {
             //connecting to server
-
             client = new TcpClient("localhost", 80);
             stream = client.GetStream();
 
@@ -87,7 +77,7 @@ namespace TypeRacers.Client
             //writing the progress to stream
             byte[] bytesToSend = Encoding.ASCII.GetBytes(LocalPlayerProgress + "$" + Name + "#");
             stream.Write(bytesToSend, 0, bytesToSend.Length);
-            Opponents = GetOpponentsProgress();
+            SetOpponents(GetOpponentsProgress());
             stream.Flush();
         }
 
@@ -112,7 +102,7 @@ namespace TypeRacers.Client
                     read = stream.Read(inStream, 0, inStream.Length);
                     text += Encoding.ASCII.GetString(inStream, text.Length, read);
                 }
-                client.Close();
+
                 var currentOpponents = text.Split('/').ToList();
                 currentOpponents.Remove("#");
                 List<Tuple<string, string>> opponents = new List<Tuple<string, string>>();
