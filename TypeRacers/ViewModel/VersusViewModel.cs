@@ -21,6 +21,8 @@ namespace TypeRacers.ViewModel
         int incorrectChars;
         int currentWordIndex;
         private bool alert;
+        static int elapsedTime = 0; // Elapsed time in ms
+
 
         public VersusViewModel()
         {
@@ -30,6 +32,7 @@ namespace TypeRacers.ViewModel
             // first time getting opponents
             Opponents = Model.Model.GetOpponents();
             //start searching for 30 seconds
+            Model.Model.StartSearchingOpponents();
             Model.Model.SubscribeToSearchingOpponents(UpdateOpponents);
             CanUserType = false;
         }
@@ -49,6 +52,8 @@ namespace TypeRacers.ViewModel
         public IEnumerable<Tuple<string, string>> Opponents { get; private set; }
 
         public int OpponentsCount { get; set; }
+
+        public int ElapsedTime { get; set; }
         public bool IsValid
         {
             get => isValid;

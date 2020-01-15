@@ -22,7 +22,7 @@ namespace TypeRacers.Client
         public TypeRacersClient()
         {
             opponents = new List<Tuple<string, string>>();
-            StartTimerForSearchingOpponents();
+       
         }
 
         private List<Tuple<string, string>> Opponents
