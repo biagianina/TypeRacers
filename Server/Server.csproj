@@ -68,7 +68,6 @@
   <ItemGroup>
     <Compile Include="InputCharacterValidation.cs" />
     <Compile Include="ServerGeneratedText.cs" />
-    <Compile Include="ServerSetup.cs" />
     <Compile Include="TypeRacersServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

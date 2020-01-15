@@ -16,9 +16,7 @@
             Stroke="#ff9900"
             StrokeDashArray="2 2"
             StrokeThickness="3"
-              X2="{Binding ActualWidth, Mode=OneWay, 
-               RelativeSource={RelativeSource FindAncestor, 
-               AncestorType={x:Type local:CarAndProgressUserControl}}}" />
+            X2="10000" />
 
         <TextBlock Width="auto"
                    Height="auto"
@@ -45,11 +43,9 @@
             Value="{Binding CAPUCProgress, Mode=OneWay}" />
 
         <Line Stroke="#ff9900"
-              StrokeDashArray="2 2"
-              StrokeThickness="3"
-              X2="{Binding ActualWidth, Mode=OneWay, 
-               RelativeSource={RelativeSource FindAncestor, 
-               AncestorType={x:Type local:CarAndProgressUserControl}}}" />
+            StrokeDashArray="2 2"
+            StrokeThickness="3"
+            X2="10000" />
 
     </StackPanel>
 

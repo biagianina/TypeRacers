@@ -18,7 +18,7 @@
                             <Image
                                 Width="100"
                                 Height="100"
-                                Margin="2"
+                                Margin="0"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Source="pack://application:,,,/TypeRacers;component/Images/orange.png" />
@@ -42,7 +42,31 @@
                                     Orientation="Horizontal">
                             <Image Width="100"
                                    Height="100"
-                                   Margin="2"
+                                   Margin="0"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Source="pack://application:,,,/TypeRacers;component/Images/green.png" />
+
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="SliderThumbStyle"
+           TargetType="Thumb">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <StackPanel Width="auto"
+                                    Height="35"
+                                    Background="#00000000"
+                                    Orientation="Horizontal">
+                            <Image Width="100"
+                                   Height="100"
+                                   Margin="0"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    Source="pack://application:,,,/TypeRacers;component/Images/green.png" />
@@ -66,7 +90,7 @@
                                     Orientation="Horizontal">
                             <Image Width="100"
                                    Height="100"
-                                   Margin="2"
+                                   Margin="0"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    Source="pack://application:,,,/TypeRacers;component/Images/pink.png" />

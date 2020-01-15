@@ -221,7 +221,7 @@ namespace TypeRacers.ViewModel
             Opponents = updatedOpponents;
             OpponentsCount = Opponents.Count() + 1;
             TriggerPropertyChanged(nameof(OpponentsCount));
-            if (OpponentsCount > 1)
+            if (OpponentsCount == 3)
             {
                 //enabling input
                 CanUserType = true;
