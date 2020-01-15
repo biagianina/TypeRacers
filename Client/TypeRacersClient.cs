@@ -19,7 +19,6 @@ namespace TypeRacers.Client
         List<Tuple<string, string>> opponents;
         public delegate void TimerTickHandler(List<Tuple<string, string>> newOpponents);
         public event TimerTickHandler OpponentsChanged;
-
         public TypeRacersClient()
         {
             opponents = new List<Tuple<string, string>>();
@@ -35,6 +34,7 @@ namespace TypeRacers.Client
                 OnOpponentsChanged(opponents);
             }
         }
+
         private string LocalPlayerProgress { get; set; }
         public string Name { get; set; }
         public void StartTimerForSearchingOpponents()
