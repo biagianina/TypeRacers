@@ -9,9 +9,9 @@
     xmlns:vm="clr-namespace:TypeRacers.ViewModel"
     mc:Ignorable="d"
     Background="#004c99"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
-    Title="Practice">
+    Title="Practice"
+    MinHeight="450"
+    MinWidth="450">
 
     <Page.Resources>
         <vm:PracticeViewModel

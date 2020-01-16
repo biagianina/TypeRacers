@@ -8,6 +8,6 @@
         SizeToContent="WidthAndHeight">
     <Frame Name="Frame"
            NavigationUIVisibility="Hidden"
-           Height="auto"
-           Width="auto" />
+           HorizontalContentAlignment="Stretch" 
+           VerticalContentAlignment="Stretch"/>
 </Window>

@@ -7,8 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:TypeRacers.View"
     xmlns:vm="clr-namespace:TypeRacers.ViewModel"
-    mc:Ignorable="d"
-    Title="Versus"
+      MinHeight="450"
+      MinWidth="450"
+      Title="Versus"
     Style="{StaticResource AppStyle}">
 
     <Page.Resources>

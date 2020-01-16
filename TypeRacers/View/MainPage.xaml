@@ -7,15 +7,13 @@
       Loaded="OnLoaded"
       mc:Ignorable="d"
       Title="MainPage"
-      Width="auto"
-      Height="auto">
+      MinHeight="450"
+      MinWidth="450">
 
     <Page.Resources>
         <y:MainViewModel x:Key="MainVM" />
     </Page.Resources>
-    <Grid Width="420"
-          Height="490"
-          Background="FloralWhite"
+    <Grid Background="FloralWhite"
           DataContext="{StaticResource MainVM}">
 
         <Grid.ColumnDefinitions>
