@@ -16,9 +16,6 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         
-
-
-
         <TextBlock vm:TextBlockExtensions.BindableInlines="{Binding RATUCInlines}"
                    Grid.Row="0"
                    FontFamily="Arial"
@@ -59,7 +56,7 @@
                  Grid.Row="2"
                  VerticalAlignment="Bottom"
                  Foreground="White"
-                 IsEnabled="False"
+                 IsEnabled="{Binding RATUCCanType}"
                  IsReadOnly="{Binding RATUCAllTextTyped}"
                  Text="{Binding RATUCCurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                  Background="{Binding RATUCBackgroundColor, UpdateSourceTrigger=PropertyChanged}" />
