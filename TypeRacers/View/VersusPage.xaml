@@ -9,6 +9,7 @@
     xmlns:vm="clr-namespace:TypeRacers.ViewModel"
       MinHeight="450"
       MinWidth="450"
+      MaxWidth="800"
       Title="Versus"
     Style="{StaticResource AppStyle}">
 

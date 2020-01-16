@@ -11,7 +11,8 @@
     Background="#004c99"
     Title="Practice"
     MinHeight="450"
-    MinWidth="450">
+    MinWidth="450"
+      MaxWidth="800">
 
     <Page.Resources>
         <vm:PracticeViewModel
