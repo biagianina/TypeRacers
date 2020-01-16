@@ -21,12 +21,24 @@
       
             <Grid.RowDefinitions>
                 <RowDefinition Height="20" />
-               <RowDefinition Height="*" />
-                <RowDefinition Height="20" />
+                <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
                 <RowDefinition Height="20" />
             </Grid.RowDefinitions>
-            <local:CarAndProgressUserControl Grid.Row="1"
+        <Button Name="Back"                
+                Click="Back_click"
+                Grid.Row="1"
+                Margin="10 5" 
+                Width="70"
+                Height="30"
+                HorizontalAlignment="Left"
+                Style="{StaticResource RoundButtonTemplate}"
+                Background="Orange"
+                Content="Back"
+                BorderBrush="Yellow"
+                BorderThickness="5"/>
+        <local:CarAndProgressUserControl Grid.Row="2"
                                              VerticalAlignment="Center"
                                              CAPUCName="Your progress"
                                              CAPUCProgress="{Binding Progress}"

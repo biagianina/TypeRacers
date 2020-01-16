@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
@@ -12,6 +13,11 @@ namespace TypeRacers.View
         public VersusPage()
         {
             InitializeComponent();
+        }
+
+        public void Back_click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new MainPage());
         }
 
         private void GetReadyPopUp_Opened(object sender, EventArgs e)

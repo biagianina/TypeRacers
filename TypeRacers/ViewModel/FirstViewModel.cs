@@ -8,14 +8,6 @@ namespace TypeRacers.ViewModel
 {
     public class FirstViewModel
     {
-        public string Username
-        {
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                    return;
-                Model.Model.NameClient(value);
-            }
-        }
+       
     }
 }
