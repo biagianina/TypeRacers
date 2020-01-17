@@ -16,9 +16,6 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         
-
-
-
         <TextBlock vm:TextBlockExtensions.BindableInlines="{Binding RATUCInlines}"
                    Grid.Row="0"
                    FontFamily="Arial"
@@ -55,7 +52,8 @@
             </Grid>
         </Popup>
         
-        <TextBox Grid.Row="2"
+        <TextBox Name="inputTextbox"
+                 Grid.Row="2"
                  VerticalAlignment="Bottom"
                  Foreground="White"
                  IsEnabled="{Binding RATUCCanType}"

@@ -7,8 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:TypeRacers.View"
     xmlns:vm="clr-namespace:TypeRacers.ViewModel"
-    mc:Ignorable="d"
-    Title="Versus"
+      MinHeight="450"
+      MinWidth="450"
+      MaxWidth="800"
+      Title="Versus"
     Style="{StaticResource AppStyle}">
 
     <Page.Resources>
@@ -26,34 +28,46 @@
                     VerticalAlignment="Center"
                     Width="auto"
                     Height="auto">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
-                <RowDefinition Height="20" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" Width="auto"
-                        Height="auto"
+            <StackPanel Grid.Column="1"
                         Orientation="Vertical"
-                HorizontalAlignment="Right"
-                Margin="10">
-                <TextBlock
-                    FontFamily="Times New Roman"
-                    FontSize="12"
-                    Foreground="White"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    Text="Searching for opponents...." />
-                <TextBlock
-                    FontFamily="Times New Roman"
-                    FontSize="12"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Center"
-                    Foreground="White"
-                    Text="{Binding OpponentsCount, UpdateSourceTrigger=PropertyChanged,
+                            HorizontalAlignment="Right">
+                    <TextBlock FontFamily="Times New Roman"
+                               FontSize="12"
+                               Foreground="White"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Text="Searching for opponents...." />
+                    <TextBlock FontFamily="Times New Roman"
+                               FontSize="12"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Center"
+                               Foreground="White"
+                               Text="{Binding OpponentsCount, UpdateSourceTrigger=PropertyChanged,
                             StringFormat='Number of players: {0}'}" />
-            </StackPanel>
-
-            <StackPanel Grid.Row="2" VerticalAlignment="Center">
+                </StackPanel>
+            <Button Grid.Column="0"
+                    Name="Back"
+                    Click="Back_click"
+                    Margin="10 5"
+                    Width="70"
+                    Height="30"
+                    HorizontalAlignment="Left"
+                    Style="{StaticResource RoundButtonTemplate}"
+                    Background="Orange"
+                    Content="Back"
+                    BorderBrush="Yellow"
+                    BorderThickness="5" />
+            <StackPanel Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        VerticalAlignment="Center">
                 <local:CarAndProgressUserControl CAPUCProgress="{Binding Progress}"
                                                  CAPUCName="You"
                                                  CAPUCSliderStyle="{StaticResource GreenSliderStyle}" />
@@ -73,8 +87,10 @@
 
             </StackPanel>
         </Grid>
-        <Grid Grid.Row="1" VerticalAlignment="Center">
-                <local:ReadAndTypeUserControl Width="auto"
+        <Grid Grid.Row="1"
+              VerticalAlignment="Center">
+                <local:ReadAndTypeUserControl x:Name="UserCTRL"
+                                              Width="auto"
                                               Height="auto"
                                               Margin="20"
                                               RATUCInlines="{Binding Inlines}"
@@ -85,29 +101,34 @@
                                               RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}">
                 </local:ReadAndTypeUserControl>
             </Grid>
-        <Popup IsOpen="{Binding CanUserType, UpdateSourceTrigger=PropertyChanged}"
-               Width="auto"
-               Height="auto"
-               PlacementTarget="{Binding CurrentInputText}"
+        <Popup Name="GetReadyPopUp"
+               IsOpen="{Binding CanUserType, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+               Opened="GetReadyPopUp_Opened"
+               StaysOpen="False"
                Placement="Center"
-               AllowsTransparency="True"
-               PopupAnimation="Fade">
+               VerticalAlignment="Center"
+               HorizontalAlignment="Center"
+               AllowsTransparency="True">
+
             <Grid Width="auto"
-                  Height="auto"
-                  HorizontalAlignment="Right">
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid Background="Aquamarine">
+                  Height="auto"                  >
+                <StackPanel Background="SkyBlue">
                     <Label Content="GET READY TO START!"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center" />
-                </Grid>
-                <Polygon Grid.Row="1"
-                         Points="0,0 15,0, 0,30"
-                         Stroke="Aquamarine"
-                         Fill="Aquamarine" />
+                    <Image Width="80"
+                           Height="70"
+                           Margin="2"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Source="pack://application:,,,/TypeRacers;component/Images/start.png" />
+                    <Label Name="Timer"
+                           Margin="5"
+                           FontSize="20"
+                           Content="5"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+                </StackPanel>
             </Grid>
         </Popup>
     </Grid>

@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace TypeRacers.View
 {
@@ -24,5 +15,39 @@ namespace TypeRacers.View
             InitializeComponent();
         }
 
+        public void Back_click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new MainPage());
+        }
+
+        private void GetReadyPopUp_Opened(object sender, EventArgs e)
+        {
+            DispatcherTimer timer = new DispatcherTimer()
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
+
+            timer.Tick += Timer_Tick;       
+
+            timer.Start();
+        }
+
+        private int decrement = 5;
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            decrement--;
+            Timer.Content = decrement.ToString();
+            if (decrement == 0)
+            {
+                Timer.Content = "START!";
+            }
+
+            if (decrement < 0)
+            {
+                UserCTRL.inputTextbox.IsEnabled = true;
+                GetReadyPopUp.IsOpen = false;
+                GetReadyPopUp.IsEnabled = false;
+            }
+        }
     }
 }

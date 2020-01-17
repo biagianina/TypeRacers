@@ -37,7 +37,7 @@ namespace TypeRacers
 
         public void NameClient(string username)
         {
-            client.Name = username;
+            client.NameClient(username);
         }
     }
 }
