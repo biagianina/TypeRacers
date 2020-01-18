@@ -11,22 +11,24 @@ namespace TypeRacers.Client
     {
         TcpClient client;
         NetworkStream stream;
-        static readonly int interval = 1000; // 1 second
-        static readonly int totalTime = 30000; // 30 seconds or 30000 ms
-        static int elapsedTime = 0; // Elapsed time in ms
         Timer timer;
+        readonly int interval = 1000; // 1 second
+        readonly int totalTime = 30000; // 30 seconds or 30000 ms
+        int elapsedTime = 0; // Elapsed time in ms
         List<Tuple<string, string>> opponents;
-        public delegate void TimerTickHandler(List<Tuple<string, string>> newOpponents);
+        public delegate void TimerTickHandler(Tuple<List<Tuple<string, string>>, int> opponentsAndElapsedTime);
         public event TimerTickHandler OpponentsChanged;
-      
-        private void SetOpponents(List<Tuple<string, string>> value)
+
+        private void SetOpponentsAndElapsedTime(Tuple<List<Tuple<string, string>>, int> value)
         {
-            opponents = value;
-            OnOpponentsChanged(opponents);
+            opponents = value.Item1;
+            elapsedTime = value.Item2;
+            OnOpponentsChangedAndTimeChanged(value);
         }
 
         private string LocalPlayerProgress { get; set; }
         public static string Name { get; set; }
+
         public void StartTimerForSearchingOpponents()
         {
             timer = new Timer(interval);
@@ -52,18 +54,18 @@ namespace TypeRacers.Client
             {
                 // here I am performing the task
                 //getting the opponents each second for 30 seconds from server through Client
-                SetOpponents(GetOpponentsProgress());
+                SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, string>>, int>(GetOpponentsProgress(), elapsedTime));
                 timer.Enabled = true;
             }
 
             elapsedTime += interval;
         }
 
-        protected void OnOpponentsChanged(List<Tuple<string, string>> newOpponents)
+        protected void OnOpponentsChangedAndTimeChanged(Tuple<List<Tuple<string, string>>, int> opponentsAndElapsedTime)
         {
-            if (newOpponents != null)
+            if (opponentsAndElapsedTime != null)
             {
-                OpponentsChanged(newOpponents);
+                OpponentsChanged(opponentsAndElapsedTime);
             }
         }
         public void SendProgressToServer(string progress)
@@ -77,7 +79,7 @@ namespace TypeRacers.Client
             //writing the progress to stream
             byte[] bytesToSend = Encoding.ASCII.GetBytes(LocalPlayerProgress + "$" + Name + "#");
             stream.Write(bytesToSend, 0, bytesToSend.Length);
-            SetOpponents(GetOpponentsProgress());
+            SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, string>>, int>(GetOpponentsProgress(), elapsedTime));
             stream.Flush();
         }
 

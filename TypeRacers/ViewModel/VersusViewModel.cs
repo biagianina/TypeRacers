@@ -21,7 +21,6 @@ namespace TypeRacers.ViewModel
         int incorrectChars;
         int currentWordIndex;
         private bool alert;
-        static int elapsedTime = 0; // Elapsed time in ms
         Model.Model model;
 
         public VersusViewModel()
@@ -54,7 +53,7 @@ namespace TypeRacers.ViewModel
 
         public int OpponentsCount { get; set; }
 
-        public int ElapsedTime { get; set; }
+        public int ElapsedTimeFrom30SecondsTimer { get; set; }
         public bool IsValid
         {
             get => isValid;
@@ -217,10 +216,12 @@ namespace TypeRacers.ViewModel
 
             TriggerPropertyChanged(nameof(Inlines)); //new Inlines formed at each char in input
         }
-        public void UpdateOpponents(List<Tuple<string, string>> updatedOpponents)
+        public void UpdateOpponents(Tuple<List<Tuple<string, string>>, int> updatedOpponentsAndElapsedTime)
         {
-            Opponents = updatedOpponents;
+            Opponents = updatedOpponentsAndElapsedTime.Item1;
+            ElapsedTimeFrom30SecondsTimer = updatedOpponentsAndElapsedTime.Item2;
             OpponentsCount = Opponents.Count() + 1;
+            TriggerPropertyChanged(nameof(ElapsedTimeFrom30SecondsTimer));
             TriggerPropertyChanged(nameof(OpponentsCount));
             if (OpponentsCount > 1)
             {
