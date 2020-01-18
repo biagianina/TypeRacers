@@ -26,7 +26,6 @@ namespace TypeRacers.Client
             OnOpponentsChangedAndTimeChanged(value);
         }
 
-
         private string LocalPlayerProgress { get; set; }
         public static string Name { get; set; }
 
