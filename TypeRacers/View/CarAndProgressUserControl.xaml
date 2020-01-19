@@ -11,7 +11,8 @@
 
     <StackPanel Width="auto"
                 Height="auto"
-                DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:CarAndProgressUserControl}}">
+                DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:CarAndProgressUserControl}}"
+                Visibility="{Binding CAPUCCanBeShown}">
         <Line
             Stroke="#ff9900"
             StrokeDashArray="2 2"
