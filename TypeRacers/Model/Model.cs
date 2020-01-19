@@ -9,7 +9,7 @@ namespace TypeRacers.Model
     {
         readonly static NetworkHandler networkHandler = new NetworkHandler();
 
-        public List<Tuple<string, string>> GetOpponents()
+        public List<Tuple<string, string, string>> GetOpponents()
         {
             return networkHandler.GetOpponents();
         }
@@ -17,13 +17,13 @@ namespace TypeRacers.Model
         {
             networkHandler.StartSearchingOpponents();
         }
-        public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, string>>, int>> updateOpponentsAndElapsedTime)
+        public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, string, string>>, int>> updateOpponentsAndElapsedTime)
         {
             networkHandler.SubscribeToSearchingOpponentsTimer(updateOpponentsAndElapsedTime);
         }
-        public void ReportProgress(int message)
+        public void ReportProgress(int message, bool userIsInGame)
         {
-            networkHandler.SendProgressToServer(message.ToString());
+            networkHandler.SendProgressToServer(message.ToString(), userIsInGame);
         }
         public string GetGeneratedTextToTypeLocally()
         {

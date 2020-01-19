@@ -22,7 +22,7 @@ namespace TypeRacers.ViewModel
         int currentWordIndex;
         private bool alert;
         Model.Model model;
-        int timeLimit = 3000;
+        int timeLimit = 30000;
 
         public VersusViewModel()
         {
@@ -53,14 +53,14 @@ namespace TypeRacers.ViewModel
                 };
         }
 
-        public IEnumerable<Tuple<string, string>> Opponents { get; private set; }
+        public IEnumerable<Tuple<string, string, string>> Opponents { get; private set; }
 
         public Visibility ShowFirstOpponent { get; set; }
 
         public Visibility ShowSecondOpponent { get; set; }
 
         public int OpponentsCount { get; set; }
-
+        public bool PlayerIsInGame { get; set; }
         public int ElapsedTimeFrom30SecondsTimer { get; set; }
         public bool IsValid
         {
@@ -154,8 +154,9 @@ namespace TypeRacers.ViewModel
         }
         public void ReportProgress()
         {
-            model.ReportProgress(Progress);
+            model.ReportProgress(Progress, PlayerIsInGame);
             Opponents = model.GetOpponents();
+            TriggerPropertyChanged(nameof(PlayerIsInGame));
             TriggerPropertyChanged(nameof(Opponents));
         }
         public void CheckUserInput(string value)
@@ -223,7 +224,7 @@ namespace TypeRacers.ViewModel
 
             TriggerPropertyChanged(nameof(Inlines)); //new Inlines formed at each char in input
         }
-        public void UpdateOpponents(Tuple<List<Tuple<string, string>>, int> updatedOpponentsAndElapsedTime)
+        public void UpdateOpponents(Tuple<List<Tuple<string, string, string>>, int> updatedOpponentsAndElapsedTime)
         {
             Opponents = updatedOpponentsAndElapsedTime.Item1;
             ElapsedTimeFrom30SecondsTimer = updatedOpponentsAndElapsedTime.Item2;
@@ -231,10 +232,11 @@ namespace TypeRacers.ViewModel
             TriggerPropertyChanged(nameof(ElapsedTimeFrom30SecondsTimer));
             TriggerPropertyChanged(nameof(OpponentsCount));
             UpdateShownPlayers();
-            if (OpponentsCount == 3)
+            if (OpponentsCount == 2)
             {
                 //enabling input
                 CanUserType = true;
+                PlayerIsInGame = true;
                 TriggerPropertyChanged(nameof(CanUserType));
                 //we stop the timer after 30 seconds
                 return;
@@ -257,7 +259,7 @@ namespace TypeRacers.ViewModel
                 ShowSecondOpponent = Visibility.Hidden;
 
             }
-            if(Opponents.Count() == 2)
+            if (Opponents.Count() == 2)
             {
                 ShowFirstOpponent = Visibility.Visible;
                 ShowSecondOpponent = Visibility.Visible;
