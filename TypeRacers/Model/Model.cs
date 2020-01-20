@@ -9,7 +9,7 @@ namespace TypeRacers.Model
     {
         readonly static NetworkHandler networkHandler = new NetworkHandler();
 
-        public List<Tuple<string, string, string>> GetOpponents()
+        public List<Tuple<string, string, bool>> GetOpponents()
         {
             return networkHandler.GetOpponents();
         }
@@ -17,7 +17,7 @@ namespace TypeRacers.Model
         {
             networkHandler.StartSearchingOpponents();
         }
-        public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, string, string>>, int>> updateOpponentsAndElapsedTime)
+        public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, string, bool>>, int>> updateOpponentsAndElapsedTime)
         {
             networkHandler.SubscribeToSearchingOpponentsTimer(updateOpponentsAndElapsedTime);
         }

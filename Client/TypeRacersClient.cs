@@ -15,15 +15,20 @@ namespace TypeRacers.Client
         readonly int interval = 1000; // 1 second
         readonly int totalTime = 30000; // 30 seconds or 30000 ms
         int elapsedTime = 0; // Elapsed time in ms
-        List<Tuple<string, string, string>> opponents;
-        public delegate void TimerTickHandler(Tuple<List<Tuple<string, string, string>>, int> opponentsAndElapsedTime);
+        List<Tuple<string, string, bool>> opponents;
+        public delegate void TimerTickHandler(Tuple<List<Tuple<string, string, bool>>, int> opponentsAndElapsedTime);
         public event TimerTickHandler OpponentsChanged;
 
+        public TypeRacersClient()
+        {
+            opponents = new List<Tuple<string, string, bool>>();
+        }
 
+        public List<Tuple<string, string, bool>> Opponents { get => opponents; private set => opponents = value; }
         public bool LocalPlayerIsInGame { get; set; }
         private string LocalPlayerProgress { get; set; }
         public static string Name { get; set; }
-        private void SetOpponentsAndElapsedTime(Tuple<List<Tuple<string, string, string>>, int> value)
+        private void SetOpponentsAndElapsedTime(Tuple<List<Tuple<string, string, bool>>, int> value)
         {
             opponents = value.Item1;
             elapsedTime = value.Item2;
@@ -35,7 +40,6 @@ namespace TypeRacers.Client
             timer = new Timer(interval);
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Enabled = true;
-
         }
 
         public void NameClient(string username)
@@ -55,14 +59,14 @@ namespace TypeRacers.Client
             {
                 // here I am performing the task
                 //getting the opponents each second for 30 seconds from server through Client
-                SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, string, string>>, int>(GetOpponentsProgress(), elapsedTime));
+                SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, string, bool>>, int>(Opponents, elapsedTime));
                 timer.Enabled = true;
             }
 
             elapsedTime += interval;
         }
 
-        protected void OnOpponentsChangedAndTimeChanged(Tuple<List<Tuple<string, string, string>>, int> opponentsAndElapsedTime)
+        protected void OnOpponentsChangedAndTimeChanged(Tuple<List<Tuple<string, string, bool>>, int> opponentsAndElapsedTime)
         {
             if (opponentsAndElapsedTime != null)
             {
@@ -82,12 +86,12 @@ namespace TypeRacers.Client
             //writing the progress to stream
             byte[] bytesToSend = Encoding.ASCII.GetBytes(LocalPlayerProgress + "$" + Name + "*" + LocalPlayerIsInGame + "#");
             stream.Write(bytesToSend, 0, bytesToSend.Length);
-            SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, string, string>>, int>(GetOpponentsProgress(), elapsedTime));
+            SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, string, bool>>, int>(Opponents, elapsedTime));
             stream.Flush();
         }
 
         //receiving the opponents and their progress in a List
-        public List<Tuple<string, string, string>> GetOpponentsProgress()
+        public void GetOpponentsProgress()
         {
             //connecting to server
             client = new TcpClient("localhost", 80);
@@ -108,16 +112,8 @@ namespace TypeRacers.Client
                     text += Encoding.ASCII.GetString(inStream, text.Length, read);
                 }
 
-                var currentOpponents = text.Split('/').ToList();
-                currentOpponents.Remove("#");
-                List<Tuple<string, string, string>> opponents = new List<Tuple<string, string, string>>();
-                foreach (var v in currentOpponents)
-                {
-                    var playerInfo = v.Split(':');
-                    opponents.Add(new Tuple<string, string, string>(playerInfo[0], playerInfo[1], playerInfo[2]));
-                }
+                SetOpponents(text.Remove('#'));
 
-                return opponents;
             }
             catch (Exception)
             {
@@ -134,7 +130,8 @@ namespace TypeRacers.Client
 
             try
             {
-                byte[] bytesToSend = Encoding.ASCII.GetBytes("0" + "$" + Name + "*" + LocalPlayerIsInGame + "#");
+                string userInfo = "0" + "$" + Name + "*" + LocalPlayerIsInGame + "#";
+                byte[] bytesToSend = Encoding.ASCII.GetBytes(userInfo);
                 stream.Write(bytesToSend, 0, bytesToSend.Length);
 
                 byte[] inStream = new byte[client.ReceiveBufferSize];
@@ -146,8 +143,10 @@ namespace TypeRacers.Client
                     read = stream.Read(inStream, 0, inStream.Length);
                     text += Encoding.ASCII.GetString(inStream, text.Length, read);
                 }
+                text = text.Remove(text.Length - 1);
                 client.Close();
-                return text.Substring(0, text.IndexOf('#'));
+                SetOpponents(text.Substring(text.IndexOf('$') + 1));
+                return text.Substring(0, text.IndexOf('$'));
             }
             catch (Exception)
             {
@@ -155,5 +154,21 @@ namespace TypeRacers.Client
             }
         }
 
+        private void SetOpponents(string opponentsList)
+        {
+            if (string.IsNullOrEmpty(opponentsList))
+            {
+                return;
+            }
+
+            var op = opponentsList.Split(';');
+            foreach (var v in op)
+            {
+                var playerInfo = v.Split(':');
+                string name = playerInfo[0];
+                var progressAndIsInGame = playerInfo[1].Split('/');
+                opponents.Add(new Tuple<string, string, bool>(name, progressAndIsInGame[0], Convert.ToBoolean(progressAndIsInGame[1])));
+            }
+        }
     }
 }

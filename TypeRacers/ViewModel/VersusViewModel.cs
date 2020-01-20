@@ -53,7 +53,7 @@ namespace TypeRacers.ViewModel
                 };
         }
 
-        public IEnumerable<Tuple<string, string, string>> Opponents { get; private set; }
+        public IEnumerable<Tuple<string, string, bool>> Opponents { get; private set; }
 
         public Visibility ShowFirstOpponent { get; set; }
 
@@ -224,7 +224,7 @@ namespace TypeRacers.ViewModel
 
             TriggerPropertyChanged(nameof(Inlines)); //new Inlines formed at each char in input
         }
-        public void UpdateOpponents(Tuple<List<Tuple<string, string, string>>, int> updatedOpponentsAndElapsedTime)
+        public void UpdateOpponents(Tuple<List<Tuple<string, string, bool>>, int> updatedOpponentsAndElapsedTime)
         {
             Opponents = updatedOpponentsAndElapsedTime.Item1;
             ElapsedTimeFrom30SecondsTimer = updatedOpponentsAndElapsedTime.Item2;

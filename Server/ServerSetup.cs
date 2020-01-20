@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -77,9 +78,16 @@ namespace TypeRacers.Server
         {
             if (newClient)
             {
-                byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "#"); //generates random text from text document
+                string opponents = string.Empty;
+                foreach (var value in players)
+                {
+                    if (!value.Key.ToString().Equals(currentClient))
+                    {
+                        opponents += value.Key + ":" + value.Value.Item1 + "/" + value.Value.Item2 + "/";
+                    }
+                }
+                byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + opponents + "#"); //generates random text from text document
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
-                //SendOpponents();//sending current connected opponents to connected client
             }
             else
             {
@@ -94,7 +102,7 @@ namespace TypeRacers.Server
             {
                 if (!value.Key.ToString().Equals(currentClient))
                 {
-                    opponents += value.Key + ":" + value.Value.Item1 + "/" + value.Value.Item2 + "/";
+                    opponents += value.Key + ":" + value.Value.Item1 + "/" + value.Value.Item2 + ";";
                 }
             }
 
@@ -106,10 +114,11 @@ namespace TypeRacers.Server
         //this method determines if a player is new or is already playing and is just sending progress
         private void CheckUsername(string dataReceived, Dictionary<string, Tuple<string, string>> players)
         {
+            string info = dataReceived.Remove(dataReceived.Length - 1);
             //player infromations
-            string progress = dataReceived.Substring(0, dataReceived.IndexOf('$'));
-            string username = dataReceived.Substring(dataReceived.IndexOf('$') + 1);
-            string isInGame = dataReceived.Substring(dataReceived.IndexOf('*') + 1); ;
+            string progress = info.Substring(0, dataReceived.IndexOf('$'));
+            string username = info.Substring(dataReceived.IndexOf('$') + 1, dataReceived.IndexOf('*') - 1);
+            string isInGame = info.Substring(dataReceived.IndexOf('*') + 1);
 
             currentClient = username.Substring(0, username.Length - 1);
             Tuple<string, string> playerInfo = new Tuple<string, string>(progress, isInGame);
