@@ -69,6 +69,7 @@
                         Grid.ColumnSpan="2"
                         VerticalAlignment="Center">
                 <local:CarAndProgressUserControl CAPUCProgress="{Binding Progress}"
+                                                 CAPUCSliderProgress="{Binding SliderProgress}"
                                                  CAPUCName="You"
                                                  CAPUCSliderStyle="{StaticResource GreenSliderStyle}" />
 

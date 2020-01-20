@@ -32,7 +32,6 @@ namespace TypeRacers.Client
             timer = new Timer(interval);
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Enabled = true;
-
         }
 
         public void NameClient(string username)

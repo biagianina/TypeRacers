@@ -27,10 +27,10 @@
                    Margin="5"
                    FontSize="15"
                    TextAlignment="Left"
-                   HorizontalAlignment="Left"
+                   HorizontalAlignment="Right"
                    VerticalAlignment="Bottom">
             <TextBlock.Text>
-                <MultiBinding StringFormat="{}{0} :{1} %">
+                <MultiBinding StringFormat="{}{0} : {1} WPM">
                     <Binding Path="CAPUCName" />
                     <Binding Path="CAPUCProgress" />
                 </MultiBinding>
@@ -42,7 +42,7 @@
             Focusable="False"
             Style="{Binding CAPUCSliderStyle}"
             Maximum="100"
-            Value="{Binding CAPUCProgress, Mode=OneWay}" />
+            Value="{Binding CAPUCSliderProgress, Mode=OneWay}" />
 
         <Line Stroke="#ff9900"
               StrokeDashArray="2 2"

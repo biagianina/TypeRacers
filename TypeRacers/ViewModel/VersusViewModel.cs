@@ -21,8 +21,10 @@ namespace TypeRacers.ViewModel
         int incorrectChars;
         int currentWordIndex;
         private bool alert;
-        static int elapsedTime = 0; // Elapsed time in ms
-        Model.Model model;
+        private DateTime startTime;
+        private int numberOfCharactersTyped;
+        static readonly int elapsedTime = 0; // Elapsed time in ms
+        readonly Model.Model model;
 
         public VersusViewModel()
         {
@@ -37,8 +39,6 @@ namespace TypeRacers.ViewModel
             model.SubscribeToSearchingOpponents(UpdateOpponents);
             CanUserType = false;
         }
-
-
 
         public IEnumerable<Inline> Inlines
         {
@@ -71,7 +71,7 @@ namespace TypeRacers.ViewModel
         }
 
         public bool CanUserType { get; set; }
-        public int Progress
+        public int SliderProgress
         {
             get
             {
@@ -80,7 +80,20 @@ namespace TypeRacers.ViewModel
                     return 100;
                 }
 
-                return (spaceIndex * 100 / TextToType.Length);
+                return spaceIndex * 100 / TextToType.Length;
+            }
+        }
+
+        public int Progress
+        {
+            get
+            {
+                if (currentWordIndex == 0)
+                {
+                    return 0;
+                }
+
+                return (numberOfCharactersTyped / 5) * 60 / ((int)(DateTime.UtcNow - startTime).TotalSeconds);
             }
         }
         public int CurrentWordLength
@@ -148,7 +161,7 @@ namespace TypeRacers.ViewModel
         }
         public void ReportProgress()
         {
-            model.ReportProgress(Progress);
+            model.ReportProgress(SliderProgress);
             Opponents = model.GetOpponents();
             TriggerPropertyChanged(nameof(Opponents));
         }
@@ -165,7 +178,9 @@ namespace TypeRacers.ViewModel
                 }
 
                 userInputValidator = new InputCharacterValidation(TextToType.Substring(spaceIndex));
+                numberOfCharactersTyped += CurrentInputText.Length;
                 textToType = string.Empty;
+                TriggerPropertyChanged(nameof(SliderProgress));
                 TriggerPropertyChanged(nameof(Progress));//recalculates progress 
                 ReportProgress();
             }
@@ -226,6 +241,7 @@ namespace TypeRacers.ViewModel
             {
                 //enabling input
                 CanUserType = true;
+                startTime = DateTime.UtcNow.AddSeconds(5);
                 TriggerPropertyChanged(nameof(CanUserType));
                 //we stop the timer after 30 seconds
                 return;
