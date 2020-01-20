@@ -60,5 +60,16 @@ namespace TypeRacers.View
                 SetValue(CAPUCSliderStyleProperty, value);
             }
         }
+
+        public static DependencyProperty CAPUCCanBeShownProperty = DependencyProperty.Register("CAPUCCanBeShown", typeof(Visibility), typeof(CarAndProgressUserControl));
+
+        public Visibility CAPUCCanBeShown
+        {
+            get { return (Visibility)GetValue(CAPUCCanBeShownProperty); }
+            set
+            {
+                SetValue(CAPUCCanBeShownProperty, value);
+            }
+        }
     }
 }

@@ -86,6 +86,7 @@
     <Compile Include="ViewModel\Commander.cs" />
     <Compile Include="ViewModel\ITextToType.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\PlayerAllocation.cs" />
     <Compile Include="ViewModel\PracticeViewModel.cs" />
     <Compile Include="ViewModel\VersusViewModel.cs" />
     <Compile Include="View\CarAndProgressUserControl.xaml.cs">
