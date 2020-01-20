@@ -31,7 +31,7 @@ namespace TypeRacers.ViewModel
             model = new Model.Model();
             TextToType = model.GetGeneratedTextToTypeFromServer();
             userInputValidator = new InputCharacterValidation(TextToType);
-            startTime = DateTime.UtcNow.AddSeconds(5);
+            startTime = DateTime.UtcNow;
             // first time getting opponents
             Opponents = model.GetOpponents();
 
