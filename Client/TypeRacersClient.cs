@@ -15,11 +15,11 @@ namespace TypeRacers.Client
         readonly int interval = 1000; // 1 second
         readonly int totalTime = 30000; // 30 seconds or 30000 ms
         int elapsedTime = 0; // Elapsed time in ms
-        List<Tuple<string, string>> opponents;
-        public delegate void TimerTickHandler(Tuple<List<Tuple<string, string>>, int> opponentsAndElapsedTime);
+        List<Tuple<string, Tuple<string, string>>> opponents;
+        public delegate void TimerTickHandler(Tuple<List<Tuple<string, Tuple<string, string>>>, int> opponentsAndElapsedTime);
         public event TimerTickHandler OpponentsChanged;
 
-        private void SetOpponentsAndElapsedTime(Tuple<List<Tuple<string, string>>, int> value)
+        private void SetOpponentsAndElapsedTime(Tuple<List<Tuple<string, Tuple<string, string>>>, int> value)
         {
             opponents = value.Item1;
             elapsedTime = value.Item2;
@@ -53,14 +53,14 @@ namespace TypeRacers.Client
             {
                 // here I am performing the task
                 //getting the opponents each second for 30 seconds from server through Client
-                SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, string>>, int>(GetOpponentsProgress(), elapsedTime));
+                SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string>>>, int>(GetOpponentsProgress(), elapsedTime));
                 timer.Enabled = true;
             }
 
             elapsedTime += interval;
         }
 
-        protected void OnOpponentsChangedAndTimeChanged(Tuple<List<Tuple<string, string>>, int> opponentsAndElapsedTime)
+        protected void OnOpponentsChangedAndTimeChanged(Tuple<List<Tuple<string, Tuple<string, string>>>, int> opponentsAndElapsedTime)
         {
             if (opponentsAndElapsedTime != null)
             {
@@ -78,18 +78,27 @@ namespace TypeRacers.Client
             //writing the progress to stream
             byte[] bytesToSend = Encoding.ASCII.GetBytes(LocalPlayerProgress + "$" + Name + "#");
             stream.Write(bytesToSend, 0, bytesToSend.Length);
-            SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, string>>, int>(GetOpponentsProgress(), elapsedTime));
+            SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string>>>, int>(GetOpponentsProgress(), elapsedTime));
             stream.Flush();
         }
 
         //receiving the opponents and their progress in a List
-        public List<Tuple<string, string>> GetOpponentsProgress()
+        public List<Tuple<string, Tuple<string, string>>> GetOpponentsProgress()
         {
             //connecting to server
             client = new TcpClient("localhost", 80);
             stream = client.GetStream();
+            string toSend;
             //writing the progress to stream
-            byte[] bytesToSend = Encoding.ASCII.GetBytes(LocalPlayerProgress + "$" + Name + "#");
+            if (LocalPlayerProgress != null)
+            {
+                toSend = LocalPlayerProgress + "$" + Name + "#";
+            }
+            else
+            {
+                toSend = "0&0$" + Name + "#";
+            }
+            byte[] bytesToSend = Encoding.ASCII.GetBytes(toSend);
             stream.Write(bytesToSend, 0, bytesToSend.Length);
 
             try
@@ -106,11 +115,13 @@ namespace TypeRacers.Client
 
                 var currentOpponents = text.Split('/').ToList();
                 currentOpponents.Remove("#");
-                List<Tuple<string, string>> opponents = new List<Tuple<string, string>>();
+                List<Tuple<string, Tuple<string, string>>> opponents = new List<Tuple<string, Tuple<string, string>>>();
                 foreach (var v in currentOpponents)
                 {
                     var nameAndProgress = v.Split(':');
-                    opponents.Add(new Tuple<string, string>(nameAndProgress.FirstOrDefault(), nameAndProgress.LastOrDefault()));
+                    var progressAndSliderProgress = nameAndProgress.LastOrDefault().Split('&');
+                    var opponentInfo = new Tuple<string, string>(progressAndSliderProgress.FirstOrDefault(), progressAndSliderProgress.LastOrDefault());
+                    opponents.Add(new Tuple<string, Tuple<string, string>> (nameAndProgress.FirstOrDefault(), opponentInfo));
                 }
 
                 return opponents;
@@ -130,7 +141,7 @@ namespace TypeRacers.Client
 
             try
             {
-                byte[] bytesToSend = Encoding.ASCII.GetBytes("0" + "$" + Name + "#");
+                byte[] bytesToSend = Encoding.ASCII.GetBytes("0&0" + "$" + Name + "#");
                 stream.Write(bytesToSend, 0, bytesToSend.Length);
 
                 byte[] inStream = new byte[client.ReceiveBufferSize];

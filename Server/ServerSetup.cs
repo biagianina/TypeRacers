@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -10,7 +11,7 @@ namespace TypeRacers.Server
     {
         private bool newClient;
         private TcpListener server;
-        private Hashtable players;
+        private Dictionary<string, Tuple<string, string>> players;
         private NetworkStream networkStream;
         private string currentClient;
         //to avoid generating different texts from users in same competition
@@ -20,7 +21,7 @@ namespace TypeRacers.Server
         {
             server = new TcpListener(IPAddress.IPv6Any, 80);
             server.Server.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
-            players = new Hashtable();
+            players = new Dictionary<string, Tuple<string, string>>();
 
             try
             {
@@ -89,11 +90,11 @@ namespace TypeRacers.Server
         private void SendOpponents()
         {
             string opponents = string.Empty;
-            foreach (DictionaryEntry a in players)
+            foreach (var a in players)
             {
                 if (!a.Key.ToString().Equals(currentClient))
                 {
-                    opponents += a.Key + ":" + a.Value + "/";
+                    opponents += a.Key + ":" + a.Value.Item1 + "&" + a.Value.Item2 + "/";
                 }
             }
 
@@ -103,9 +104,10 @@ namespace TypeRacers.Server
 
 
         //this method determines if a player is new or is already playing and is just sending progress
-        private void CheckUsername(string dataReceived, Hashtable players)
+        private void CheckUsername(string dataReceived, Dictionary<string, Tuple<string, string>> players)
         {
-            string progress = dataReceived.Substring(0, dataReceived.IndexOf('$'));
+            string progressAndSliderProgress = dataReceived.Substring(0, dataReceived.IndexOf('$'));
+            Tuple<string, string> clientInfo = new Tuple<string, string>(progressAndSliderProgress.Substring(0, progressAndSliderProgress.IndexOf('&')), progressAndSliderProgress.Substring(progressAndSliderProgress.IndexOf('&') + 1));
             string username = dataReceived.Substring(dataReceived.IndexOf('$') + 1);
             currentClient = username.Substring(0, username.Length - 1);
             Console.WriteLine(username + " connected");
@@ -113,12 +115,12 @@ namespace TypeRacers.Server
             if (players.ContainsKey(currentClient))
             {
                 newClient = false;
-                players[currentClient] = progress;
+                players[currentClient] = clientInfo;
             }
             else
             {
                 newClient = true;
-                players.Add(currentClient, progress);
+                players.Add(currentClient, clientInfo);
             }
 
             CheckNewClient();

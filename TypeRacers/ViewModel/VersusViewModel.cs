@@ -23,13 +23,15 @@ namespace TypeRacers.ViewModel
         private bool alert;
         Model.Model model;
         int timeLimit = 3000;
+        private readonly DateTime startTime;
+        private int numberOfCharactersTyped;
 
         public VersusViewModel()
         {
             model = new Model.Model();
             TextToType = model.GetGeneratedTextToTypeFromServer();
             userInputValidator = new InputCharacterValidation(TextToType);
-
+            startTime = DateTime.UtcNow.AddSeconds(5);
             // first time getting opponents
             Opponents = model.GetOpponents();
 
@@ -53,7 +55,7 @@ namespace TypeRacers.ViewModel
                 };
         }
 
-        public IEnumerable<Tuple<string, string>> Opponents { get; private set; }
+        public IEnumerable<Tuple<string, Tuple<string, string>>> Opponents { get; private set; }
 
         public Visibility ShowFirstOpponent { get; set; }
 
@@ -77,7 +79,7 @@ namespace TypeRacers.ViewModel
             }
         }
         public bool CanUserType { get; set; }
-        public int Progress
+        public int SliderProgress
         {
             get
             {
@@ -86,7 +88,20 @@ namespace TypeRacers.ViewModel
                     return 100;
                 }
 
-                return (spaceIndex * 100 / TextToType.Length);
+                return spaceIndex * 100 / TextToType.Length;
+            }
+        }
+
+        public int Progress
+        {
+            get
+            {
+                if (currentWordIndex == 0)
+                {
+                    return 0;
+                }
+
+                return (numberOfCharactersTyped / 5) * 60 / ((int)(DateTime.UtcNow - startTime).TotalSeconds);
             }
         }
         public int CurrentWordLength
@@ -154,7 +169,7 @@ namespace TypeRacers.ViewModel
         }
         public void ReportProgress()
         {
-            model.ReportProgress(Progress);
+            model.ReportProgress(Progress, SliderProgress);
             Opponents = model.GetOpponents();
             TriggerPropertyChanged(nameof(Opponents));
         }
@@ -171,7 +186,9 @@ namespace TypeRacers.ViewModel
                 }
 
                 userInputValidator = new InputCharacterValidation(TextToType.Substring(spaceIndex));
+                numberOfCharactersTyped += CurrentInputText.Length;
                 textToType = string.Empty;
+                TriggerPropertyChanged(nameof(SliderProgress));
                 TriggerPropertyChanged(nameof(Progress));//recalculates progress 
                 ReportProgress();
             }
@@ -223,7 +240,7 @@ namespace TypeRacers.ViewModel
 
             TriggerPropertyChanged(nameof(Inlines)); //new Inlines formed at each char in input
         }
-        public void UpdateOpponents(Tuple<List<Tuple<string, string>>, int> updatedOpponentsAndElapsedTime)
+        public void UpdateOpponents(Tuple<List<Tuple<string, Tuple<string, string>>>, int> updatedOpponentsAndElapsedTime)
         {
             Opponents = updatedOpponentsAndElapsedTime.Item1;
             ElapsedTimeFrom30SecondsTimer = updatedOpponentsAndElapsedTime.Item2;
@@ -240,7 +257,6 @@ namespace TypeRacers.ViewModel
                 return;
             }
             TriggerPropertyChanged(nameof(Opponents));
-
         }
 
         public void UpdateShownPlayers()
