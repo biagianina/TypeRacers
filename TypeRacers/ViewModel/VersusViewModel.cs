@@ -61,6 +61,8 @@ namespace TypeRacers.ViewModel
 
         public int OpponentsCount { get; set; }
 
+        public string SecondsToStart { get; set; }
+
         public int ElapsedTimeFrom30SecondsTimer { get; set; }
         public bool IsValid
         {
@@ -106,6 +108,7 @@ namespace TypeRacers.ViewModel
         {
             get => TextToType.Split()[currentWordIndex].Length;//length of current word
         }
+        public bool GetReadyAlert { get; set; }
         public bool AllTextTyped { get; set; }
         //determines if a popup alert should apear, binded in open property of popup xaml
         public bool TypingAlert
@@ -251,13 +254,33 @@ namespace TypeRacers.ViewModel
             UpdateShownPlayers();
             if (OpponentsCount == 3)
             {
+                TriggerPropertyChanged(nameof(Opponents));
                 //enabling input
-                CanUserType = true;
-                startTime.AddSeconds(ElapsedTimeFrom30SecondsTimer + 5);
-                TriggerPropertyChanged(nameof(CanUserType));
+                GetReadyAlert = true;
+                TriggerPropertyChanged(nameof(GetReadyAlert));
+                startTime = startTime.AddSeconds(ElapsedTimeFrom30SecondsTimer / 1000 + 5);
+                var now = DateTime.UtcNow;
+                while ((startTime - now).Seconds < 5)
+                {
+                    SecondsToStart = (startTime - now).Seconds.ToString();
+                    now = DateTime.UtcNow;
+                    if ((startTime - now).Seconds == 0)
+                    {
+                        SecondsToStart = "START!";
+                        TriggerPropertyChanged(nameof(SecondsToStart));
+                        GetReadyAlert = false;
+                        TriggerPropertyChanged(nameof(GetReadyAlert));
+                        CanUserType = true;
+                        TriggerPropertyChanged(nameof(CanUserType));
+                        break;
+                    }
+
+                    TriggerPropertyChanged(nameof(SecondsToStart));
+                }
                 //we stop the timer after 30 seconds
                 return;
             }
+
             TriggerPropertyChanged(nameof(Opponents));
         }
 

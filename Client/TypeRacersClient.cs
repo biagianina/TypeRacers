@@ -18,29 +18,24 @@ namespace TypeRacers.Client
         List<Tuple<string, Tuple<string, string>>> opponents;
         public delegate void TimerTickHandler(Tuple<List<Tuple<string, Tuple<string, string>>>, int> opponentsAndElapsedTime);
         public event TimerTickHandler OpponentsChanged;
-
         private void SetOpponentsAndElapsedTime(Tuple<List<Tuple<string, Tuple<string, string>>>, int> value)
         {
             opponents = value.Item1;
             elapsedTime = value.Item2;
             OnOpponentsChangedAndTimeChanged(value);
         }
-
         private string LocalPlayerProgress { get; set; }
         public static string Name { get; set; }
-
         public void StartTimerForSearchingOpponents()
         {
             timer = new Timer(interval);
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Enabled = true;
         }
-
         public void NameClient(string username)
         {
             Name = username;
         }
-
         void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
             timer.Stop();
@@ -56,10 +51,8 @@ namespace TypeRacers.Client
                 SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string>>>, int>(GetOpponentsProgress(), elapsedTime));
                 timer.Enabled = true;
             }
-
             elapsedTime += interval;
         }
-
         protected void OnOpponentsChangedAndTimeChanged(Tuple<List<Tuple<string, Tuple<string, string>>>, int> opponentsAndElapsedTime)
         {
             if (opponentsAndElapsedTime != null)
@@ -81,7 +74,6 @@ namespace TypeRacers.Client
             SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string>>>, int>(GetOpponentsProgress(), elapsedTime));
             stream.Flush();
         }
-
         //receiving the opponents and their progress in a List
         public List<Tuple<string, Tuple<string, string>>> GetOpponentsProgress()
         {
@@ -130,9 +122,7 @@ namespace TypeRacers.Client
             {
                 throw new Exception("Lost connection with server");
             }
-
         }
-
         public string GetMessageFromServer()
         {
             //connecting to server
@@ -161,6 +151,5 @@ namespace TypeRacers.Client
                 throw new Exception("Lost connection with server");
             }
         }
-
     }
 }
