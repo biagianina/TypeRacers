@@ -12,7 +12,6 @@ namespace TypeRacers.ViewModel
 {
     class VersusViewModel : ITextToType, INotifyPropertyChanged
     {
-
         string textToType;
         InputCharacterValidation userInputValidator;
         bool isValid;
@@ -33,13 +32,11 @@ namespace TypeRacers.ViewModel
             startTime = DateTime.UtcNow;
             // first time getting opponents
             Opponents = model.GetOpponents();
-
             //check how many players can we display on the screen
             UpdateShownPlayers();
             //start searching for 30 seconds and subscribe to timer
             model.StartSearchingOpponents();
             model.SubscribeToSearchingOpponents(UpdateOpponents);
-
             CanUserType = false;
         }
        
