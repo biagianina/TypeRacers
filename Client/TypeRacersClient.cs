@@ -115,7 +115,7 @@ namespace TypeRacers.Client
 
                 var currentOpponents = text.Split('/').ToList();
                 currentOpponents.Remove("#");
-                List<Tuple<string, Tuple<string, string>>> opponents = new List<Tuple<string, Tuple<string, string>>>();
+                opponents = new List<Tuple<string, Tuple<string, string>>>();
                 foreach (var v in currentOpponents)
                 {
                     var nameAndProgress = v.Split(':');

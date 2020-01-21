@@ -21,9 +21,8 @@ namespace TypeRacers.ViewModel
         int incorrectChars;
         int currentWordIndex;
         private bool alert;
-        Model.Model model;
-        int timeLimit = 3000;
-        private readonly DateTime startTime;
+        readonly Model.Model model;
+        private DateTime startTime;
         private int numberOfCharactersTyped;
 
         public VersusViewModel()
@@ -43,8 +42,7 @@ namespace TypeRacers.ViewModel
 
             CanUserType = false;
         }
-
-
+       
         public IEnumerable<Inline> Inlines
         {
             get => new[] { new Run() { Text = TextToType.Substring(0, spaceIndex) , Foreground = Brushes.Gold},
@@ -189,7 +187,8 @@ namespace TypeRacers.ViewModel
                 numberOfCharactersTyped += CurrentInputText.Length;
                 textToType = string.Empty;
                 TriggerPropertyChanged(nameof(SliderProgress));
-                TriggerPropertyChanged(nameof(Progress));//recalculates progress 
+                TriggerPropertyChanged(nameof(Progress));
+                //recalculates progress 
                 ReportProgress();
             }
             //checks if current word is the last one
@@ -197,6 +196,7 @@ namespace TypeRacers.ViewModel
             {
                 AllTextTyped = true;
                 TriggerPropertyChanged(nameof(AllTextTyped));
+                TriggerPropertyChanged(nameof(SliderProgress));
                 TriggerPropertyChanged(nameof(Progress));//recalculates progress 
                 ReportProgress();
             }
@@ -240,6 +240,7 @@ namespace TypeRacers.ViewModel
 
             TriggerPropertyChanged(nameof(Inlines)); //new Inlines formed at each char in input
         }
+
         public void UpdateOpponents(Tuple<List<Tuple<string, Tuple<string, string>>>, int> updatedOpponentsAndElapsedTime)
         {
             Opponents = updatedOpponentsAndElapsedTime.Item1;
@@ -252,6 +253,7 @@ namespace TypeRacers.ViewModel
             {
                 //enabling input
                 CanUserType = true;
+                startTime.AddSeconds(ElapsedTimeFrom30SecondsTimer + 5);
                 TriggerPropertyChanged(nameof(CanUserType));
                 //we stop the timer after 30 seconds
                 return;
@@ -271,8 +273,8 @@ namespace TypeRacers.ViewModel
             {
                 ShowFirstOpponent = Visibility.Visible;
                 ShowSecondOpponent = Visibility.Hidden;
-
             }
+            
             if(Opponents.Count() == 2)
             {
                 ShowFirstOpponent = Visibility.Visible;
