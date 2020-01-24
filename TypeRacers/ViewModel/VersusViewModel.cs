@@ -53,6 +53,7 @@ namespace TypeRacers.ViewModel
                 };
         }
 
+
         public IEnumerable<Tuple<string, Tuple<string, string, int>>> Opponents { get; private set; }
 
         public Visibility ShowFirstOpponent { get; set; }
@@ -168,6 +169,11 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(CurrentInputText));
             }
         }
+
+        public bool EnableGetReadyAlert { get; set; }
+
+        public string SecondsToGetReady { get; set; } = "5";
+
         public void ReportProgress()
         {
             model.ReportProgress(Progress, SliderProgress);
@@ -245,6 +251,7 @@ namespace TypeRacers.ViewModel
         }
 
         public void UpdateOpponents(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int> updatedOpponentsAndElapsedTime)
+
         {
             Opponents = updatedOpponentsAndElapsedTime.Item1;
             ElapsedTimeFrom30SecondsTimer = updatedOpponentsAndElapsedTime.Item2;
@@ -256,27 +263,10 @@ namespace TypeRacers.ViewModel
             {
                 TriggerPropertyChanged(nameof(Opponents));
                 //enabling input
-                GetReadyAlert = true;
-                TriggerPropertyChanged(nameof(GetReadyAlert));
-                startTime = startTime.AddSeconds(ElapsedTimeFrom30SecondsTimer / 1000 + 5);
-                var now = DateTime.UtcNow;
-                while ((startTime - now).Seconds < 5)
-                {
-                    SecondsToStart = (startTime - now).Seconds.ToString();
-                    now = DateTime.UtcNow;
-                    if ((startTime - now).Seconds == 0)
-                    {
-                        SecondsToStart = "START!";
-                        TriggerPropertyChanged(nameof(SecondsToStart));
-                        GetReadyAlert = false;
-                        TriggerPropertyChanged(nameof(GetReadyAlert));
-                        CanUserType = true;
-                        TriggerPropertyChanged(nameof(CanUserType));
-                        break;
-                    }
 
-                    TriggerPropertyChanged(nameof(SecondsToStart));
-                }
+                TriggerPropertyChanged(nameof(EnableGetReadyAlert));
+                EnableGetReadyAlert = true;
+                startTime.AddSeconds(ElapsedTimeFrom30SecondsTimer + 5);
                 //we stop the timer after 30 seconds
                 return;
             }

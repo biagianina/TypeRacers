@@ -2,7 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -27,9 +26,12 @@ namespace TypeRacers.Server
 
             server = new TcpListener(IPAddress.IPv6Any, 80);
             server.Server.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
+
             playrooms = new List<Playroom>();
             playrooms.Add(new Playroom());
             currentPlayroom = playrooms.Last();
+
+
 
             try
             {
@@ -103,11 +105,13 @@ namespace TypeRacers.Server
         private void SendOpponents()
         {
             string opponents = string.Empty;
+
             foreach (var a in playrooms[currentPlayerPlayroomNumber].Players)
             {
                 if (!a.Key.ToString().Equals(currentClient))
                 {
                     opponents += a.Key + ":" + a.Value.Item1 + "&" + a.Value.Item2 + "&" + a.Value.Item3 + "/";
+
                 }
             }
 
@@ -117,6 +121,7 @@ namespace TypeRacers.Server
 
 
         //this method determines if a player is new or is already playing and is just sending progress
+
         private void CheckClientReceievedData(string dataReceived)
         {
 
@@ -129,8 +134,10 @@ namespace TypeRacers.Server
             Tuple<string, string, int> clientInfo = new Tuple<string, string, int>(progressInfoAndPlayerRoom[0],
                 progressInfoAndPlayerRoom[1], Convert.ToInt32(progressInfoAndPlayerRoom[2]));
 
+
             string username = dataReceived.Substring(dataReceived.IndexOf('$') + 1);
             currentClient = username.Substring(0, username.Length - 1);
+
 
             currentPlayerPlayroomNumber = clientInfo.Item3;
 
@@ -161,6 +168,7 @@ namespace TypeRacers.Server
                 {
                     currentPlayroom = playrooms.Last();
                 }
+
             }
             newClient = currentPlayroom.AddPlayersToRoom(currrentClient, clientInfo);
             CheckNewClient(currentPlayroom.PlayroomNumber);
