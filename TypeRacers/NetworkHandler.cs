@@ -18,11 +18,13 @@ namespace TypeRacers
             client.StartTimerForSearchingOpponents();
         }
 
-        public void SubscribeToSearchingOpponentsTimer(Action<Tuple<List<Tuple<string, Tuple<string, string>>>, int>> updateOpponentsListAndElapsedTime)
+
+        public void SubscribeToSearchingOpponentsTimer(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, int>> updateOpponentsListAndElapsedTime)
         {
             client.OpponentsChanged += new TypeRacersClient.TimerTickHandler(updateOpponentsListAndElapsedTime);
         }
-        public List<Tuple<string, Tuple<string, string>>> GetOpponents()
+        public List<Tuple<string, Tuple<string, string, int>>> GetOpponents()
+
         {
             return client.GetOpponentsProgress();
         }

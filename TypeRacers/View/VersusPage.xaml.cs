@@ -18,11 +18,11 @@ namespace TypeRacers.View
             InitializeComponent();
             vm = (VersusViewModel)this.Resources["VersusVM"];
         }
-
         public void Back_click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new MainPage());
         }
+
 
         private void GetReadyPopUp_Opened(object sender, EventArgs e)
         {
@@ -60,5 +60,6 @@ namespace TypeRacers.View
                 vm.TriggerPropertyChanged(nameof(vm.SecondsToGetReady));
             }
         }
+
     }
 }

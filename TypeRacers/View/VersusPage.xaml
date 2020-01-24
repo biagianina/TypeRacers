@@ -114,12 +114,15 @@
                 Margin="20"
                 RATUCInlines="{Binding Inlines}"
                 RATUCCanType="{Binding CanUserType}"
+                RATUCGetReadyAlert="{Binding GetReadyAlert}"
                 RATUCAllTextTyped="{Binding AllTextTyped}"
                 RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
-                RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}">
+                RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}"
+                RATUCSecondsToStart="{Binding SecondsToStart, UpdateSourceTrigger=PropertyChanged}">               
             </local:ReadAndTypeUserControl>
         </Grid>
+
         <Popup
             Name="GetReadyPopUp"
                IsOpen="{Binding EnableGetReadyAlert, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
@@ -157,5 +160,6 @@
                 </StackPanel>
             </Grid>
         </Popup>
+
     </Grid>
 </Page>

@@ -53,13 +53,16 @@ namespace TypeRacers.ViewModel
                 };
         }
 
-        public IEnumerable<Tuple<string, Tuple<string, string>>> Opponents { get; private set; }
+
+        public IEnumerable<Tuple<string, Tuple<string, string, int>>> Opponents { get; private set; }
 
         public Visibility ShowFirstOpponent { get; set; }
 
         public Visibility ShowSecondOpponent { get; set; }
 
         public int OpponentsCount { get; set; }
+
+        public string SecondsToStart { get; set; }
 
         public int ElapsedTimeFrom30SecondsTimer { get; set; }
         public bool IsValid
@@ -106,6 +109,7 @@ namespace TypeRacers.ViewModel
         {
             get => TextToType.Split()[currentWordIndex].Length;//length of current word
         }
+        public bool GetReadyAlert { get; set; }
         public bool AllTextTyped { get; set; }
         //determines if a popup alert should apear, binded in open property of popup xaml
         public bool TypingAlert
@@ -246,7 +250,8 @@ namespace TypeRacers.ViewModel
             TriggerPropertyChanged(nameof(Inlines)); //new Inlines formed at each char in input
         }
 
-        public void UpdateOpponents(Tuple<List<Tuple<string, Tuple<string, string>>>, int> updatedOpponentsAndElapsedTime)
+        public void UpdateOpponents(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int> updatedOpponentsAndElapsedTime)
+
         {
             Opponents = updatedOpponentsAndElapsedTime.Item1;
             ElapsedTimeFrom30SecondsTimer = updatedOpponentsAndElapsedTime.Item2;
@@ -254,15 +259,18 @@ namespace TypeRacers.ViewModel
             TriggerPropertyChanged(nameof(ElapsedTimeFrom30SecondsTimer));
             TriggerPropertyChanged(nameof(OpponentsCount));
             UpdateShownPlayers();
-            if (OpponentsCount == 3)
+            if (OpponentsCount == 2)
             {
+                TriggerPropertyChanged(nameof(Opponents));
                 //enabling input
+
                 TriggerPropertyChanged(nameof(EnableGetReadyAlert));
                 EnableGetReadyAlert = true;
                 startTime.AddSeconds(ElapsedTimeFrom30SecondsTimer + 5);
                 //we stop the timer after 30 seconds
                 return;
             }
+
             TriggerPropertyChanged(nameof(Opponents));
         }
 
