@@ -82,21 +82,24 @@
                 Grid.ColumnSpan="2"
                 VerticalAlignment="Center">
 
-                <local:CarAndProgressUserControl
-                    CAPUCProgress="{Binding Progress}"
+                <local:CarAndProgressUserControl 
+                    CAPUCProgress="{Binding Progress, UpdateSourceTrigger=PropertyChanged}"
                     CAPUCName="You"
+                    CAPUCSliderProgress="{Binding SliderProgress, UpdateSourceTrigger=PropertyChanged}"
                     CAPUCSliderStyle="{StaticResource GreenSliderStyle}" />
 
                 <local:CarAndProgressUserControl
                     CAPUCCanBeShown="{Binding ShowFirstOpponent}"
                     CAPUCName="{Binding Opponents[0].Item1, UpdateSourceTrigger=PropertyChanged}"
-                    CAPUCProgress="{Binding Opponents[0].Item2, UpdateSourceTrigger=PropertyChanged}"
+                    CAPUCProgress="{Binding Opponents[0].Item2.Item1, UpdateSourceTrigger=PropertyChanged}"
+                    CAPUCSliderProgress="{Binding Opponents[0].Item2.Item2, UpdateSourceTrigger=PropertyChanged}"
                     CAPUCSliderStyle="{StaticResource OrangeSliderStyle}" />
 
                 <local:CarAndProgressUserControl
                     CAPUCCanBeShown="{Binding ShowSecondOpponent}"
                     CAPUCName="{Binding Opponents[1].Item1,  UpdateSourceTrigger=PropertyChanged}"
-                    CAPUCProgress="{Binding Opponents[1].Item2,  UpdateSourceTrigger=PropertyChanged}"
+                    CAPUCProgress="{Binding Opponents[1].Item2.Item1, UpdateSourceTrigger=PropertyChanged}"
+                    CAPUCSliderProgress="{Binding Opponents[1].Item2.Item2, UpdateSourceTrigger=PropertyChanged}"
                     CAPUCSliderStyle="{StaticResource PinkSliderStyle}" />
 
             </StackPanel>
@@ -111,47 +114,13 @@
                 Margin="20"
                 RATUCInlines="{Binding Inlines}"
                 RATUCCanType="{Binding CanUserType}"
+                RATUCGetReadyAlert="{Binding GetReadyAlert}"
                 RATUCAllTextTyped="{Binding AllTextTyped}"
                 RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
-                RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}">
+                RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}"
+                RATUCSecondsToStart="{Binding SecondsToStart, UpdateSourceTrigger=PropertyChanged}">               
             </local:ReadAndTypeUserControl>
         </Grid>
-        <Popup
-            Name="GetReadyPopUp"
-            IsOpen="{Binding CanUserType, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-            Opened="GetReadyPopUp_Opened"
-            StaysOpen="False"
-            Placement="Center"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Center"
-            AllowsTransparency="True">
-
-            <Grid
-                Width="auto"
-                Height="auto">
-                <StackPanel
-                    Background="SkyBlue">
-                    <Label
-                        Content="GET READY TO START!"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-                    <Image
-                        Width="80"
-                        Height="70"
-                        Margin="2"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Source="pack://application:,,,/TypeRacers;component/Images/start.png" />
-                    <Label
-                        Name="Timer"
-                        Margin="5"
-                        FontSize="20"
-                        Content="5"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-                </StackPanel>
-            </Grid>
-        </Popup>
     </Grid>
 </Page>

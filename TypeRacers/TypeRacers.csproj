@@ -52,7 +52,7 @@
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>827502_page_512x512_DZw_icon.ico</ApplicationIcon>
+    <ApplicationIcon>Images\827502_page_512x512_DZw_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -85,7 +85,6 @@
     <Compile Include="NetworkHandler.cs" />
     <Compile Include="ViewModel\Commander.cs" />
     <Compile Include="ViewModel\ITextToType.cs" />
-    <Compile Include="ViewModel\FirstViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\PlayerAllocation.cs" />
     <Compile Include="ViewModel\PracticeViewModel.cs" />
@@ -215,7 +214,7 @@
     <Resource Include="Images\typer.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="827502_page_512x512_DZw_icon.ico" />
+    <Resource Include="Images\827502_page_512x512_DZw_icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

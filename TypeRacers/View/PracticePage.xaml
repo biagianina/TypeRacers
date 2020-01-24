@@ -41,8 +41,9 @@
                 BorderThickness="5"/>
         <local:CarAndProgressUserControl Grid.Row="2"
                                              VerticalAlignment="Center"
-                                             CAPUCName="Your progress"
+                                             CAPUCName="You"
                                              CAPUCProgress="{Binding Progress}"
+                                             CAPUCSliderProgress="{Binding SliderProgress}"
                                              CAPUCSliderStyle="{StaticResource OrangeSliderStyle}" />
 
             <local:ReadAndTypeUserControl Grid.Row="3"

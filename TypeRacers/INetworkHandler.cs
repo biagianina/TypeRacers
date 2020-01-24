@@ -9,11 +9,11 @@ namespace TypeRacers
     //interface for network handler
     interface INetworkHandler
     { 
-        void SendProgressToServer(string progress, bool userIsInGame);
+        void SendProgressToServer(string progress);
 
         string GetTextFromServer();
 
-        List<Tuple<string, string, bool>> GetOpponents();
+        List<Tuple<string, Tuple<string, string, int>>> GetOpponents();
 
     }
 }
