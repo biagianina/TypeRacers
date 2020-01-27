@@ -19,6 +19,7 @@ namespace TypeRacers.Server
         private Playroom currentPlayroom;
         int playroomCount = 0;
         int currentPlayerPlayroomNumber;
+        int maxPlayroomSize = 3;
         //to avoid generating different texts from users in same competition
 
         public static string CompetitionText { get; } = ServerGeneratedText.GetText();
@@ -27,11 +28,9 @@ namespace TypeRacers.Server
 
             server = new TcpListener(IPAddress.IPv6Any, 80);
             server.Server.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
-
             playrooms = new List<Playroom>();
             playrooms.Add(new Playroom());
             currentPlayroom = playrooms.Last();
-
             try
             {
                 server.Start();
@@ -118,7 +117,6 @@ namespace TypeRacers.Server
             networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
         }
 
-
         //this method determines if a player is new or is already playing and is just sending progress
 
         private void CheckClientReceievedData(string dataReceived)
@@ -137,6 +135,10 @@ namespace TypeRacers.Server
             string username = dataReceived.Substring(dataReceived.IndexOf('$') + 1);
             currentClient = username.Substring(0, username.Length - 1);
 
+            if(currentClient == string.Empty)
+            {
+                return;
+            }
 
             currentPlayerPlayroomNumber = clientInfo.Item3;
 
@@ -157,9 +159,9 @@ namespace TypeRacers.Server
         {
             currentPlayroom = playrooms[roomNumber];
 
-            if (currentPlayroom.PlayroomSize == 2 && !currentPlayroom.ExistsInPlayroom(currentClient))
+            if (currentPlayroom.PlayroomSize == maxPlayroomSize && !currentPlayroom.ExistsInPlayroom(currentClient))
             { 
-                if(playrooms.Last().PlayroomSize == 2)
+                if(playrooms.Last().PlayroomSize == maxPlayroomSize)
                 {
                     currentPlayroom = CreateNewPlayroom();
                 }

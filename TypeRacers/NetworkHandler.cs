@@ -12,13 +12,10 @@ namespace TypeRacers
         {
             client = new TypeRacersClient();
         }
-
         public void StartSearchingOpponents()
         {
             client.StartTimerForSearchingOpponents();
         }
-
-
         public void SubscribeToSearchingOpponentsTimer(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, int>> updateOpponentsListAndElapsedTime)
         {
             client.OpponentsChanged += new TypeRacersClient.TimerTickHandler(updateOpponentsListAndElapsedTime);

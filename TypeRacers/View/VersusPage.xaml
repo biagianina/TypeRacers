@@ -86,7 +86,7 @@
                 Grid.ColumnSpan="3"
                 VerticalAlignment="Center">
 
-                <local:CarAndProgressUserControl 
+                <local:CarAndProgressUserControl
                     CAPUCProgress="{Binding Progress, UpdateSourceTrigger=PropertyChanged}"
                     CAPUCName="You"
                     CAPUCSliderProgress="{Binding SliderProgress, UpdateSourceTrigger=PropertyChanged}"
@@ -123,13 +123,13 @@
                 RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
                 RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}"
-                RATUCSecondsToStart="{Binding SecondsToStart, UpdateSourceTrigger=PropertyChanged}">               
+                RATUCSecondsToStart="{Binding SecondsToStart, UpdateSourceTrigger=PropertyChanged}">
             </local:ReadAndTypeUserControl>
         </Grid>
 
         <Popup
             Name="GetReadyPopUp"
-               IsOpen="{Binding EnableGetReadyAlert, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+            IsOpen="{Binding EnableGetReadyAlert, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
             Opened="GetReadyPopUp_Opened"
             StaysOpen="False"
             IsEnabled="{Binding EnableGetReadyAlert, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
@@ -165,5 +165,59 @@
             </Grid>
         </Popup>
 
+        <Popup
+            Name="TimerReadyPopup"
+            IsOpen="{Binding EnableRestartOrExitAlert}"
+            Placement="Center"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            AllowsTransparency="True"           
+            Width="200"
+            Height="200">
+
+            <Border
+                BorderThickness="4"
+                BorderBrush="#7ac5cd"
+                CornerRadius="7"
+                Padding="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                
+                <StackPanel
+                    Background="White">
+                    <TextBlock
+                        Margin="0,50,0,60"
+                        FontFamily="Arial"
+                        Opacity="0.9"
+                        FontSize="15"
+                        Foreground="#bbcedd"
+                        Background="White"
+                        TextAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="No opponents found" />
+
+                    <StackPanel
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Button
+                            Background="Red"
+                            Foreground="White"
+                            Width="100"
+                            Height="70"
+                            Content="TRY AGAIN"
+                            Command="{Binding RestartSearchingOpponentsCommand}"
+                           />
+                        <Button
+                            Background="#7ac5cd"
+                            Foreground="White"
+                            Width="100"
+                            Height="70"
+                            Content="EXIT"
+                            Command="{Binding ExitProgramCommand}" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Popup>
     </Grid>
+
 </Page>
