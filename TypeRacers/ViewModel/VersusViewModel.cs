@@ -150,7 +150,6 @@ namespace TypeRacers.ViewModel
                 return default;
             }
         }
-
         public string TextToType { get; }
         public string CurrentInputText
         {
