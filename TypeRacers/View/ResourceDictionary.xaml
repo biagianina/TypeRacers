@@ -21,8 +21,8 @@
                                 Margin="2"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                Source="pack://application:,,,/TypeRacers;component/Images/orange.png" />
-
+                                Source="pack://application:,,,/TypeRacers;component/Images/orange.png">
+                            </Image>
                         </StackPanel>
                     </ControlTemplate>
                 </Setter.Value>
@@ -45,7 +45,8 @@
                                    Margin="2"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
-                                   Source="pack://application:,,,/TypeRacers;component/Images/green.png" />
+                                   Source="pack://application:,,,/TypeRacers;component/Images/green.png">
+                            </Image>
                         </StackPanel>
                     </ControlTemplate>
                 </Setter.Value>
@@ -68,7 +69,8 @@
                                    Margin="2"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
-                                   Source="pack://application:,,,/TypeRacers;component/Images/pink.png" />
+                                   Source="pack://application:,,,/TypeRacers;component/Images/pink.png">
+                            </Image>
 
                         </StackPanel>
                     </ControlTemplate>
@@ -187,8 +189,9 @@
         <Setter Property="Height"
                 Value="auto" />
         <Setter Property="Background"
-                Value="#004c99" />
+                Value="#FF1577DA" />
    </Style>
+    
     <Style x:Key="RoundButtonTemplate"
            TargetType="Button">
         <Setter Property="Background"
@@ -203,13 +206,21 @@
                             BorderThickness="1">
                         <ContentPresenter HorizontalAlignment="Center"
                                           VerticalAlignment="Center">
-
                         </ContentPresenter>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-
-
+    
+    <Style x:Key="FocusTextBox"
+           TargetType="Grid">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=username, Path=IsVisible}"
+                         Value="True">
+                <Setter Property="FocusManager.FocusedElement"
+                        Value="{Binding ElementName=username}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

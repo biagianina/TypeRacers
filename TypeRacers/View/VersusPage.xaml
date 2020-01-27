@@ -19,10 +19,12 @@
     <Grid Height="auto"
           DataContext="{StaticResource VersusVM}">
         <Grid.RowDefinitions>
+            <RowDefinition Height="10" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0"
+        <Grid Grid.Row="1"
               VerticalAlignment="Center"
               Width="auto"
               Height="auto">
@@ -77,14 +79,8 @@
                     Style="{StaticResource RoundButtonTemplate}"
                     Background="#FF591F74"
                     Content="Back"
-                    BorderBrush="#FF9133BD"
-                    BorderThickness="5"
-                    FontFamily="Times New Roman"
-                    FontWeight="Bold">
-                <Button.Effect>
-                    <DropShadowEffect Color="#FF6E1178" />
-                </Button.Effect>
-            </Button>
+                    BorderBrush="#FFAE00FF"
+                    BorderThickness="5" />
             <StackPanel Grid.Row="1"
                         Grid.ColumnSpan="3"
                         VerticalAlignment="Center">
@@ -108,7 +104,7 @@
 
             </StackPanel>
         </Grid>
-        <Grid Grid.Row="1"
+        <Grid Grid.Row="2"
               VerticalAlignment="Center">
             <local:ReadAndTypeUserControl x:Name="UserCTRL"
                                           Width="auto"
