@@ -118,6 +118,7 @@ namespace TypeRacers.Server
         }
 
         //this method determines if a player is new or is already playing and is just sending progress
+
         private void CheckClientReceievedData(string dataReceived)
         {
 
