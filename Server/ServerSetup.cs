@@ -85,7 +85,6 @@ namespace TypeRacers.Server
                 }
             }
         }
-
         private void CheckNewClient(int roomNumber)
         {
             if (newClient)
