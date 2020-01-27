@@ -19,7 +19,6 @@ namespace TypeRacers.Model
         {
             networkHandler.StartSearchingOpponents();
         }
-
         public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, int>> updateOpponentsAndElapsedTime)
 
         {

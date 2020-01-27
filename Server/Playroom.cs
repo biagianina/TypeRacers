@@ -15,7 +15,6 @@ namespace Server
             Players = new Dictionary<string, Tuple<string, string, int>>();
 
         }
-
         public Dictionary<string, Tuple<string, string, int>> Players { get; set; }
 
         public int PlayroomSize { get; set; }

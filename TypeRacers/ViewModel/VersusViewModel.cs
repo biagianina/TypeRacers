@@ -4,15 +4,18 @@ using System.ComponentModel;
 using System.Linq;
 using System.Timers;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Navigation;
+using TypeRacers.View;
+
 
 namespace TypeRacers.ViewModel
 {
     class VersusViewModel : ITextToType, INotifyPropertyChanged
     {
-
         string textToType;
         InputCharacterValidation userInputValidator;
         bool isValid;
@@ -24,6 +27,7 @@ namespace TypeRacers.ViewModel
         readonly Model.Model model;
         private DateTime startTime;
         private int numberOfCharactersTyped;
+        int timerDone = 10000;
 
         public VersusViewModel()
         {
@@ -36,13 +40,18 @@ namespace TypeRacers.ViewModel
 
             //check how many players can we display on the screen
             UpdateShownPlayers();
+            ExitProgramCommand = new CommandHandler(() => ExitProgram(), () => true);
+            RestartSearchingOpponentsCommand = new CommandHandler(() => RestartSearchingOpponents(), () => true);
             //start searching for 30 seconds and subscribe to timer
             model.StartSearchingOpponents();
             model.SubscribeToSearchingOpponents(UpdateOpponents);
 
             CanUserType = false;
         }
-       
+
+        public CommandHandler RestartSearchingOpponentsCommand { get; }
+        public CommandHandler ExitProgramCommand { get; }
+    
         public IEnumerable<Inline> Inlines
         {
             get => new[] { new Run() { Text = TextToType.Substring(0, spaceIndex) , Foreground = Brushes.Gold},
@@ -52,7 +61,6 @@ namespace TypeRacers.ViewModel
                 new Run() {Text = TextToType.Substring(spaceIndex + CurrentWordLength) }
                 };
         }
-
 
         public IEnumerable<Tuple<string, Tuple<string, string, int>>> Opponents { get; private set; }
 
@@ -92,7 +100,6 @@ namespace TypeRacers.ViewModel
                 return spaceIndex * 100 / TextToType.Length;
             }
         }
-
         public int Progress
         {
             get
@@ -169,11 +176,9 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(CurrentInputText));
             }
         }
-
         public bool EnableGetReadyAlert { get; set; }
-
+        public bool EnableRestartOrExitAlert { get; set; }
         public string SecondsToGetReady { get; set; } = "5";
-
         public void ReportProgress()
         {
             model.ReportProgress(Progress, SliderProgress);
@@ -249,7 +254,18 @@ namespace TypeRacers.ViewModel
 
             TriggerPropertyChanged(nameof(Inlines)); //new Inlines formed at each char in input
         }
+        private void RestartSearchingOpponents()
+        {
+            EnableRestartOrExitAlert = false;
+            TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
+            model.StartSearchingOpponents();
+            model.SubscribeToSearchingOpponents(UpdateOpponents);
 
+        }
+        private void ExitProgram()
+        {
+            Application.Current.Shutdown();
+        }
         public void UpdateOpponents(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int> updatedOpponentsAndElapsedTime)
 
         {
@@ -259,7 +275,13 @@ namespace TypeRacers.ViewModel
             TriggerPropertyChanged(nameof(ElapsedTimeFrom30SecondsTimer));
             TriggerPropertyChanged(nameof(OpponentsCount));
             UpdateShownPlayers();
-            if (OpponentsCount == 2)
+
+            if (ElapsedTimeFrom30SecondsTimer == timerDone && OpponentsCount < 2)
+            {
+                EnableRestartOrExitAlert = true;
+                TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
+            }
+            if (OpponentsCount == 3 || ElapsedTimeFrom30SecondsTimer == timerDone && OpponentsCount == 2)
             {
                 TriggerPropertyChanged(nameof(Opponents));
                 //enabling input
@@ -287,8 +309,8 @@ namespace TypeRacers.ViewModel
                 ShowFirstOpponent = Visibility.Visible;
                 ShowSecondOpponent = Visibility.Hidden;
             }
-            
-            if(Opponents.Count() == 2)
+
+            if (Opponents.Count() == 2)
             {
                 ShowFirstOpponent = Visibility.Visible;
                 ShowSecondOpponent = Visibility.Visible;

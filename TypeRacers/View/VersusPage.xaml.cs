@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using System.Windows.Navigation;
 using TypeRacers.ViewModel;
 
 namespace TypeRacers.View
@@ -22,7 +23,6 @@ namespace TypeRacers.View
         {
             NavigationService.Navigate(new MainPage());
         }
-
 
         private void GetReadyPopUp_Opened(object sender, EventArgs e)
         {
@@ -60,6 +60,5 @@ namespace TypeRacers.View
                 vm.TriggerPropertyChanged(nameof(vm.SecondsToGetReady));
             }
         }
-
     }
 }
