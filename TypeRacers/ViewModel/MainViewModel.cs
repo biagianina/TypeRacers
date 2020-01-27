@@ -13,6 +13,8 @@ namespace TypeRacers.ViewModel
         }
 
         public bool UsernameEntered { get; set; }
+
+        public bool EnterUsernameMessage { get; set; }
         public CommandHandler ContestCommand { get; }
 
         public NavigationService ContestNavigation { get; set; }
@@ -28,6 +30,7 @@ namespace TypeRacers.ViewModel
                 if (string.IsNullOrEmpty(value))
                 {
                     UsernameEntered = false;
+
                     TriggerPropertyChanged(nameof(UsernameEntered));
                     return;
                 }
@@ -40,14 +43,28 @@ namespace TypeRacers.ViewModel
 
         private void NavigateContest()
         {
-            if (UsernameEntered)  
-            ContestNavigation.Navigate(new Uri("View/VersusPage.xaml", UriKind.RelativeOrAbsolute));
+            if (UsernameEntered)
+            {
+                ContestNavigation.Navigate(new Uri("View/VersusPage.xaml", UriKind.RelativeOrAbsolute));
+            }
+            else
+            {
+                EnterUsernameMessage = true;
+                TriggerPropertyChanged(nameof(EnterUsernameMessage));
+            }
         }
 
         private void NavigatePractice()
         {
-            if (UsernameEntered)  
-            PracticeNavigation.Navigate(new Uri("View/PracticePage.xaml", UriKind.RelativeOrAbsolute));
+            if (UsernameEntered)
+            {
+                PracticeNavigation.Navigate(new Uri("View/PracticePage.xaml", UriKind.RelativeOrAbsolute));
+            }
+            else
+            {
+                EnterUsernameMessage = true;
+                TriggerPropertyChanged(nameof(EnterUsernameMessage));
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

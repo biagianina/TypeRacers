@@ -21,11 +21,43 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="10" />
         </Grid.RowDefinitions>
+        <Popup IsOpen="{Binding EnterUsernameMessage}"
+               PlacementTarget="{Binding ElementName=username}"
+               Placement="Top"
+               StaysOpen="False"
+               AllowsTransparency="True"
+               HorizontalAlignment="Center"
+               Width="230">
+            <StackPanel VerticalAlignment="Center">
+                <StackPanel.Effect>
+                    <DropShadowEffect Color="#FF410A49" />
+                </StackPanel.Effect>
+                <Border CornerRadius="20"
+                    Height="80"
+                    Width="200"
+                    Background="#FFDE7BE8"
+                    Opacity="100"
+                    SnapsToDevicePixels="True">
+                
+                <TextBlock Text="Username cannot be empty!"
+                           TextAlignment="Center"
+                           VerticalAlignment="Center"
+                       FontFamily="Monotype Corsiva"
+                       FontSize="18"
+                       FontWeight="Bold" />
+            </Border>
+                <Polygon Margin="30 0" 
+                         HorizontalAlignment="Left"
+                         Points="0,0 15,0 0,30"
+                         Stroke="#FFDE7BE8"
+                         Fill="#FFDE7BE8"
+                         Width="19" />
+            </StackPanel>
+        </Popup>
         <StackPanel MinWidth="360"
                     Background="#FF7726B0"
                     Grid.Column="1"
-                    Grid.Row="1"
-                   >
+                    Grid.Row="1"                   >
             <TextBlock Name="txt_welcomingmessage"
                        Text="Welcome to Type Racers!"
                        Foreground="Black"
