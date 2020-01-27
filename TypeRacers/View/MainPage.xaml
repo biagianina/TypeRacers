@@ -13,14 +13,9 @@
     <Page.Resources>
         <y:MainViewModel x:Key="MainVM" />
     </Page.Resources>
-    <Grid Background="FloralWhite"
+    <Grid Background="#FF7726B0"
           DataContext="{StaticResource MainVM}">
-
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="10" />
-        </Grid.ColumnDefinitions>
+       
         <Grid.RowDefinitions>
             <RowDefinition Height="10" />
             <RowDefinition Height="*" />

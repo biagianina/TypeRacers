@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Timers;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Navigation;
-using TypeRacers.View;
 
 
 namespace TypeRacers.ViewModel
@@ -51,7 +47,7 @@ namespace TypeRacers.ViewModel
 
         public CommandHandler RestartSearchingOpponentsCommand { get; }
         public CommandHandler ExitProgramCommand { get; }
-    
+
         public IEnumerable<Inline> Inlines
         {
             get => new[] { new Run() { Text = TextToType.Substring(0, spaceIndex) , Foreground = Brushes.Gold},
@@ -150,7 +146,6 @@ namespace TypeRacers.ViewModel
                 return default;
             }
         }
-
         public string TextToType { get; }
         public string CurrentInputText
         {
@@ -179,6 +174,9 @@ namespace TypeRacers.ViewModel
         public bool EnableGetReadyAlert { get; set; }
         public bool EnableRestartOrExitAlert { get; set; }
         public string SecondsToGetReady { get; set; } = "5";
+        public bool StartGameTimer { get; set; }
+        public string SecondsInGame { get; internal set; } = "90 seconds";
+
         public void ReportProgress()
         {
             model.ReportProgress(Progress, SliderProgress);
@@ -286,8 +284,17 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(Opponents));
                 //enabling input
 
-                TriggerPropertyChanged(nameof(EnableGetReadyAlert));
                 EnableGetReadyAlert = true;
+
+                int.TryParse(SecondsToGetReady, out int seconds);
+
+                if (seconds < 0)
+                {
+                    EnableGetReadyAlert = false;
+                }
+
+                TriggerPropertyChanged(nameof(EnableGetReadyAlert));
+
                 startTime.AddSeconds(ElapsedTimeFrom30SecondsTimer + 5);
                 //we stop the timer after 30 seconds
                 return;
