@@ -26,7 +26,6 @@
                     </StackPanel>
                 </Grid>
             </Grid>
-          
         </ControlTemplate>
     </ContentControl.Template>
 </UserControl>
