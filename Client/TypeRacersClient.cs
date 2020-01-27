@@ -19,6 +19,7 @@ namespace TypeRacers.Client
         List<Tuple<string, Tuple<string, string, int>>> opponents;
         public delegate void TimerTickHandler(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int> opponentsAndElapsedTime);
         public event TimerTickHandler OpponentsChanged;
+
         private void SetOpponentsAndElapsedTime(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int> value)
 
         {
@@ -35,6 +36,7 @@ namespace TypeRacers.Client
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Enabled = true;
         }
+
         public void NameClient(string username)
         {
             Name = username;
@@ -44,6 +46,7 @@ namespace TypeRacers.Client
             timer.Stop();
             if (elapsedTime > totalTime)
             {
+                elapsedTime = 0;
                 //we stop the timer after 30 seconds
                 return;
             }
