@@ -13,7 +13,7 @@ namespace TypeRacers.Client
         NetworkStream stream;
         Timer timer;
         readonly int interval = 1000; // 1 second
-        readonly int totalTime = 10000; // 30 seconds or 30000 ms
+        readonly int totalTime = 3000; // 30 seconds or 30000 ms
         int elapsedTime = 0; // Elapsed time in ms
 
         List<Tuple<string, Tuple<string, string, int>>> opponents;

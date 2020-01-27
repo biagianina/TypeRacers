@@ -34,7 +34,8 @@
             Height="auto">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
-                    Width="auto" />
+                    Width="*" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition
                     Width="*" />
             </Grid.ColumnDefinitions>
@@ -44,8 +45,11 @@
                 <RowDefinition
                     Height="*" />
             </Grid.RowDefinitions>
+            <Label Grid.Column="1"
+                   Content="{Binding SecondsInGame, UpdateSourceTrigger=PropertyChanged}"
+                   IsEnabled="{Binding EnableGameTimer, UpdateSourceTrigger=PropertyChanged}" />
             <StackPanel
-                Grid.Column="1"
+                Grid.Column="2"
                 Orientation="Vertical"
                 HorizontalAlignment="Right">
                 <TextBlock
@@ -79,7 +83,7 @@
                 BorderThickness="5" />
             <StackPanel
                 Grid.Row="1"
-                Grid.ColumnSpan="2"
+                Grid.ColumnSpan="3"
                 VerticalAlignment="Center">
 
                 <local:CarAndProgressUserControl 

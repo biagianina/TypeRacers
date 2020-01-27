@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -30,8 +31,6 @@ namespace TypeRacers.Server
             playrooms = new List<Playroom>();
             playrooms.Add(new Playroom());
             currentPlayroom = playrooms.Last();
-
-
 
             try
             {
