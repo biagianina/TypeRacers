@@ -27,29 +27,38 @@
                    VerticalAlignment="Center"
                    TextWrapping="Wrap" />
         <Popup IsOpen="{Binding RATUCTypingAlert, UpdateSourceTrigger=PropertyChanged}"
-               Width="auto"
-               Height="auto"
-               PlacementTarget="{Binding ElementName=displayText}"
+               Width="220"
+               Height="120"
+               PlacementTarget="{Binding ElementName=inputTextbox}"
                Placement="Top"
                AllowsTransparency="True"
                PopupAnimation="Fade">
-            <Grid Width="auto"
-                  Height="auto"
-                  HorizontalAlignment="Right">
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid Background="Aquamarine">
-                    <Label Content="Check your spelling!"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center" />
-                </Grid>
-                <Polygon Grid.Row="1"
-                         Points="0,0 15,0, 0,30"
-                         Stroke="Aquamarine"
-                         Fill="Aquamarine" />
-            </Grid>
+            <StackPanel VerticalAlignment="Center">
+                <StackPanel.Effect>
+                    <DropShadowEffect Color="#FF410A49" />
+                </StackPanel.Effect>
+                <Border CornerRadius="20"
+                        Height="80"
+                        Width="200"
+                        Background="#FFB60C14"
+                        Opacity="100"
+                        SnapsToDevicePixels="True">
+
+                    <TextBlock Text="You are spelling wrong this word!"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap"
+                               VerticalAlignment="Center"
+                               FontFamily="Monotype Corsiva"
+                               FontSize="18"
+                               FontWeight="Bold" />
+                </Border>
+                <Polygon Margin="30 0"
+                         HorizontalAlignment="Left"
+                         Points="0,0 15,0 0,30"
+                         Stroke="#FFB60C14"
+                         Fill="#FFB60C14"
+                         Width="19" />
+            </StackPanel>
         </Popup>
         <Popup Name="GetReadyPopUp"
                IsOpen="{Binding RATUCGetReadyAlert, UpdateSourceTrigger=PropertyChanged}"
@@ -57,11 +66,16 @@
                Placement="Center"
                VerticalAlignment="Center"
                HorizontalAlignment="Center"
-               AllowsTransparency="True">
+               AllowsTransparency="True"
+               Width="410"
+               Height="410">
 
-            <Grid Width="auto"
-                  Height="auto">
-                <StackPanel Background="SkyBlue">
+            <Grid Width="400"
+                  Height="400">
+                <StackPanel Background="#FF2272E6">
+                    <StackPanel.Effect>
+                        <DropShadowEffect />
+                    </StackPanel.Effect>
                     <Label Content="GET READY TO START!"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center" />

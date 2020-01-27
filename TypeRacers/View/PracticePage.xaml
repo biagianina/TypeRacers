@@ -26,6 +26,22 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="20" />
             </Grid.RowDefinitions>
+        <Label Grid.Row="1"
+               Content="{Binding SecondsInGame}"
+               IsEnabled="{Binding StartGameTimer}"
+               FontFamily="Times New Roman"
+               FontSize="12"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               Grid.Column="1"
+               Foreground="White"
+               FontWeight="Bold"
+               Background="#FF865B8F"
+               BorderBrush="#FF5D1572">
+            <Label.Effect>
+                <DropShadowEffect Color="#FF853C95" />
+            </Label.Effect>
+        </Label>
         <Button Name="Back"                
                 Click="Back_click"
                 Grid.Row="1"

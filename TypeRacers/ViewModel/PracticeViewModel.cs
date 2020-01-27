@@ -144,6 +144,10 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(CurrentInputText));
             }
         }
+
+        public bool CanUserType { get; internal set; }
+        public string SecondsInGame { get; internal set; } = "90 seconds";
+
         public void CheckUserInput(string value)
         {
             //checks if current word is typed, clears textbox, reintializes remaining text to the validation, sends progress 
