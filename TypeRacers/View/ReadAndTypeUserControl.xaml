@@ -8,7 +8,7 @@
     xmlns:vm="clr-namespace:TypeRacers.ViewModel"
     mc:Ignorable="d">
 
-    <Grid VerticalAlignment="Bottom"
+    <Grid Style="{StaticResource FocusTextBoxInGame}" VerticalAlignment="Bottom"
           DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ReadAndTypeUserControl}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -65,6 +65,7 @@
                  Grid.Row="2"
                  VerticalAlignment="Bottom"
                  Foreground="White"
+                 Focusable="True"
                  IsEnabled="{Binding RATUCCanType}"
                  IsReadOnly="{Binding RATUCAllTextTyped}"
                  Text="{Binding RATUCCurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"

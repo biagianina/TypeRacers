@@ -223,4 +223,15 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
+
+    <Style x:Key="FocusTextBoxInGame"
+           TargetType="Grid">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=inputTextbox, Path=IsEnabled}"
+                         Value="True">
+                <Setter Property="FocusManager.FocusedElement"
+                        Value="{Binding ElementName=inputTextbox}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

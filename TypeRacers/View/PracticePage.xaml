@@ -66,7 +66,7 @@
                                           Margin="20"
                                           RATUCCanType="{Binding CanUserType}"
                                           RATUCGetReadyAlert="{Binding GetReadyAlert}"
-                                          RATUCInlines="{Binding TextToTypeStyles}"
+                                          RATUCInlines="{Binding Inlines}"
                                           RATUCAllTextTyped="{Binding AllTextTyped}"
                                           RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                           RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
