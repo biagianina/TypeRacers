@@ -12,6 +12,11 @@ namespace TypeRacers
         {
             client = new TypeRacersClient();
         }
+
+        public string GetStartingTime()
+        {
+            return client.StartingTime;
+        }
         public void StartSearchingOpponents()
         {
             client.StartTimerForSearchingOpponents();

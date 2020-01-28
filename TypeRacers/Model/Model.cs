@@ -9,7 +9,6 @@ namespace TypeRacers.Model
     {
         readonly static NetworkHandler networkHandler = new NetworkHandler();
 
-
         public List<Tuple<string, Tuple<string, string, int>>> GetOpponents()
 
         {
@@ -18,6 +17,11 @@ namespace TypeRacers.Model
         public void StartSearchingOpponents()
         {
             networkHandler.StartSearchingOpponents();
+        }
+
+        public string GetStartingTime()
+        {
+            return networkHandler.GetStartingTime();
         }
         public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, int>> updateOpponentsAndElapsedTime)
 

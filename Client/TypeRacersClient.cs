@@ -13,10 +13,12 @@ namespace TypeRacers.Client
         NetworkStream stream;
         Timer timer;
         readonly int interval = 1000; // 1 second
-        readonly int totalTime = 10000; // 30 seconds or 30000 ms
+        readonly int totalTime = 30000; // 15 seconds or 15000 ms
         int elapsedTime = 0; // Elapsed time in ms
-
         List<Tuple<string, Tuple<string, string, int>>> opponents;
+
+
+
         public delegate void TimerTickHandler(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int> opponentsAndElapsedTime);
         public event TimerTickHandler OpponentsChanged;
 
@@ -27,6 +29,8 @@ namespace TypeRacers.Client
             elapsedTime = value.Item2;
             OnOpponentsChangedAndTimeChanged(value);
         }
+
+        public string StartingTime { get; set; }
         private string LocalPlayerProgress { get; set; }
         private int PlayroomNumber { get; set; }
         public static string Name { get; set; }
@@ -153,7 +157,6 @@ namespace TypeRacers.Client
 
             try
             {
-
                 byte[] bytesToSend = Encoding.ASCII.GetBytes("0&0&" + PlayroomNumber + "$" + Name + "#");
 
                 stream.Write(bytesToSend, 0, bytesToSend.Length);
@@ -170,8 +173,12 @@ namespace TypeRacers.Client
 
                 var dataWithoutHashtag = recievedData.Remove(recievedData.Length - 1);
                 var textToType = dataWithoutHashtag.Substring(0, dataWithoutHashtag.IndexOf('$'));
-                //getting the allocated playroom number
-                PlayroomNumber = Convert.ToInt32(dataWithoutHashtag.Substring(recievedData.IndexOf('$') + 1));
+                //getting the starting time
+                StartingTime = dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('%') + 1);
+                //getting room number
+                PlayroomNumber = Convert.ToInt32(dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('$') + 1, (dataWithoutHashtag.Length - textToType.Length - StartingTime.Length - 2)));
+
+
 
                 client.Close();
                 return textToType;
