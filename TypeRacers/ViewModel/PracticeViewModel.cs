@@ -9,7 +9,7 @@ using TypeRacers.Model;
 
 namespace TypeRacers.ViewModel
 {
-    class PracticeViewModel : ITextToType, INotifyPropertyChanged
+    public class PracticeViewModel : ITextToType, INotifyPropertyChanged
     {
         string textToType;
         InputCharacterValidation userInputValidator;

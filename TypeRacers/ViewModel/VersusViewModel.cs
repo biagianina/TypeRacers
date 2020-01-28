@@ -10,7 +10,7 @@ using System.Windows.Media;
 
 namespace TypeRacers.ViewModel
 {
-    class VersusViewModel : ITextToType, INotifyPropertyChanged
+    public class VersusViewModel : ITextToType, INotifyPropertyChanged
     {
         string textToType;
         InputCharacterValidation userInputValidator;
