@@ -23,25 +23,9 @@
                 <RowDefinition Height="20" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
                 <RowDefinition Height="20" />
             </Grid.RowDefinitions>
-        <Label Grid.Row="1"
-               Content="{Binding SecondsInGame}"
-               IsEnabled="{Binding StartGameTimer}"
-               FontFamily="Times New Roman"
-               FontSize="12"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"
-               Grid.Column="1"
-               Foreground="White"
-               FontWeight="Bold"
-               Background="#FF865B8F"
-               BorderBrush="#FF5D1572">
-            <Label.Effect>
-                <DropShadowEffect Color="#FF853C95" />
-            </Label.Effect>
-        </Label>
         <Button Name="Back"                
                 Click="Back_click"
                 Grid.Row="1"
@@ -61,16 +45,19 @@
                                              CAPUCName="You"
                                              CAPUCProgress="{Binding Progress}"
                                              CAPUCSliderProgress="{Binding SliderProgress}"
-                                             CAPUCSliderStyle="{StaticResource OrangeSliderStyle}" />
+                                             CAPUCSliderStyle="{StaticResource YellowSliderStyle}" />
 
             <local:ReadAndTypeUserControl Grid.Row="3"
                                           Margin="20"
-                                          RATUCCanType="True"
+                                          RATUCCanType="{Binding CanUserType}"
+                                          RATUCGetReadyAlert="{Binding GetReadyAlert}"
                                           RATUCInlines="{Binding Inlines}"
+                                          RATUCSecondsInGame="90 seconds"
+                                          RATUCSecondsToStart="3"
                                           RATUCAllTextTyped="{Binding AllTextTyped}"
                                           RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                           RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
                                           RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}"
                                           VerticalContentAlignment="Top" />
-        </Grid>
+    </Grid>
 </Page>

@@ -37,21 +37,6 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Label Content="{Binding SecondsInGame}"
-                   IsEnabled="{Binding StartGameTimer}"
-                   FontFamily="Times New Roman"
-                   FontSize="12"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   Grid.Column="1"
-                   Foreground="White"
-                   FontWeight="Bold"
-                   Background="#FF865B8F"
-                   BorderBrush="#FF5D1572">
-                <Label.Effect>
-                    <DropShadowEffect Color="#FF853C95" />
-                </Label.Effect>
-            </Label>
             <StackPanel Grid.Column="2"
                         Orientation="Vertical"
                         HorizontalAlignment="Right">
@@ -71,7 +56,7 @@
             </StackPanel>
             <Button Grid.Column="0"
                     Name="Back"
-                    Click="Back_click"
+                    Click="BackBtn_Click"
                     Margin="10 5"
                     Width="70"
                     Height="30"
@@ -94,7 +79,7 @@
                                                  CAPUCName="{Binding Opponents[0].Item1, UpdateSourceTrigger=PropertyChanged}"
                                                  CAPUCProgress="{Binding Opponents[0].Item2.Item1, UpdateSourceTrigger=PropertyChanged}"
                                                  CAPUCSliderProgress="{Binding Opponents[0].Item2.Item2, UpdateSourceTrigger=PropertyChanged}"
-                                                 CAPUCSliderStyle="{StaticResource OrangeSliderStyle}" />
+                                                 CAPUCSliderStyle="{StaticResource YellowSliderStyle}" />
 
                 <local:CarAndProgressUserControl CAPUCCanBeShown="{Binding ShowSecondOpponent}"
                                                  CAPUCName="{Binding Opponents[1].Item1,  UpdateSourceTrigger=PropertyChanged}"
@@ -110,67 +95,18 @@
                                           Width="auto"
                                           Height="auto"
                                           Margin="20"
-                                          RATUCInlines="{Binding Inlines}"
+                                          RATUCSecondsToStart="{Binding SecondsToGetReady}"
+                                          RATUCInlines="{Binding TextToTypeStyles}"
+                                          RATUCSecondsInGame="90 seconds left"
                                           RATUCCanType="{Binding CanUserType}"
-                                          RATUCGetReadyAlert="{Binding GetReadyAlert}"
+                                          RATUCGetReadyAlert="{Binding EnableGetReadyAlert}"
                                           RATUCAllTextTyped="{Binding AllTextTyped}"
                                           RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                           RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
                                           RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}"
-                                          RATUCSecondsToStart="{Binding SecondsToStart, UpdateSourceTrigger=PropertyChanged}">
+                                          >
             </local:ReadAndTypeUserControl>
         </Grid>
-
-        <Popup Name="GetReadyPopUp"
-               IsOpen="{Binding EnableGetReadyAlert, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-               Opened="GetReadyPopUp_Opened"
-               StaysOpen="False"
-               IsEnabled="{Binding EnableGetReadyAlert, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-               Placement="Center"
-               VerticalAlignment="Center"
-               HorizontalAlignment="Center"
-               AllowsTransparency="True"
-               Height="180"
-               Width="180">
-            <Border CornerRadius="10"
-                    BorderBrush="#FF8CBED3"
-                    Background="#FF8CBED3"
-                    BorderThickness="2"
-                    Padding="2">
-                <Border.Effect>
-                    <DropShadowEffect Color="#FF0C059E"
-                                      Direction="330"
-                                      BlurRadius="10" />
-                </Border.Effect>
-                <StackPanel Background="#FF8CBED3"
-                        Height="170"
-                        Width="170">
-
-                <Label Content="GET READY TO START!"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                           Foreground="#FF01030A"
-                           FontFamily="MV Boli"
-                           FontWeight="Bold" />
-                <Image Width="80"
-                       Height="70"
-                       Margin="2"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       Source="pack://application:,,,/TypeRacers;component/Images/start.png" />
-                <Label Name="Timer"
-                       Margin="5"
-                       FontSize="20"
-                       Content="{Binding SecondsToGetReady, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                           Foreground="#FF01030A"
-                           FontFamily="MV Boli"
-                           FontWeight="Bold" />
-            </StackPanel>
-            </Border>
-
-        </Popup>
 
         <Popup Name="TimerReadyPopup"
                IsOpen="{Binding EnableRestartOrExitAlert}"

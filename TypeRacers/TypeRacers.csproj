@@ -206,16 +206,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\red_car.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\green.png" />
-    <Resource Include="Images\orange.png" />
-    <Resource Include="Images\pink.png" />
-    <Resource Include="Images\purple.png" />
-    <Resource Include="Images\yellow.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\start.png" />
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +213,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\827502_page_512x512_DZw_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\green.png" />
+    <Resource Include="Images\pink.png" />
+    <Resource Include="Images\yellow.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

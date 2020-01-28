@@ -8,16 +8,16 @@
     xmlns:vm="clr-namespace:TypeRacers.ViewModel"
     mc:Ignorable="d">
 
-    <Grid VerticalAlignment="Bottom"
+    <Grid Style="{StaticResource FocusTextBoxInGame}" VerticalAlignment="Bottom"
           DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ReadAndTypeUserControl}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
-            <RowDefinition Height="20" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <TextBlock vm:TextBlockExtensions.BindableInlines="{Binding RATUCInlines}"
-                   Grid.Row="0"
+                   Grid.Row="1"
                    FontFamily="Arial"
                    Foreground="White"
                    Name="displayText"
@@ -26,6 +26,23 @@
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    TextWrapping="Wrap" />
+        <Label Grid.Row="0"
+               Margin="5"
+               Content="{Binding RATUCSecondsInGame}"
+               IsEnabled="True"
+               FontFamily="Times New Roman"
+               FontSize="12"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Top"
+               Grid.Column="2"
+               Foreground="White"
+               FontWeight="Bold"
+               Background="#FF865B8F"
+               BorderBrush="#FF5D1572">
+            <Label.Effect>
+                <DropShadowEffect Color="#FF853C95" />
+            </Label.Effect>
+        </Label>
         <Popup IsOpen="{Binding RATUCTypingAlert, UpdateSourceTrigger=PropertyChanged}"
                Width="220"
                Height="120"
@@ -61,24 +78,36 @@
             </StackPanel>
         </Popup>
         <Popup Name="GetReadyPopUp"
-               IsOpen="{Binding RATUCGetReadyAlert, UpdateSourceTrigger=PropertyChanged}"
+               IsOpen="{Binding RATUCGetReadyAlert, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+               Opened="GetReadyPopUp_Opened"
                StaysOpen="False"
+               IsEnabled="{Binding RATUCGetReadyAlert, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                Placement="Center"
                VerticalAlignment="Center"
                HorizontalAlignment="Center"
                AllowsTransparency="True"
-               Width="410"
-               Height="410">
+               Height="180"
+               Width="180">
+            <Border CornerRadius="10"
+                    BorderBrush="#FF8CBED3"
+                    Background="#FF8CBED3"
+                    BorderThickness="2"
+                    Padding="2">
+                <Border.Effect>
+                    <DropShadowEffect Color="#FF0C059E"
+                                      Direction="330"
+                                      BlurRadius="10" />
+                </Border.Effect>
+                <StackPanel Background="#FF8CBED3"
+                            Height="170"
+                            Width="170">
 
-            <Grid Width="400"
-                  Height="400">
-                <StackPanel Background="#FF2272E6">
-                    <StackPanel.Effect>
-                        <DropShadowEffect />
-                    </StackPanel.Effect>
                     <Label Content="GET READY TO START!"
                            HorizontalAlignment="Center"
-                           VerticalAlignment="Center" />
+                           VerticalAlignment="Center"
+                           Foreground="#FF01030A"
+                           FontFamily="MV Boli"
+                           FontWeight="Bold" />
                     <Image Width="80"
                            Height="70"
                            Margin="2"
@@ -88,16 +117,20 @@
                     <Label Name="Timer"
                            Margin="5"
                            FontSize="20"
-                           Content="{Binding RATUCSecondsToStart, UpdateSourceTrigger=PropertyChanged}"
+                           Content="{Binding RATUCSecondsToStart, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                            HorizontalAlignment="Center"
-                           VerticalAlignment="Center" />
+                           VerticalAlignment="Center"
+                           Foreground="#FF01030A"
+                           FontFamily="MV Boli"
+                           FontWeight="Bold" />
                 </StackPanel>
-            </Grid>
+            </Border>
         </Popup>
         <TextBox Name="inputTextbox"
                  Grid.Row="2"
                  VerticalAlignment="Bottom"
                  Foreground="White"
+                 Focusable="True"
                  IsEnabled="{Binding RATUCCanType}"
                  IsReadOnly="{Binding RATUCAllTextTyped}"
                  Text="{Binding RATUCCurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"

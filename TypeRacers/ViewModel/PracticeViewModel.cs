@@ -9,7 +9,7 @@ using TypeRacers.Model;
 
 namespace TypeRacers.ViewModel
 {
-    class PracticeViewModel : ITextToType, INotifyPropertyChanged
+    public class PracticeViewModel : ITextToType, INotifyPropertyChanged
     {
         string textToType;
         InputCharacterValidation userInputValidator;
@@ -28,6 +28,8 @@ namespace TypeRacers.ViewModel
             model = new Model.Model();
             TextToType = model.GetGeneratedTextToTypeLocally();
             userInputValidator = new InputCharacterValidation(TextToType);
+            GetReadyAlert = true;
+            TriggerPropertyChanged(nameof(GetReadyAlert));
             startTime = DateTime.UtcNow;
         }
 
@@ -147,6 +149,8 @@ namespace TypeRacers.ViewModel
 
         public bool CanUserType { get; internal set; }
         public string SecondsInGame { get; internal set; } = "90 seconds";
+        public bool GetReadyAlert { get; internal set; }
+        public string SecondsToGetReady { get; internal set; } = "3";
 
         public void CheckUserInput(string value)
         {
