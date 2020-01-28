@@ -120,7 +120,6 @@
                                           RATUCSecondsToStart="{Binding SecondsToStart, UpdateSourceTrigger=PropertyChanged}">
             </local:ReadAndTypeUserControl>
         </Grid>
-
         <Popup Name="GetReadyPopUp"
                IsOpen="{Binding EnableGetReadyAlert, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                Opened="GetReadyPopUp_Opened"

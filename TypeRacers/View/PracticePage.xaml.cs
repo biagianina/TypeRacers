@@ -28,12 +28,48 @@ namespace TypeRacers.View
         {
             InitializeComponent();
             vm = (PracticeViewModel)Resources["PracticeVM"];
-            StartGameTimer();
         }
 
         public void Back_click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new MainPage());
+        }
+        private void GetReadyPopUp_Opened(object sender, EventArgs e)
+        {
+            timer = new DispatcherTimer()
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
+
+            timer.Tick += Timer_Tick;
+
+            timer.Start();
+      
+        }
+
+        private int secondsToStart = 3;
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            secondsToStart--;
+
+            if (secondsToStart < 0)
+            {
+                timer.Stop();
+                vm.GetReadyAlert = false;
+                vm.TriggerPropertyChanged(nameof(vm.GetReadyAlert));
+                vm.CanUserType = true;
+                StartGameTimer();
+                vm.TriggerPropertyChanged(nameof(vm.CanUserType));
+            }
+
+            vm.SecondsToGetReady = secondsToStart.ToString();
+            vm.TriggerPropertyChanged(nameof(vm.SecondsToGetReady));
+
+            if (secondsToStart == 0)
+            {
+                vm.SecondsToGetReady = "START!";
+                vm.TriggerPropertyChanged(nameof(vm.SecondsToGetReady));
+            }
         }
 
         private void StartGameTimer()
@@ -44,8 +80,7 @@ namespace TypeRacers.View
             };
 
             timer.Tick += GameTimer_Tick;
-            vm.CanUserType = true;
-            vm.TriggerPropertyChanged(nameof(vm.CanUserType));
+
             timer.Start();
         }
 
@@ -53,8 +88,8 @@ namespace TypeRacers.View
         private void GameTimer_Tick(object sender, EventArgs e)
         {
             secondsInGame--;
-           
-            if (secondsInGame < 0 || vm.AllTextTyped)
+
+            if (secondsInGame < 0)
             {
                 timer.Stop();
                 vm.CanUserType = false;
