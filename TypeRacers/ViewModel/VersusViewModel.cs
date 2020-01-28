@@ -21,7 +21,6 @@ namespace TypeRacers.ViewModel
         int currentWordIndex;
         private bool alert;
         readonly Model.Model model;
-        private DateTime startTime;
         private int numberOfCharactersTyped;
         int timerDone = 10000;
 
@@ -30,7 +29,7 @@ namespace TypeRacers.ViewModel
             model = new Model.Model();
             TextToType = model.GetGeneratedTextToTypeFromServer();
             userInputValidator = new InputCharacterValidation(TextToType);
-            startTime = DateTime.UtcNow;
+            StartTime = DateTime.UtcNow;
             // first time getting opponents
             Opponents = model.GetOpponents();
 
@@ -105,7 +104,7 @@ namespace TypeRacers.ViewModel
                     return 0;
                 }
 
-                return (numberOfCharactersTyped / 5) * 60 / ((int)(DateTime.UtcNow - startTime).TotalSeconds);
+                return (numberOfCharactersTyped / 5) * 60 / ((int)(DateTime.UtcNow - StartTime).TotalSeconds);
             }
         }
         public int CurrentWordLength
@@ -173,9 +172,11 @@ namespace TypeRacers.ViewModel
         }
         public bool EnableGetReadyAlert { get; set; }
         public bool EnableRestartOrExitAlert { get; set; }
-        public string SecondsToGetReady { get; set; } = "5";
+        public string SecondsToGetReady { get; set; }
         public bool StartGameTimer { get; set; }
         public string SecondsInGame { get; internal set; } = "90 seconds";
+
+        public DateTime StartTime { get; }
 
         public void ReportProgress()
         {
@@ -295,7 +296,6 @@ namespace TypeRacers.ViewModel
 
                 TriggerPropertyChanged(nameof(EnableGetReadyAlert));
 
-                startTime.AddSeconds(ElapsedTimeFrom30SecondsTimer + 5);
                 //we stop the timer after 30 seconds
                 return;
             }

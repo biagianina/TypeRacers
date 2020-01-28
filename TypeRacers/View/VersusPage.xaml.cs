@@ -14,6 +14,7 @@ namespace TypeRacers.View
     {
         readonly VersusViewModel vm;
         DispatcherTimer timer;
+        private double timeTillStart;
         public VersusPage()
         {
             InitializeComponent();
@@ -34,14 +35,17 @@ namespace TypeRacers.View
             timer.Tick += Timer_Tick;
 
             timer.Start();
-        }
 
-        private int decrement = 5;
+            timeTillStart = (int)(vm.StartTime - DateTime.UtcNow).TotalSeconds;
+            vm.SecondsToGetReady = timeTillStart.ToString();
+            vm.TriggerPropertyChanged(nameof(vm.SecondsToGetReady));
+        }
+       
         private void Timer_Tick(object sender, EventArgs e)
         {
-            decrement--;
+            timeTillStart--;
 
-            if (decrement < 0)
+            if (timeTillStart < 0)
             {
                 timer.Stop();
                 vm.EnableGetReadyAlert = false;
@@ -52,10 +56,10 @@ namespace TypeRacers.View
                 vm.TriggerPropertyChanged(nameof(vm.CanUserType));
             }
 
-            vm.SecondsToGetReady = decrement.ToString();
+            vm.SecondsToGetReady = timeTillStart.ToString();
             vm.TriggerPropertyChanged(nameof(vm.SecondsToGetReady));
 
-            if (decrement == 0)
+            if (timeTillStart == 0)
             {
                 vm.SecondsToGetReady = "START!";
                 vm.TriggerPropertyChanged(nameof(vm.SecondsToGetReady));
