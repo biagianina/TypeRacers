@@ -37,21 +37,6 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Label Content="{Binding SecondsInGame}"
-                   IsEnabled="{Binding StartGameTimer}"
-                   FontFamily="Times New Roman"
-                   FontSize="12"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   Grid.Column="1"
-                   Foreground="White"
-                   FontWeight="Bold"
-                   Background="#FF865B8F"
-                   BorderBrush="#FF5D1572">
-                <Label.Effect>
-                    <DropShadowEffect Color="#FF853C95" />
-                </Label.Effect>
-            </Label>
             <StackPanel Grid.Column="2"
                         Orientation="Vertical"
                         HorizontalAlignment="Right">
@@ -110,15 +95,16 @@
                                           Width="auto"
                                           Height="auto"
                                           Margin="20"
+                                          RATUCSecondsToStart="{Binding SecondsToGetReady}"
                                           RATUCInlines="{Binding TextToTypeStyles}"
+                                          RATUCSecondsInGame="90 seconds left"
                                           RATUCCanType="{Binding CanUserType}"
-                                          RATUCVersusVM="{StaticResource VersusVM}"
                                           RATUCGetReadyAlert="{Binding EnableGetReadyAlert}"
                                           RATUCAllTextTyped="{Binding AllTextTyped}"
                                           RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                           RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
                                           RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}"
-                                          RATUCSecondsToStart="{Binding SecondsToStart, UpdateSourceTrigger=PropertyChanged}">
+                                          >
             </local:ReadAndTypeUserControl>
         </Grid>
 

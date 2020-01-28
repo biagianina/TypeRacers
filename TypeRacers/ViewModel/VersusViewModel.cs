@@ -65,8 +65,6 @@ namespace TypeRacers.ViewModel
 
         public int OpponentsCount { get; set; }
 
-        public string SecondsToStart { get; set; }
-
         public int ElapsedTimeFrom30SecondsTimer { get; set; }
         public bool IsValid
         {
@@ -172,7 +170,7 @@ namespace TypeRacers.ViewModel
         }
         public bool EnableGetReadyAlert { get; set; }
         public bool EnableRestartOrExitAlert { get; set; }
-        public string SecondsToGetReady { get; set; }
+        public string SecondsToGetReady { get; set; } = "3";
         public bool StartGameTimer { get; set; }
         public string SecondsInGame { get; internal set; } = "90 seconds";
 

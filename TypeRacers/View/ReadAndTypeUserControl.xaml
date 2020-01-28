@@ -12,12 +12,12 @@
           DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ReadAndTypeUserControl}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
-            <RowDefinition Height="20" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <TextBlock vm:TextBlockExtensions.BindableInlines="{Binding RATUCInlines}"
-                   Grid.Row="0"
+                   Grid.Row="1"
                    FontFamily="Arial"
                    Foreground="White"
                    Name="displayText"
@@ -26,6 +26,23 @@
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    TextWrapping="Wrap" />
+        <Label Grid.Row="0"
+               Margin="5"
+               Content="{Binding RATUCSecondsInGame}"
+               IsEnabled="True"
+               FontFamily="Times New Roman"
+               FontSize="12"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Top"
+               Grid.Column="2"
+               Foreground="White"
+               FontWeight="Bold"
+               Background="#FF865B8F"
+               BorderBrush="#FF5D1572">
+            <Label.Effect>
+                <DropShadowEffect Color="#FF853C95" />
+            </Label.Effect>
+        </Label>
         <Popup IsOpen="{Binding RATUCTypingAlert, UpdateSourceTrigger=PropertyChanged}"
                Width="220"
                Height="120"
@@ -108,7 +125,6 @@
                            FontWeight="Bold" />
                 </StackPanel>
             </Border>
-
         </Popup>
         <TextBox Name="inputTextbox"
                  Grid.Row="2"

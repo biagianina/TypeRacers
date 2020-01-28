@@ -125,28 +125,17 @@ namespace TypeRacers.View
             }
         }
 
-        public readonly static DependencyProperty RATUCPracticeVMProperty = DependencyProperty.Register("RATUCPracticeVM", typeof(PracticeViewModel), typeof(ReadAndTypeUserControl));
+        public readonly static DependencyProperty RATUCStartTimeProperty = DependencyProperty.Register("RATUCStartTime", typeof(DateTime), typeof(ReadAndTypeUserControl));
 
-        public PracticeViewModel RATUCPracticeVM
+        public DateTime RATUCStartTime
         {
-            get { return (PracticeViewModel)GetValue(RATUCPracticeVMProperty); }
+            get { return (DateTime)GetValue(RATUCStartTimeProperty); }
             set
             {
-                SetValue(RATUCCanTypeProperty, value);
+                SetValue(RATUCStartTimeProperty, value);
             }
         }
-
-        public readonly static DependencyProperty RATUCVersusVMProperty = DependencyProperty.Register("RATUCVersusVM", typeof(VersusViewModel), typeof(ReadAndTypeUserControl));
-
-        public VersusViewModel RATUCVersusVM
-        {
-            get { return (VersusViewModel)GetValue(RATUCVersusVMProperty); }
-            set
-            {
-                SetValue(RATUCCanTypeProperty, value);
-            }
-        }
-
+  
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
@@ -162,19 +151,13 @@ namespace TypeRacers.View
             timer.Tick += Timer_Tick;
 
             timer.Start();
-
-            if (RATUCPracticeVM != null)
-            {
-                RATUCPracticeVM.SecondsToGetReady = "3";
-                RATUCSecondsToStart = "3";
-                secondsToStart = int.Parse(RATUCSecondsToStart);
-            }
-
-            if (RATUCVersusVM != null)
-            {
-                RATUCSecondsToStart = (DateTime.UtcNow - RATUCVersusVM.StartTime).Seconds.ToString();
-                secondsToStart = (DateTime.UtcNow - RATUCVersusVM.StartTime).Seconds;
-            }
+            
+            secondsToStart = 3;
+            
+            //if (RATUCStartTime != null)
+            //{
+            //    secondsToStart = (DateTime.UtcNow - RATUCStartTime).Seconds;
+            //}
         }
 
        
@@ -215,6 +198,7 @@ namespace TypeRacers.View
         }
 
         private int secondsInGame = 90;
+
         private void GameTimer_Tick(object sender, EventArgs e)
         {
             secondsInGame--;
@@ -228,33 +212,17 @@ namespace TypeRacers.View
 
             if (secondsInGame > 0)
             {
-                if (RATUCPracticeVM != null)
-                {
-                    RATUCPracticeVM.SecondsInGame = secondsInGame.ToString() + " seconds";
-                    RATUCPracticeVM.TriggerPropertyChanged(nameof(RATUCPracticeVM.SecondsInGame));
-                }
-                if (RATUCVersusVM != null)
-                {
-                    RATUCVersusVM.SecondsInGame = secondsInGame.ToString() + " seconds";
-                    RATUCVersusVM.TriggerPropertyChanged(nameof(RATUCVersusVM.SecondsInGame));
-                }
+                RATUCSecondsInGame = secondsInGame.ToString() + " seconds left";
+                TriggerPropertyChanged(nameof(RATUCSecondsInGame));
             }
 
             if (secondsInGame == 0)
             {
-                if (RATUCPracticeVM != null)
-                {
-                    RATUCPracticeVM.SecondsInGame = "Time is up!";
-                    RATUCPracticeVM.TriggerPropertyChanged(nameof(RATUCPracticeVM.SecondsInGame));
-                }
-                if (RATUCVersusVM != null)
-                {
-                    RATUCVersusVM.SecondsInGame = "Time is up!";
-                    RATUCVersusVM.TriggerPropertyChanged(nameof(RATUCVersusVM.SecondsInGame));
-                }
+                RATUCSecondsInGame = "Time is up!";
+                TriggerPropertyChanged(nameof(RATUCSecondsInGame));
             }
         }
-
+       
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void TriggerPropertyChanged(string propertyName)
