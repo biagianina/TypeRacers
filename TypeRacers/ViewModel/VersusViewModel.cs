@@ -48,7 +48,7 @@ namespace TypeRacers.ViewModel
         public CommandHandler RestartSearchingOpponentsCommand { get; }
         public CommandHandler ExitProgramCommand { get; }
 
-        public IEnumerable<Inline> Inlines
+        public IEnumerable<Inline> TextToTypeStyles
         {
             get => new[] { new Run() { Text = TextToType.Substring(0, spaceIndex) , Foreground = Brushes.Gold},
                 new Run() { Text = TextToType.Substring(spaceIndex, correctChars), Foreground = Brushes.Gold, TextDecorations = TextDecorations.Underline},
@@ -250,7 +250,7 @@ namespace TypeRacers.ViewModel
                 }
             }
 
-            TriggerPropertyChanged(nameof(Inlines)); //new Inlines formed at each char in input
+            TriggerPropertyChanged(nameof(TextToTypeStyles)); //new Inlines formed at each char in input
         }
         private void RestartSearchingOpponents()
         {

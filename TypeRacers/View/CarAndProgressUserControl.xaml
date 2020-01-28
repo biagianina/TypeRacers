@@ -39,6 +39,7 @@
         </TextBlock>
         <Slider Width="auto"
                 Height="auto"
+                Margin="0,0,0,20"
                 IsHitTestVisible="False"
             Focusable="False"
             Style="{Binding CAPUCSliderStyle}"

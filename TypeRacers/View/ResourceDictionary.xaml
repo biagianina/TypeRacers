@@ -3,7 +3,7 @@
 
     <!-- styles for the slider(car) -->
     <Style
-        x:Key="OrangeSliderThumbStyle"
+        x:Key="YellowSliderThumbStyle"
         TargetType="Thumb">
         <Style.Setters>
             <Setter
@@ -12,16 +12,16 @@
                     <ControlTemplate>
                         <StackPanel
                             Width="auto"
-                            Height="35"
+                            Height="65"
                             Background="#00000000"
                             Orientation="Horizontal">
                             <Image
-                                Width="100"
-                                Height="100"
+                                Width="120"
+                                Height="150"
                                 Margin="2"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                Source="pack://application:,,,/TypeRacers;component/Images/orange.png">
+                                Source="pack://application:,,,/TypeRacers;component/Images/yellow.png">
                             </Image>
                         </StackPanel>
                     </ControlTemplate>
@@ -37,11 +37,11 @@
                 <Setter.Value>
                     <ControlTemplate>
                         <StackPanel Width="auto"
-                                    Height="35"
+                                    Height="65"
                                     Background="#00000000"
                                     Orientation="Horizontal">
-                            <Image Width="100"
-                                   Height="100"
+                            <Image Width="120"
+                                   Height="150"
                                    Margin="2"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
@@ -61,11 +61,11 @@
                 <Setter.Value>
                     <ControlTemplate>
                         <StackPanel Width="auto"
-                                    Height="35"
+                                    Height="65"
                                     Background="#00000000"
                                     Orientation="Horizontal">
-                            <Image Width="100"
-                                   Height="100"
+                            <Image Width="120"
+                                   Height="150"
                                    Margin="2"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
@@ -81,7 +81,7 @@
     
     <Style
         TargetType="Slider"
-        x:Key="OrangeSliderStyle">
+        x:Key="YellowSliderStyle">
         <Setter
             Property="OverridesDefaultStyle"
             Value="true" />
@@ -109,7 +109,7 @@
                             Height="{TemplateBinding Height}">
                             <Track.Thumb>
                                 <Thumb
-                                    Style="{StaticResource OrangeSliderThumbStyle}" />
+                                    Style="{StaticResource YellowSliderThumbStyle}" />
                             </Track.Thumb>
                         </Track>
                     </Grid>

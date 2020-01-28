@@ -19,7 +19,7 @@ namespace TypeRacers.View
             InitializeComponent();
             vm = (VersusViewModel)Resources["VersusVM"];
         }
-        public void Back_click(object sender, RoutedEventArgs e)
+        public void BackBtn_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new MainPage());
         }

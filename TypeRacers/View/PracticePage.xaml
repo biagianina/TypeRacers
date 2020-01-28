@@ -61,12 +61,12 @@
                                              CAPUCName="You"
                                              CAPUCProgress="{Binding Progress}"
                                              CAPUCSliderProgress="{Binding SliderProgress}"
-                                             CAPUCSliderStyle="{StaticResource OrangeSliderStyle}" />
+                                             CAPUCSliderStyle="{StaticResource YellowSliderStyle}" />
 
             <local:ReadAndTypeUserControl Grid.Row="3"
                                           Margin="20"
                                           RATUCCanType="True"
-                                          RATUCInlines="{Binding Inlines}"
+                                          RATUCInlines="{Binding TextToTypeStyles}"
                                           RATUCAllTextTyped="{Binding AllTextTyped}"
                                           RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                           RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"

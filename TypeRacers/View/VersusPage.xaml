@@ -71,7 +71,7 @@
             </StackPanel>
             <Button Grid.Column="0"
                     Name="Back"
-                    Click="Back_click"
+                    Click="BackBtn_Click"
                     Margin="10 5"
                     Width="70"
                     Height="30"
@@ -94,7 +94,7 @@
                                                  CAPUCName="{Binding Opponents[0].Item1, UpdateSourceTrigger=PropertyChanged}"
                                                  CAPUCProgress="{Binding Opponents[0].Item2.Item1, UpdateSourceTrigger=PropertyChanged}"
                                                  CAPUCSliderProgress="{Binding Opponents[0].Item2.Item2, UpdateSourceTrigger=PropertyChanged}"
-                                                 CAPUCSliderStyle="{StaticResource OrangeSliderStyle}" />
+                                                 CAPUCSliderStyle="{StaticResource YellowSliderStyle}" />
 
                 <local:CarAndProgressUserControl CAPUCCanBeShown="{Binding ShowSecondOpponent}"
                                                  CAPUCName="{Binding Opponents[1].Item1,  UpdateSourceTrigger=PropertyChanged}"
@@ -110,7 +110,7 @@
                                           Width="auto"
                                           Height="auto"
                                           Margin="20"
-                                          RATUCInlines="{Binding Inlines}"
+                                          RATUCInlines="{Binding TextToTypeStyles}"
                                           RATUCCanType="{Binding CanUserType}"
                                           RATUCGetReadyAlert="{Binding GetReadyAlert}"
                                           RATUCAllTextTyped="{Binding AllTextTyped}"
