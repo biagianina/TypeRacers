@@ -22,7 +22,6 @@ namespace TypeRacers.ViewModel
         private bool alert;
         readonly Model.Model model;
         private int numberOfCharactersTyped;
-        int timerDone = 10000;
 
         public VersusViewModel()
         {
@@ -32,9 +31,10 @@ namespace TypeRacers.ViewModel
             StartTime = DateTime.UtcNow;
             // first time getting opponents
             Opponents = model.GetOpponents();
-
+            StartingTime = model.GetStartingTime();
             //check how many players can we display on the screen
             UpdateShownPlayers();
+
             ExitProgramCommand = new CommandHandler(() => ExitProgram(), () => true);
             RestartSearchingOpponentsCommand = new CommandHandler(() => RestartSearchingOpponents(), () => true);
             //start searching for 30 seconds and subscribe to timer
@@ -64,6 +64,12 @@ namespace TypeRacers.ViewModel
         public Visibility ShowSecondOpponent { get; set; }
 
         public int OpponentsCount { get; set; }
+
+
+        public string StartingTime { get; set; }
+        public string SecondsToStart { get; set; }
+
+
 
         public int ElapsedTimeFrom30SecondsTimer { get; set; }
         public bool IsValid
@@ -273,12 +279,12 @@ namespace TypeRacers.ViewModel
             TriggerPropertyChanged(nameof(OpponentsCount));
             UpdateShownPlayers();
 
-            if (ElapsedTimeFrom30SecondsTimer == timerDone && OpponentsCount < 2)
+            if (DateTime.Now.ToString("h:mm:ss") == StartingTime && OpponentsCount < 2)
             {
                 EnableRestartOrExitAlert = true;
                 TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
             }
-            if (OpponentsCount == 3 || ElapsedTimeFrom30SecondsTimer == timerDone && OpponentsCount == 2)
+            if (OpponentsCount == 3 || DateTime.Now.ToString("h:mm:ss") == StartingTime && OpponentsCount == 2)
             {
                 TriggerPropertyChanged(nameof(Opponents));
                 //enabling input
@@ -301,6 +307,10 @@ namespace TypeRacers.ViewModel
             TriggerPropertyChanged(nameof(Opponents));
         }
 
+        public void CheckIfRaceCanStart()
+        {
+
+        }
         public void UpdateShownPlayers()
         {
             if (Opponents.Count() == 0)

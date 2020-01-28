@@ -20,7 +20,10 @@ namespace TypeRacers.Server
         int playroomCount = 0;
         int currentPlayerPlayroomNumber;
         int maxPlayroomSize = 3;
+
+
         //to avoid generating different texts from users in same competition
+
 
         public static string CompetitionText { get; } = ServerGeneratedText.GetText();
         public void Setup()
@@ -31,6 +34,8 @@ namespace TypeRacers.Server
             playrooms = new List<Playroom>();
             playrooms.Add(new Playroom());
             currentPlayroom = playrooms.Last();
+
+
             try
             {
                 server.Start();
@@ -90,7 +95,7 @@ namespace TypeRacers.Server
         {
             if (newClient)
             {
-                byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + roomNumber + "#"); //generates random text from text document
+                byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + roomNumber + "%" + currentPlayroom.StartingTime + "#"); //generates random text from text document
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
 
             }
@@ -135,7 +140,7 @@ namespace TypeRacers.Server
             string username = dataReceived.Substring(dataReceived.IndexOf('$') + 1);
             currentClient = username.Substring(0, username.Length - 1);
 
-            if(currentClient == string.Empty)
+            if (currentClient == string.Empty)
             {
                 return;
             }
@@ -159,14 +164,17 @@ namespace TypeRacers.Server
         {
             currentPlayroom = playrooms[roomNumber];
 
+
             if (currentPlayroom.PlayroomSize == maxPlayroomSize && !currentPlayroom.ExistsInPlayroom(currentClient))
-            { 
-                if(playrooms.Last().PlayroomSize == maxPlayroomSize)
+            {
+                if (playrooms.Last().PlayroomSize == maxPlayroomSize)
                 {
+
                     currentPlayroom = CreateNewPlayroom();
                 }
                 else
                 {
+
                     currentPlayroom = playrooms.Last();
                 }
 

@@ -45,7 +45,7 @@
             Style="{Binding CAPUCSliderStyle}"
             Maximum="100"
             Value="{Binding CAPUCSliderProgress, Mode=OneWay}" />
-
+ 
         <Line Stroke="#FF13110E"
               StrokeDashArray="2 2"
               StrokeThickness="3"
