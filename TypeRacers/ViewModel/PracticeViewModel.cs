@@ -33,7 +33,7 @@ namespace TypeRacers.ViewModel
             startTime = DateTime.UtcNow;
         }
 
-        public IEnumerable<Inline> Inlines
+        public IEnumerable<Inline> TextToTypeStyles
         {
             get => new[] { new Run() { Text = TextToType.Substring(0, spaceIndex) , Foreground = Brushes.Gold},
                 new Run() { Text = TextToType.Substring(spaceIndex, correctChars), Foreground = Brushes.Gold, TextDecorations = TextDecorations.Underline},
@@ -43,7 +43,7 @@ namespace TypeRacers.ViewModel
                 };
         }
 
-        public bool IsValid
+        public bool ValidateInput
         {
             get => isValid;
 
@@ -53,7 +53,7 @@ namespace TypeRacers.ViewModel
                     return;
 
                 isValid = value;
-                TriggerPropertyChanged(nameof(IsValid));
+                TriggerPropertyChanged(nameof(ValidateInput));
                 TriggerPropertyChanged(nameof(InputBackgroundColor));
             }
         }
@@ -71,7 +71,7 @@ namespace TypeRacers.ViewModel
             }
         }
 
-        public int Progress
+        public int WPMProgress
         {
             get
             {
@@ -134,7 +134,7 @@ namespace TypeRacers.ViewModel
                 textToType = value;
 
                 //validate current word
-                IsValid = userInputValidator.ValidateWord(CurrentInputText, CurrentInputText.Length);
+                ValidateInput = userInputValidator.ValidateWord(CurrentInputText, CurrentInputText.Length);
 
                 CheckUserInput(textToType);
 
@@ -168,14 +168,14 @@ namespace TypeRacers.ViewModel
                 numberOfCharactersTyped += CurrentInputText.Length;
                 textToType = string.Empty;
                 TriggerPropertyChanged(nameof(SliderProgress));
-                TriggerPropertyChanged(nameof(Progress));//recalculates progress 
+                TriggerPropertyChanged(nameof(WPMProgress));//recalculates progress 
             }
             //checks if current word is the last one
-            if (IsValid && textToType.Length + spaceIndex == TextToType.Length)
+            if (ValidateInput && textToType.Length + spaceIndex == TextToType.Length)
             {
                 AllTextTyped = true;
                 TriggerPropertyChanged(nameof(AllTextTyped));
-                TriggerPropertyChanged(nameof(Progress));//recalculates progress 
+                TriggerPropertyChanged(nameof(WPMProgress));//recalculates progress 
             }
         }
         public void HighlightText()
@@ -215,7 +215,7 @@ namespace TypeRacers.ViewModel
                 }
             }
 
-            TriggerPropertyChanged(nameof(Inlines)); //new Inlines formed at each char in input
+            TriggerPropertyChanged(nameof(TextToTypeStyles)); //new Inlines formed at each char in input
         }
 
         //INotifyPropertyChanged code - basic 

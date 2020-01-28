@@ -51,7 +51,7 @@
                                           Margin="20"
                                           RATUCCanType="{Binding CanUserType}"
                                           RATUCGetReadyAlert="{Binding GetReadyAlert}"
-                                          RATUCInlines="{Binding Inlines}"
+                                          RATUCInlines="{Binding TextToTypeStyles}"
                                           RATUCSecondsInGame="90 seconds"
                                           RATUCSecondsToStart="3"
                                           RATUCAllTextTyped="{Binding AllTextTyped}"

@@ -72,7 +72,7 @@ namespace TypeRacers.ViewModel
 
 
         public int ElapsedTimeFrom30SecondsTimer { get; set; }
-        public bool IsValid
+        public bool InputValidation
         {
             get => isValid;
 
@@ -82,7 +82,7 @@ namespace TypeRacers.ViewModel
                     return;
 
                 isValid = value;
-                TriggerPropertyChanged(nameof(IsValid));
+                TriggerPropertyChanged(nameof(InputValidation));
                 TriggerPropertyChanged(nameof(InputBackgroundColor));
             }
         }
@@ -99,7 +99,7 @@ namespace TypeRacers.ViewModel
                 return spaceIndex * 100 / TextToType.Length;
             }
         }
-        public int Progress
+        public int WPMProgress
         {
             get
             {
@@ -108,7 +108,7 @@ namespace TypeRacers.ViewModel
                     return 0;
                 }
 
-                return (numberOfCharactersTyped / 5) * 60 / ((int)(DateTime.UtcNow - StartTime).TotalSeconds);
+                return (numberOfCharactersTyped / 5) * 60 / ((int)(DateTime.Now - DateTime.Parse(StartingTime)).TotalSeconds);
             }
         }
         public int CurrentWordLength
@@ -162,7 +162,7 @@ namespace TypeRacers.ViewModel
                 textToType = value;
 
                 //validate current word
-                IsValid = userInputValidator.ValidateWord(CurrentInputText, CurrentInputText.Length);
+                InputValidation = userInputValidator.ValidateWord(CurrentInputText, CurrentInputText.Length);
 
                 CheckUserInput(textToType);
 
@@ -177,14 +177,12 @@ namespace TypeRacers.ViewModel
         public bool EnableGetReadyAlert { get; set; }
         public bool EnableRestartOrExitAlert { get; set; }
         public string SecondsToGetReady { get; set; } = "3";
-        public bool StartGameTimer { get; set; }
         public string SecondsInGame { get; internal set; } = "90 seconds";
-
         public DateTime StartTime { get; }
 
         public void ReportProgress()
         {
-            model.ReportProgress(Progress, SliderProgress);
+            model.ReportProgress(WPMProgress, SliderProgress);
             Opponents = model.GetOpponents();
             TriggerPropertyChanged(nameof(Opponents));
         }
@@ -204,17 +202,17 @@ namespace TypeRacers.ViewModel
                 numberOfCharactersTyped += CurrentInputText.Length;
                 textToType = string.Empty;
                 TriggerPropertyChanged(nameof(SliderProgress));
-                TriggerPropertyChanged(nameof(Progress));
+                TriggerPropertyChanged(nameof(WPMProgress));
                 //recalculates progress 
                 ReportProgress();
             }
             //checks if current word is the last one
-            if (IsValid && textToType.Length + spaceIndex == TextToType.Length)
+            if (InputValidation && textToType.Length + spaceIndex == TextToType.Length)
             {
                 AllTextTyped = true;
                 TriggerPropertyChanged(nameof(AllTextTyped));
                 TriggerPropertyChanged(nameof(SliderProgress));
-                TriggerPropertyChanged(nameof(Progress));//recalculates progress 
+                TriggerPropertyChanged(nameof(WPMProgress));//recalculates progress 
                 ReportProgress();
             }
         }
