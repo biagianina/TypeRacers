@@ -95,6 +95,7 @@
                                           Width="auto"
                                           Height="auto"
                                           Margin="20"
+                                          RATUCStartTime="{Binding SecondsToGetReady}"
                                           RATUCSecondsToStart="{Binding SecondsToGetReady}"
                                           RATUCInlines="{Binding TextToTypeStyles}"
                                           RATUCSecondsInGame="90 seconds left"

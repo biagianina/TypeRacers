@@ -10,11 +10,11 @@ namespace Server
 {
     class Playroom
     {
-        DateTime currentTime = DateTime.Now;
+        readonly DateTime currentTime;
         public Playroom()
         {
             Players = new Dictionary<string, Tuple<string, string, int>>();
-            currentTime = currentTime.AddSeconds(30);
+            currentTime = DateTime.UtcNow.AddSeconds(30);
             StartingTime = currentTime.ToString("h:mm:ss");
         }
 

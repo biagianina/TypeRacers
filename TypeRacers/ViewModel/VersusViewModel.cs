@@ -28,21 +28,23 @@ namespace TypeRacers.ViewModel
             model = new Model.Model();
             TextToType = model.GetGeneratedTextToTypeFromServer();
             userInputValidator = new InputCharacterValidation(TextToType);
-            StartTime = DateTime.UtcNow;
-            // first time getting opponents
+
+            // first time getting opponents and timersetters
             Opponents = model.GetOpponents();
             StartingTime = model.GetStartingTime();
-            SecondsToGetReady = ((int)(DateTime.Parse(StartingTime) - DateTime.Now).Seconds / 1000).ToString();
+            SecondsToGetReady = ((DateTime.Parse(StartingTime).Subtract(DateTime.UtcNow)).Seconds).ToString();
+            StartTime = DateTime.Parse(StartingTime);
+
             //check how many players can we display on the screen
             UpdateShownPlayers();
 
+
             ExitProgramCommand = new CommandHandler(() => ExitProgram(), () => true);
             RestartSearchingOpponentsCommand = new CommandHandler(() => RestartSearchingOpponents(), () => true);
+      
             //start searching for 30 seconds and subscribe to timer
             model.StartSearchingOpponents();
             model.SubscribeToSearchingOpponents(UpdateOpponents);
-
-            CanUserType = false;
         }
 
         public CommandHandler RestartSearchingOpponentsCommand { get; }
@@ -176,7 +178,7 @@ namespace TypeRacers.ViewModel
         public bool EnableRestartOrExitAlert { get; set; }
         public string SecondsToGetReady { get; set; }
         public string SecondsInGame { get; internal set; } = "90 seconds";
-        public DateTime StartTime { get; }
+        public DateTime StartTime { get; set; }
 
         public void ReportProgress()
         {

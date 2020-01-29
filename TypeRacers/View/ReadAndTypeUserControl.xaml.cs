@@ -91,8 +91,7 @@ namespace TypeRacers.View
                 SetValue(RATUCSecondsToStartProperty, value);
             }
         }
-
-        public readonly static DependencyProperty RATUCSecondsInGameProperty = DependencyProperty.Register("RATUCSecondsInGame", typeof(string), typeof(ReadAndTypeUserControl));
+                public readonly static DependencyProperty RATUCSecondsInGameProperty = DependencyProperty.Register("RATUCSecondsInGame", typeof(string), typeof(ReadAndTypeUserControl));
 
         public string RATUCSecondsInGame
         {
@@ -125,11 +124,11 @@ namespace TypeRacers.View
             }
         }
 
-        public readonly static DependencyProperty RATUCStartTimeProperty = DependencyProperty.Register("RATUCStartTime", typeof(string), typeof(ReadAndTypeUserControl));
+        public readonly static DependencyProperty RATUCStartTimeProperty = DependencyProperty.Register("RATUCStartTime", typeof(int), typeof(ReadAndTypeUserControl));
 
-        public string RATUCStartTime
+        public int RATUCStartTime
         {
-            get { return (string)GetValue(RATUCStartTimeProperty); }
+            get { return (int)GetValue(RATUCStartTimeProperty); }
             set
             {
                 SetValue(RATUCStartTimeProperty, value);
@@ -143,6 +142,7 @@ namespace TypeRacers.View
 
         private void GetReadyPopUp_Opened(object sender, EventArgs e)
         {
+            SetSeconds();
             timer = new DispatcherTimer()
             {
                 Interval = TimeSpan.FromSeconds(1)
@@ -151,16 +151,21 @@ namespace TypeRacers.View
             timer.Tick += Timer_Tick;
 
             timer.Start();
-            
-            secondsToStart = 3;
 
-            if (RATUCStartTime != null)
-            {
-                secondsToStart = int.Parse(RATUCStartTime);
-            }
         }
 
-       
+        public void SetSeconds()
+        {
+            if (RATUCStartTime == 0)
+            {
+                secondsToStart = 5;
+            }
+            else
+            {
+                secondsToStart = RATUCStartTime;
+            }
+        }
+  
         private void Timer_Tick(object sender, EventArgs e)
         {
            secondsToStart--;
