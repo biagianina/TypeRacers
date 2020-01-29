@@ -80,7 +80,6 @@
         <Popup Name="GetReadyPopUp"
                IsOpen="{Binding RATUCGetReadyAlert, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                Opened="GetReadyPopUp_Opened"
-               StaysOpen="False"
                IsEnabled="{Binding RATUCGetReadyAlert, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                Placement="Center"
                VerticalAlignment="Center"

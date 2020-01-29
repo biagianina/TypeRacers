@@ -28,23 +28,40 @@ namespace TypeRacers.ViewModel
             model = new Model.Model();
             TextToType = model.GetGeneratedTextToTypeFromServer();
             userInputValidator = new InputCharacterValidation(TextToType);
-
-            // first time getting opponents and timersetters
+            
+            // first time getting opponents
             Opponents = model.GetOpponents();
             StartingTime = model.GetStartingTime();
-            SecondsToGetReady = ((DateTime.Parse(StartingTime).Subtract(DateTime.UtcNow)).Seconds).ToString();
-            StartTime = DateTime.Parse(StartingTime);
-
+            SetTimers();
             //check how many players can we display on the screen
             UpdateShownPlayers();
 
-
             ExitProgramCommand = new CommandHandler(() => ExitProgram(), () => true);
             RestartSearchingOpponentsCommand = new CommandHandler(() => RestartSearchingOpponents(), () => true);
-      
             //start searching for 30 seconds and subscribe to timer
             model.StartSearchingOpponents();
             model.SubscribeToSearchingOpponents(UpdateOpponents);
+
+            CanUserType = false;
+        }
+
+        private void SetTimers()
+        {
+            var start = DateTime.Parse(StartingTime);
+            var now = DateTime.Parse(DateTime.UtcNow.ToString("h:mm:ss"));
+            var secondsToStart = start.Subtract(now);
+            SecondsToGetReady = secondsToStart.Seconds.ToString();
+            StartTime = DateTime.Parse(StartingTime);
+            EnableGetReadyAlert = true;
+
+            int.TryParse(SecondsToGetReady, out int seconds);
+
+            if (seconds < 0)
+            {
+                EnableGetReadyAlert = false;
+            }
+
+            TriggerPropertyChanged(nameof(EnableGetReadyAlert));
         }
 
         public CommandHandler RestartSearchingOpponentsCommand { get; }
@@ -277,26 +294,15 @@ namespace TypeRacers.ViewModel
             TriggerPropertyChanged(nameof(OpponentsCount));
             UpdateShownPlayers();
 
-            if (DateTime.Now.ToString("h:mm:ss") == StartingTime && OpponentsCount < 2)
+            if (DateTime.UtcNow.ToString("h:mm:ss").Equals(StartingTime) && OpponentsCount < 2)
             {
                 EnableRestartOrExitAlert = true;
                 TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
             }
-            if (OpponentsCount == 3 || DateTime.Now.ToString("h:mm:ss") == StartingTime && OpponentsCount == 2)
+            if (OpponentsCount == 3 || DateTime.UtcNow.ToString("h:mm:ss").Equals(StartingTime) && OpponentsCount == 2)
             {
                 TriggerPropertyChanged(nameof(Opponents));
                 //enabling input
-
-                EnableGetReadyAlert = true;
-
-                int.TryParse(SecondsToGetReady, out int seconds);
-
-                if (seconds < 0)
-                {
-                    EnableGetReadyAlert = false;
-                }
-
-                TriggerPropertyChanged(nameof(EnableGetReadyAlert));
 
                 //we stop the timer after 30 seconds
                 return;

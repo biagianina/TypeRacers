@@ -91,7 +91,8 @@ namespace TypeRacers.View
                 SetValue(RATUCSecondsToStartProperty, value);
             }
         }
-                public readonly static DependencyProperty RATUCSecondsInGameProperty = DependencyProperty.Register("RATUCSecondsInGame", typeof(string), typeof(ReadAndTypeUserControl));
+
+        public readonly static DependencyProperty RATUCSecondsInGameProperty = DependencyProperty.Register("RATUCSecondsInGame", typeof(string), typeof(ReadAndTypeUserControl));
 
         public string RATUCSecondsInGame
         {
@@ -142,7 +143,6 @@ namespace TypeRacers.View
 
         private void GetReadyPopUp_Opened(object sender, EventArgs e)
         {
-            SetSeconds();
             timer = new DispatcherTimer()
             {
                 Interval = TimeSpan.FromSeconds(1)
@@ -151,21 +151,16 @@ namespace TypeRacers.View
             timer.Tick += Timer_Tick;
 
             timer.Start();
+            
+            secondsToStart = 3;
 
-        }
-
-        public void SetSeconds()
-        {
-            if (RATUCStartTime == 0)
-            {
-                secondsToStart = 5;
-            }
-            else
+            if (RATUCStartTime != 0)
             {
                 secondsToStart = RATUCStartTime;
             }
         }
-  
+
+       
         private void Timer_Tick(object sender, EventArgs e)
         {
            secondsToStart--;
