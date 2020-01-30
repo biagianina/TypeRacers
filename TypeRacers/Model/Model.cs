@@ -9,7 +9,7 @@ namespace TypeRacers.Model
     {
         readonly static NetworkHandler networkHandler = new NetworkHandler();
 
-        public List<Tuple<string, Tuple<string, string, int>>> GetOpponents()
+        public List<Tuple<string, Tuple<string, string, int, string>>> GetOpponents()
 
         {
             return networkHandler.GetOpponents();
@@ -20,9 +20,9 @@ namespace TypeRacers.Model
         }
         public string GetStartingTime()
         {
-            throw new NotImplementedException();
+            return networkHandler.GetStartingTime();
         }
-        public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, int>> updateOpponentsAndElapsedTime)
+        public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, Tuple<string, string, int, string>>>, int>> updateOpponentsAndElapsedTime)
 
         {
             networkHandler.SubscribeToSearchingOpponentsTimer(updateOpponentsAndElapsedTime);
@@ -46,14 +46,14 @@ namespace TypeRacers.Model
         {
             return networkHandler.GetTextFromServer();
         }
+        public void RemovePlayer()
+        {
+            networkHandler.RemovePlayer();
+        }
         internal static void NameClient(string username)
         {
             networkHandler.NameClient(username);
         }
 
-        public void RemovePlayer()
-        {
-            networkHandler.RemovePlayer();
-        }
     }
 }

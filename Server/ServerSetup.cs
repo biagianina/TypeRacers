@@ -113,7 +113,7 @@ namespace TypeRacers.Server
             {
                 if (!a.Key.ToString().Equals(currentClient))
                 {
-                    opponents += a.Key + ":" + a.Value.Item1 + "&" + a.Value.Item2 + "&" + a.Value.Item3 + "/";
+                    opponents += a.Key + ":" + a.Value.Item1 + "&" + a.Value.Item2 + "&" + a.Value.Item3 + "&" + a.Value.Item4 + "/";
 
                 }
             }
@@ -130,11 +130,11 @@ namespace TypeRacers.Server
             //progress and slider progress
             string progress = dataReceived.Substring(0, dataReceived.IndexOf('$'));
 
-            var progressInfoAndPlayerRoom = progress.Split('&');
+            var progressInfoAndPlayerRoomInfo = progress.Split('&');
 
             //1 progress, 2 sliderprogress, 3 current client playroom
-            Tuple<string, string, int> clientInfo = new Tuple<string, string, int>(progressInfoAndPlayerRoom[0],
-                progressInfoAndPlayerRoom[1], Convert.ToInt32(progressInfoAndPlayerRoom[2]));
+            Tuple<string, string, int, string> clientInfo = new Tuple<string, string, int, string>(progressInfoAndPlayerRoomInfo[0],
+                progressInfoAndPlayerRoomInfo[1], Convert.ToInt32(progressInfoAndPlayerRoomInfo[2]), progressInfoAndPlayerRoomInfo[3]);
 
 
             string username = dataReceived.Substring(dataReceived.IndexOf('$') + 1);
@@ -167,7 +167,7 @@ namespace TypeRacers.Server
             return playrooms.Last();
         }
 
-        public void CheckCurrentPlayroom(string currrentClient, int roomNumber, Tuple<string, string, int> clientInfo)
+        public void CheckCurrentPlayroom(string currrentClient, int roomNumber, Tuple<string, string, int, string> clientInfo)
         {
             currentPlayroom = playrooms[roomNumber];
 
@@ -187,8 +187,9 @@ namespace TypeRacers.Server
 
             }
             newClient = currentPlayroom.AddPlayersToRoom(currrentClient, clientInfo);
+            currentPlayroom.CheckIfPlayersCanStart();
             CheckNewClient(currentPlayroom.PlayroomNumber);
-
+ 
         }
     }
 }

@@ -28,26 +28,25 @@ namespace TypeRacers.ViewModel
             model = new Model.Model();
             TextToType = model.GetGeneratedTextToTypeFromServer();
             userInputValidator = new InputCharacterValidation(TextToType);
-            
+
             // first time getting opponents
             Opponents = model.GetOpponents();
             WaitingTime = model.GetWaitingTime();
-            SecondsToGetReady = WaitingTime.ToString();
             //SetTimers();
             //check how many players can we display on the screen
             UpdateShownPlayers();
 
+            StartingTime = model.GetStartingTime();
             ExitProgramCommand = new CommandHandler(() => ExitProgram(), () => true);
             RemovePlayer = new CommandHandler(() => RemovePlayerFromPlayroom(), () => true);
             RestartSearchingOpponentsCommand = new CommandHandler(() => RestartSearchingOpponents(), () => true);
             //start searching for 30 seconds and subscribe to timer
             model.StartSearchingOpponents();
             model.SubscribeToSearchingOpponents(UpdateOpponents);
-
             CanUserType = false;
         }
 
-     
+
         public CommandHandler RemovePlayer { get; }
         public CommandHandler RestartSearchingOpponentsCommand { get; }
         public CommandHandler ExitProgramCommand { get; }
@@ -62,7 +61,7 @@ namespace TypeRacers.ViewModel
                 };
         }
 
-        public IEnumerable<Tuple<string, Tuple<string, string, int>>> Opponents { get; private set; }
+        public IEnumerable<Tuple<string, Tuple<string, string, int, string>>> Opponents { get; private set; }
 
         public Visibility ShowFirstOpponent { get; set; }
 
@@ -71,7 +70,7 @@ namespace TypeRacers.ViewModel
         public int WaitingTime { get; set; }
         public int OpponentsCount { get; set; }
         public string StartingTime { get; set; }
-        public int ElapsedTimeFrom30SecondsTimer { get; set; }
+        public int ElapsedTimeFromWaitingTimer { get; set; }
         public bool InputValidation
         {
             get => isValid;
@@ -186,7 +185,7 @@ namespace TypeRacers.ViewModel
             var secondsToStart = start.Subtract(now);
             SecondsToGetReady = secondsToStart.Seconds.ToString();
             StartTime = DateTime.Parse(StartingTime);
-            
+
         }
 
         public void ReportProgress()
@@ -281,16 +280,22 @@ namespace TypeRacers.ViewModel
         {
             model.RemovePlayer();
         }
-        public void UpdateOpponents(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int> updatedOpponentsAndElapsedTime)
+        public void UpdateOpponents(Tuple<List<Tuple<string, Tuple<string, string, int, string>>>, int> updatedOpponentsAndElapsedTime)
 
         {
             Opponents = updatedOpponentsAndElapsedTime.Item1;
-            ElapsedTimeFrom30SecondsTimer = updatedOpponentsAndElapsedTime.Item2;
+            ElapsedTimeFromWaitingTimer = updatedOpponentsAndElapsedTime.Item2;
             OpponentsCount = Opponents.Count() + 1;
-            TriggerPropertyChanged(nameof(ElapsedTimeFrom30SecondsTimer));
+            if (!string.IsNullOrEmpty(model.GetStartingTime()))
+            {
+                StartingTime = model.GetStartingTime();
+                SecondsToGetReady = DateTime.Parse(StartingTime).Subtract(DateTime.UtcNow).Seconds.ToString();
+                CheckIfRaceCanStart();
+            }
+
+            TriggerPropertyChanged(nameof(ElapsedTimeFromWaitingTimer));
             TriggerPropertyChanged(nameof(OpponentsCount));
             UpdateShownPlayers();
-            CheckIfRaceCanStart();
             EnableGetReadyAlert = true;
 
             int.TryParse(SecondsToGetReady, out int seconds);
@@ -308,12 +313,12 @@ namespace TypeRacers.ViewModel
         public void CheckIfRaceCanStart()
         {
 
-            if (DateTime.UtcNow.ToString("h:mm:ss").Equals(StartingTime) && OpponentsCount < 2)
-            {
-                EnableRestartOrExitAlert = true;
-                TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
-            }
-            if (OpponentsCount == 3 || DateTime.UtcNow.ToString("h:mm:ss").Equals(StartingTime) && OpponentsCount == 2)
+            //if (DateTime.UtcNow.ToString("h:mm:ss").Equals(StartingTime) && OpponentsCount < 2)
+            //{
+            //    EnableRestartOrExitAlert = true;
+            //    TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
+            //}
+            if (DateTime.UtcNow - DateTime.Parse(StartingTime) <= TimeSpan.Zero)
             {
                 TriggerPropertyChanged(nameof(Opponents));
                 //enabling input
