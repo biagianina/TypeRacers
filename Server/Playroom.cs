@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,9 @@ namespace Server
         {
             Players = new Dictionary<string, Tuple<string, string, int>>();
             currentTime = DateTime.UtcNow;
+
             TimeToWaitForOpponents = string.Format("{0:hh:mm:ss tt}", currentTime.AddSeconds(20));
+
         }
 
         public Dictionary<string, Tuple<string, string, int>> Players { get; set; }

@@ -47,8 +47,25 @@ namespace TypeRacers.ViewModel
             CanUserType = false;
         }
 
+
      
         public CommandHandler RemovePlayer { get; }
+        private void SetTimers()
+        {
+            SecondsToGetReady = DateTime.Parse(StartingTime).Subtract(DateTime.UtcNow).Seconds.ToString();
+            StartTime = DateTime.Parse(StartingTime);
+            EnableGetReadyAlert = true;
+
+            int.TryParse(SecondsToGetReady, out int seconds);
+
+            if (seconds < 0)
+            {
+                EnableGetReadyAlert = false;
+            }
+
+            TriggerPropertyChanged(nameof(EnableGetReadyAlert));
+        }
+
         public CommandHandler RestartSearchingOpponentsCommand { get; }
         public CommandHandler ExitProgramCommand { get; }
 
@@ -308,12 +325,14 @@ namespace TypeRacers.ViewModel
         public void CheckIfRaceCanStart()
         {
 
-            if (DateTime.UtcNow.ToString("h:mm:ss").Equals(StartingTime) && OpponentsCount < 2)
+            if (DateTime.Parse(StartingTime).Subtract(DateTime.UtcNow) <= TimeSpan.Zero && OpponentsCount < 2)
             {
+                EnableGetReadyAlert = false;
+                TriggerPropertyChanged(nameof(EnableGetReadyAlert));
                 EnableRestartOrExitAlert = true;
                 TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
             }
-            if (OpponentsCount == 3 || DateTime.UtcNow.ToString("h:mm:ss").Equals(StartingTime) && OpponentsCount == 2)
+            if (OpponentsCount == 3 || DateTime.UtcNow.Subtract(DateTime.Parse(StartingTime)) <= TimeSpan.Zero && OpponentsCount == 2)
             {
                 TriggerPropertyChanged(nameof(Opponents));
                 //enabling input
