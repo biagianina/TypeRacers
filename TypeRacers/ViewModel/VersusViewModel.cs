@@ -32,6 +32,7 @@ namespace TypeRacers.ViewModel
             // first time getting opponents
             Opponents = model.GetOpponents();
             WaitingTime = model.GetWaitingTime();
+            TimeToStart = DateTime.UtcNow.AddSeconds(WaitingTime /1000);
 
             WaitingAnimationRepeat = new RepeatBehavior(WaitingTime / 1000);
             EnableSearchingAnimation = true;
@@ -41,7 +42,6 @@ namespace TypeRacers.ViewModel
             //check how many players can we display on the screen
             UpdateShownPlayers();
 
-            StartingTime = model.GetStartingTime();
             ExitProgramCommand = new CommandHandler(() => ExitProgram(), () => true);
             RemovePlayer = new CommandHandler(() => RemovePlayerFromPlayroom(), () => true);
             RestartSearchingOpponentsCommand = new CommandHandler(() => RestartSearchingOpponents(), () => true);
@@ -66,13 +66,14 @@ namespace TypeRacers.ViewModel
                 };
         }
 
-        public IEnumerable<Tuple<string, Tuple<string, string, int, string>>> Opponents { get; private set; }
+        public IEnumerable<Tuple<string, Tuple<string, string, int>>> Opponents { get; private set; }
 
         public Visibility ShowFirstOpponent { get; set; }
 
         public Visibility ShowSecondOpponent { get; set; }
 
         public int WaitingTime { get; set; }
+        public DateTime TimeToStart { get; private set; }
         public int OpponentsCount { get; set; }
         public string StartingTime { get; set; }
         public int ElapsedTimeFromWaitingTimer { get; set; }
@@ -179,7 +180,6 @@ namespace TypeRacers.ViewModel
             }
         }
         public bool EnableGetReadyAlert { get; set; }
-        public bool CanGameStart { get; private set; } = true;
         public bool EnableRestartOrExitAlert { get; set; }
         public string SecondsToGetReady { get; set; }
         public RepeatBehavior WaitingAnimationRepeat { get; }
@@ -187,18 +187,7 @@ namespace TypeRacers.ViewModel
         public bool SearchingForOpponents { get; private set; }
         public string SecondsInGame { get; internal set; } = "90 seconds";
         public DateTime StartTime { get; set; }
-
-        private void SetTimers()
-        {
-            var start = DateTime.Parse(StartingTime);
-            var now = DateTime.Parse(DateTime.UtcNow.ToString("h:mm:ss"));
-            var secondsToStart = start.Subtract(now);
-            SecondsToGetReady = secondsToStart.Seconds.ToString();
-            StartTime = DateTime.Parse(StartingTime);
-
-        }
-
-
+        
         public void ReportProgress()
         {
             model.ReportProgress(WPMProgress, SliderProgress);
@@ -291,64 +280,52 @@ namespace TypeRacers.ViewModel
         {
             model.RemovePlayer();
         }
-        public void UpdateOpponents(Tuple<List<Tuple<string, Tuple<string, string, int, string>>>, int> updatedOpponentsAndElapsedTime)
+        public void UpdateOpponents(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int> updatedOpponentsAndElapsedTime)
 
         {
             Opponents = updatedOpponentsAndElapsedTime.Item1;
+            TriggerPropertyChanged(nameof(Opponents));
+
             ElapsedTimeFromWaitingTimer = updatedOpponentsAndElapsedTime.Item2;
+            TriggerPropertyChanged(nameof(ElapsedTimeFromWaitingTimer));
+
             OpponentsCount = Opponents.Count() + 1;
+            TriggerPropertyChanged(nameof(OpponentsCount));
+           
+            UpdateShownPlayers();
+
             if (!string.IsNullOrEmpty(model.GetStartingTime()))
             {
+                EnableSearchingAnimation = false;
+                TriggerPropertyChanged(nameof(EnableSearchingAnimation));
                 StartingTime = model.GetStartingTime();
-                SecondsToGetReady = DateTime.Parse(StartingTime).Subtract(DateTime.UtcNow).Seconds.ToString();
-                TriggerPropertyChanged(nameof(SecondsToGetReady));
+                StartTime = DateTime.Parse(StartingTime);
+                SecondsToGetReady = StartTime.Subtract(DateTime.UtcNow).Seconds.ToString();
+                                
                 int.TryParse(SecondsToGetReady, out int seconds);
 
                 if (seconds < 0)
                 {
                   EnableGetReadyAlert = false;
                 }
+
+                TriggerPropertyChanged(nameof(SecondsToGetReady));
                 EnableGetReadyAlert = true;
                 TriggerPropertyChanged(nameof(EnableGetReadyAlert));
-                CheckIfRaceCanStart();
             }
 
-            TriggerPropertyChanged(nameof(ElapsedTimeFromWaitingTimer));
-            TriggerPropertyChanged(nameof(OpponentsCount));
-            UpdateShownPlayers();
-
-            CheckIfRaceCanStart();
-
-            TriggerPropertyChanged(nameof(Opponents));
+            CheckIfWaitingTimeHasPassed();
         }
 
-        public void CheckIfRaceCanStart()
+        public void CheckIfWaitingTimeHasPassed()
         {
-
-
-            //if (DateTime.UtcNow.ToString("h:mm:ss").Equals(StartingTime) && OpponentsCount < 2)
-            //{
-            //    EnableRestartOrExitAlert = true;
-            //    TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
-            //}
-            if (DateTime.UtcNow - DateTime.Parse(StartingTime) <= TimeSpan.Zero)
-
-            if (StartTime.Subtract(DateTime.UtcNow) <= TimeSpan.Zero && OpponentsCount < 2)
+            if (TimeToStart.Subtract(DateTime.UtcNow) <= TimeSpan.Zero)
             {
-                EnableGetReadyAlert = false;
-                TriggerPropertyChanged(nameof(EnableGetReadyAlert));
-                CanGameStart = false;
-                TriggerPropertyChanged(nameof(CanGameStart));
+                EnableSearchingAnimation = false;
+                TriggerPropertyChanged(nameof(EnableSearchingAnimation));
+              
                 EnableRestartOrExitAlert = true;
                 TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
-            }
-            if (OpponentsCount == 3 || DateTime.UtcNow.Subtract(StartTime) <= TimeSpan.Zero && OpponentsCount == 2)
-
-            {
-                TriggerPropertyChanged(nameof(Opponents));
-                //enabling input
-
-                return;
             }
         }
         public void UpdateShownPlayers()

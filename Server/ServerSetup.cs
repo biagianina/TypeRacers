@@ -19,23 +19,17 @@ namespace TypeRacers.Server
         private Playroom currentPlayroom;
         int playroomCount = 0;
         int currentPlayerPlayroomNumber;
-        int maxPlayroomSize = 3;
+        readonly int maxPlayroomSize = 3;
 
 
         //to avoid generating different texts from users in same competition
-
-
         public static string CompetitionText { get; } = ServerGeneratedText.GetText();
         public void Setup()
         {
-
             server = new TcpListener(IPAddress.IPv6Any, 80);
             server.Server.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
             playrooms = new List<Playroom>();
-            playrooms.Add(new Playroom());
-            currentPlayroom = playrooms.Last();
-
-
+        
             try
             {
                 server.Start();
@@ -53,7 +47,6 @@ namespace TypeRacers.Server
         {
             while (true)
             {
-
                 TcpClient client = server.AcceptTcpClient();
 
                 try
@@ -95,9 +88,8 @@ namespace TypeRacers.Server
         {
             if (newClient)
             {
-                byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + roomNumber + "%" + currentPlayroom.TimeToWaitForOpponents + "#"); //generates random text from text document
+                byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + roomNumber + "%" + currentPlayroom.TimeToWaitForOpponents + "*" + currentPlayroom.GameStartingTime + "#"); //generates random text from text document
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
-
             }
             else
             {
@@ -113,10 +105,12 @@ namespace TypeRacers.Server
             {
                 if (!a.Key.ToString().Equals(currentClient))
                 {
-                    opponents += a.Key + ":" + a.Value.Item1 + "&" + a.Value.Item2 + "&" + a.Value.Item3 + "&" + a.Value.Item4 + "/";
-
+                    opponents += a.Key + ":" + a.Value.Item1 + "&" + a.Value.Item2 + "&" + a.Value.Item3 + "/";
                 }
             }
+
+            
+            opponents += "*" + playrooms[currentPlayerPlayroomNumber].GameStartingTime + "/";
 
             byte[] broadcastBytes = Encoding.ASCII.GetBytes(opponents + "#");
             networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
@@ -126,16 +120,14 @@ namespace TypeRacers.Server
 
         private void CheckClientReceievedData(string dataReceived)
         {
-
             //progress and slider progress
             string progress = dataReceived.Substring(0, dataReceived.IndexOf('$'));
 
             var progressInfoAndPlayerRoomInfo = progress.Split('&');
 
-            //1 progress, 2 sliderprogress, 3 current client playroom
-            Tuple<string, string, int, string> clientInfo = new Tuple<string, string, int, string>(progressInfoAndPlayerRoomInfo[0],
-                progressInfoAndPlayerRoomInfo[1], Convert.ToInt32(progressInfoAndPlayerRoomInfo[2]), progressInfoAndPlayerRoomInfo[3]);
-
+            //1 progress, 2 sliderprogress, 3 current client playroom, 
+            Tuple<string, string, int> clientInfo = new Tuple<string, string, int>(progressInfoAndPlayerRoomInfo[0],
+                progressInfoAndPlayerRoomInfo[1], Convert.ToInt32(progressInfoAndPlayerRoomInfo[2]));
 
             string username = dataReceived.Substring(dataReceived.IndexOf('$') + 1);
             currentClient = username.Substring(0, username.Length - 1);
@@ -155,7 +147,6 @@ namespace TypeRacers.Server
             }
 
             CheckCurrentPlayroom(currentClient, currentPlayerPlayroomNumber, clientInfo);
-
         }
 
         public Playroom CreateNewPlayroom()
@@ -167,29 +158,33 @@ namespace TypeRacers.Server
             return playrooms.Last();
         }
 
-        public void CheckCurrentPlayroom(string currrentClient, int roomNumber, Tuple<string, string, int, string> clientInfo)
+        public void CheckCurrentPlayroom(string currrentClient, int roomNumber, Tuple<string, string, int> clientInfo)
         {
-            currentPlayroom = playrooms[roomNumber];
+            if (!playrooms.Any())
+            {
+                playrooms.Add(new Playroom());
+                currentPlayroom = playrooms.Last();
+            }
 
+            currentPlayroom = playrooms[roomNumber];
 
             if (currentPlayroom.PlayroomSize == maxPlayroomSize && !currentPlayroom.ExistsInPlayroom(currentClient))
             {
                 if (playrooms.Last().PlayroomSize == maxPlayroomSize)
                 {
-
                     currentPlayroom = CreateNewPlayroom();
                 }
                 else
                 {
-
                     currentPlayroom = playrooms.Last();
                 }
-
             }
+
             newClient = currentPlayroom.AddPlayersToRoom(currrentClient, clientInfo);
-            currentPlayroom.CheckIfPlayersCanStart();
+           
             CheckNewClient(currentPlayroom.PlayroomNumber);
- 
+
+            currentPlayroom.CheckIfPlayersCanStart();
         }
     }
 }

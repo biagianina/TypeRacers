@@ -13,7 +13,7 @@ namespace TypeRacers
 
         string GetTextFromServer();
 
-        List<Tuple<string, Tuple<string, string, int, string>>> GetOpponents();
+        List<Tuple<string, Tuple<string, string, int>>> GetOpponents();
 
 
     }

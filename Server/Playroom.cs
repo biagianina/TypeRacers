@@ -13,20 +13,19 @@ namespace Server
         DateTime currentTime;
         public Playroom()
         {
-            Players = new Dictionary<string, Tuple<string, string, int, string>>();
+            Players = new Dictionary<string, Tuple<string, string, int>>();
             currentTime = DateTime.UtcNow;
             TimeToWaitForOpponents = string.Format("{0:hh:mm:ss tt}", currentTime.AddSeconds(20));
-            
         }
 
-        public Dictionary<string, Tuple<string, string, int, string>> Players { get; set; }
+        public Dictionary<string, Tuple<string, string, int>> Players { get; set; }
 
         public string GameStartingTime { get; set; } = string.Empty;
         public string TimeToWaitForOpponents { get; set; }
 
         public void CheckIfPlayersCanStart()
         {
-            if(PlayroomSize == 3 || DateTime.UtcNow - DateTime.Parse(TimeToWaitForOpponents) <= TimeSpan.Zero && PlayroomSize == 2)
+            if (PlayroomSize == 3 || DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow <= TimeSpan.Zero && PlayroomSize == 2)
             {
                 currentTime = DateTime.UtcNow;
                 currentTime = currentTime.AddSeconds(15);
@@ -46,7 +45,7 @@ namespace Server
                 Players.Remove(clientKey);
             }
         }
-        public bool AddPlayersToRoom(string currentClientKey, Tuple<string, string, int, string> clientInfo)
+        public bool AddPlayersToRoom(string currentClientKey, Tuple<string, string, int> clientInfo)
         {
 
             if (Players.ContainsKey(currentClientKey))

@@ -14,16 +14,14 @@ namespace TypeRacers.Client
         Timer timer;
         readonly int interval = 1000; // 1 second
         int elapsedTime = 0; // Elapsed time in ms
-        List<Tuple<string, Tuple<string, string, int, string>>> opponents;
+        List<Tuple<string, Tuple<string, string, int>>> opponents;
         bool playerIsRemoved;
 
 
-        public delegate void TimerTickHandler(Tuple<List<Tuple<string, Tuple<string, string, int, string>>>, int> opponentsAndElapsedTime);
+        public delegate void TimerTickHandler(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int> opponentsAndElapsedTime);
         public event TimerTickHandler OpponentsChanged;
 
-        private void SetOpponentsAndElapsedTime(Tuple<List<Tuple<string, Tuple<string, string, int, string>>>, int> value)
-
-
+        private void SetOpponentsAndElapsedTime(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int> value)
         {
             opponents = value.Item1;
             elapsedTime = value.Item2;
@@ -55,7 +53,7 @@ namespace TypeRacers.Client
         {
             timer.Stop();
 
-            if (elapsedTime > TimeToSearchForOpponents)
+            if (elapsedTime > TimeToSearchForOpponents + 2000)
             {
                 //we stop the timer after 30 seconds
                 return;
@@ -65,7 +63,7 @@ namespace TypeRacers.Client
                 // here I am performing the task
                 //getting the opponents each second for 30 seconds from server through Client
 
-                SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int, string>>>, int>(GetOpponentsProgress(), elapsedTime));
+                SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, int>(GetOpponentsProgress(), elapsedTime));
 
                 timer.Enabled = true;
             }
@@ -73,8 +71,7 @@ namespace TypeRacers.Client
             elapsedTime += interval;
         }
 
-        protected void OnOpponentsChangedAndTimeChanged(Tuple<List<Tuple<string, Tuple<string, string, int, string>>>, int> opponentsAndElapsedTime)
-
+        protected void OnOpponentsChangedAndTimeChanged(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int> opponentsAndElapsedTime)
         {
             if (opponentsAndElapsedTime != null)
             {
@@ -90,28 +87,26 @@ namespace TypeRacers.Client
             //getting the current progress from versus view model
             LocalPlayerProgress = progress;
             //writing the progress to stream
-            byte[] bytesToSend = Encoding.ASCII.GetBytes(LocalPlayerProgress + "&" + PlayroomNumber + "&" + PlayersStartingTime + "$" + Name + "#");
+            byte[] bytesToSend = Encoding.ASCII.GetBytes(LocalPlayerProgress + "&" + PlayroomNumber + "$" + Name + "#");
             stream.Write(bytesToSend, 0, bytesToSend.Length);
 
-            SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int, string>>>, int>(GetOpponentsProgress(), elapsedTime));
+            SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, int>(GetOpponentsProgress(), elapsedTime));
 
             stream.Flush();
         }
         //receiving the opponents and their progress in a List
 
-        public List<Tuple<string, Tuple<string, string, int, string>>> GetOpponentsProgress()
-
+        public List<Tuple<string, Tuple<string, string, int>>> GetOpponentsProgress()
         {
             //connecting to server
             client = new TcpClient("localhost", 80);
             stream = client.GetStream();
             string toSend;
 
-
             //writing the progress to stream
             if (LocalPlayerProgress != null)
             {
-                toSend = LocalPlayerProgress + "&" + PlayroomNumber + "&" + PlayersStartingTime + "$" + Name + "#";
+                toSend = LocalPlayerProgress + "&" + PlayroomNumber +  "$" + Name + "#";
             }
             else
             {
@@ -121,8 +116,7 @@ namespace TypeRacers.Client
                     playerIsRemoved = false;
                 }
 
-
-                toSend = "0&0&" + PlayroomNumber + "&" + PlayersStartingTime + "$" + Name + "#";
+                toSend = "0&0&" + PlayroomNumber + "$" + Name + "#";
             }
 
             byte[] bytesToSend = Encoding.ASCII.GetBytes(toSend);
@@ -143,27 +137,28 @@ namespace TypeRacers.Client
                 var currentOpponents = text.Split('/').ToList();
                 currentOpponents.Remove("#");
 
-                opponents = new List<Tuple<string, Tuple<string, string, int, string>>>();
+                opponents = new List<Tuple<string, Tuple<string, string, int>>>();
                 foreach (var v in currentOpponents)
                 {
-                    var nameAndInfos = v.Split(':');
-
-
-                    var progressInfoAndPlayroomInfo = nameAndInfos.LastOrDefault().Split('&');
-
-                    if (progressInfoAndPlayroomInfo.Count() == 4)
+                    if (v.First().Equals('*'))
                     {
-                        var wpmProgress = progressInfoAndPlayroomInfo[0];
-                        var carProgress = progressInfoAndPlayroomInfo[1];
-                        var playroomNumber = Convert.ToInt32(progressInfoAndPlayroomInfo[2]);
-                        var startingTime = progressInfoAndPlayroomInfo[3];
-                        PlayersStartingTime = startingTime;
-                        var opponentInfo = new Tuple<string, string, int, string>(wpmProgress,carProgress,playroomNumber, startingTime);
-
-                        opponents.Add(new Tuple<string, Tuple<string, string, int, string>>(nameAndInfos.FirstOrDefault(), opponentInfo));
-
+                        PlayersStartingTime = v.Substring(1);
                     }
+                    else
+                    {
+                        var nameAndInfos = v.Split(':');
 
+                        var progressInfoAndPlayroomInfo = nameAndInfos.LastOrDefault().Split('&');
+
+                        if (progressInfoAndPlayroomInfo.Count() == 3)
+                        {
+                            var wpmProgress = progressInfoAndPlayroomInfo[0];
+                            var carProgress = progressInfoAndPlayroomInfo[1];
+                            var playroomNumber = Convert.ToInt32(progressInfoAndPlayroomInfo[2]);
+                            var opponentInfo = new Tuple<string, string, int>(wpmProgress, carProgress, playroomNumber);
+                            opponents.Add(new Tuple<string, Tuple<string, string, int>>(nameAndInfos.FirstOrDefault(), opponentInfo));
+                        }
+                    }
                 }
 
                 return opponents;
@@ -181,7 +176,7 @@ namespace TypeRacers.Client
 
             try
             {
-                byte[] bytesToSend = Encoding.ASCII.GetBytes("0&0&" + PlayroomNumber + "&" + PlayersStartingTime + "$" + Name + "#");
+                byte[] bytesToSend = Encoding.ASCII.GetBytes("0&0&" + PlayroomNumber + "$" + Name + "#");
 
                 stream.Write(bytesToSend, 0, bytesToSend.Length);
 
@@ -197,12 +192,13 @@ namespace TypeRacers.Client
 
                 var dataWithoutHashtag = recievedData.Remove(recievedData.Length - 1);
                 var textToType = dataWithoutHashtag.Substring(0, dataWithoutHashtag.IndexOf('$'));
-                //getting the searching time
-                var timeToSearch = dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('%') + 1);
-                TimeToSearchForOpponents = (DateTime.Parse(timeToSearch) - DateTime.UtcNow).Seconds * 1000;
                 //getting room number
-                PlayroomNumber = Convert.ToInt32(dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('$') + 1, (dataWithoutHashtag.Length - textToType.Length - timeToSearch.Length - 2)));
-
+               
+                var times = dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('%') + 1);
+                var timers = times.Split('*');
+                TimeToSearchForOpponents = (DateTime.Parse(timers.FirstOrDefault()) - DateTime.UtcNow).Seconds * 1000;
+                PlayersStartingTime = timers.LastOrDefault();
+                PlayroomNumber = Convert.ToInt32(dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('$') + 1, (dataWithoutHashtag.Length - textToType.Length - times.Length - 2)));
                 client.Close();
                 return textToType;
             }

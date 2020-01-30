@@ -103,7 +103,7 @@
             </local:ReadAndTypeUserControl>
         </Grid>
         <StackPanel Grid.Row="1"
-                    Visibility="{Binding CanGameStart, Converter={StaticResource VisibleConverter}}"
+                    Visibility="{Binding EnableSearchingAnimation, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibleConverter}}"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center">
         <Image Source="pack://application:,,,/TypeRacers;component/Images/loading.png"
