@@ -14,6 +14,10 @@ namespace TypeRacers
             client = new TypeRacersClient();
         }
 
+        public string GetStartingTime()
+        {
+            return client.PlayersStartingTime;
+        }
         public int GetWaitingTime()
         {
             return client.TimeToSearchForOpponents;
@@ -22,12 +26,12 @@ namespace TypeRacers
         {
             client.StartTimerForSearchingOpponents();
         }
-        public void SubscribeToSearchingOpponentsTimer(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, int>> updateOpponentsListAndElapsedTime)
+        public void SubscribeToSearchingOpponentsTimer(Action<Tuple<List<Tuple<string, Tuple<string, string, int, string>>>, int>> updateOpponentsListAndElapsedTime)
         {
             timerTickHandler = new TypeRacersClient.TimerTickHandler(updateOpponentsListAndElapsedTime);
             client.OpponentsChanged += new TypeRacersClient.TimerTickHandler(timerTickHandler);
         }
-        public List<Tuple<string, Tuple<string, string, int>>> GetOpponents()
+        public List<Tuple<string, Tuple<string, string, int, string>>> GetOpponents()
 
         {
             return client.GetOpponentsProgress();

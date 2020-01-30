@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,23 +13,32 @@ namespace Server
         DateTime currentTime;
         public Playroom()
         {
-            Players = new Dictionary<string, Tuple<string, string, int>>();
+            Players = new Dictionary<string, Tuple<string, string, int, string>>();
             currentTime = DateTime.UtcNow;
-
             TimeToWaitForOpponents = string.Format("{0:hh:mm:ss tt}", currentTime.AddSeconds(20));
-
+            
         }
 
-        public Dictionary<string, Tuple<string, string, int>> Players { get; set; }
+        public Dictionary<string, Tuple<string, string, int, string>> Players { get; set; }
 
+        public string GameStartingTime { get; set; } = string.Empty;
         public string TimeToWaitForOpponents { get; set; }
+
+        public void CheckIfPlayersCanStart()
+        {
+            if(PlayroomSize == 3 || DateTime.UtcNow - DateTime.Parse(TimeToWaitForOpponents) <= TimeSpan.Zero && PlayroomSize == 2)
+            {
+                currentTime = DateTime.UtcNow;
+                currentTime = currentTime.AddSeconds(15);
+                GameStartingTime = string.Format("{0:hh:mm:ss tt}", currentTime);
+            }
+        }
         public int PlayroomSize { get; set; }
         public int PlayroomNumber { get; set; }
         public bool ExistsInPlayroom(string currentClientKey)
         {
             return Players.ContainsKey(currentClientKey);
         }
-
         public void RemovePlayer(string clientKey)
         {
             if (ExistsInPlayroom(clientKey))
@@ -38,8 +46,7 @@ namespace Server
                 Players.Remove(clientKey);
             }
         }
-
-        public bool AddPlayersToRoom(string currentClientKey, Tuple<string, string, int> clientInfo)
+        public bool AddPlayersToRoom(string currentClientKey, Tuple<string, string, int, string> clientInfo)
         {
 
             if (Players.ContainsKey(currentClientKey))
