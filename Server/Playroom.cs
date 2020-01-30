@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace Server
         {
             Players = new Dictionary<string, Tuple<string, string, int>>();
             currentTime = DateTime.UtcNow;
-            StartingTime = currentTime.AddSeconds(30).ToString("h:mm:ss");
+            StartingTime = (string.Format("{0:hh:mm:ss tt}", currentTime.AddSeconds(30)));
         }
 
         public Dictionary<string, Tuple<string, string, int>> Players { get; set; }
