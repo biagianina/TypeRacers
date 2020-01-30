@@ -95,7 +95,7 @@ namespace TypeRacers.Server
         {
             if (newClient)
             {
-                byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + roomNumber + "%" + currentPlayroom.StartingTime + "#"); //generates random text from text document
+                byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + roomNumber + "%" + currentPlayroom.TimeToWaitForOpponents + "#"); //generates random text from text document
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
 
             }
@@ -146,6 +146,13 @@ namespace TypeRacers.Server
             }
 
             currentPlayerPlayroomNumber = clientInfo.Item3;
+
+            if (currentClient.Contains("_removed"))
+            {
+                string toRemove = currentClient.Substring(0, currentClient.IndexOf('_'));
+                currentPlayroom.RemovePlayer(toRemove);
+                return;
+            }
 
             CheckCurrentPlayroom(currentClient, currentPlayerPlayroomNumber, clientInfo);
 

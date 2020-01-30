@@ -18,15 +18,19 @@ namespace TypeRacers.Model
         {
             networkHandler.StartSearchingOpponents();
         }
-
         public string GetStartingTime()
         {
-            return networkHandler.GetStartingTime();
+            throw new NotImplementedException();
         }
         public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, int>> updateOpponentsAndElapsedTime)
 
         {
             networkHandler.SubscribeToSearchingOpponentsTimer(updateOpponentsAndElapsedTime);
+        }
+
+        public int GetWaitingTime()
+        {
+            return networkHandler.GetWaitingTime();
         }
         public void ReportProgress(int progress, int sliderProgress)
         {
@@ -45,6 +49,11 @@ namespace TypeRacers.Model
         internal static void NameClient(string username)
         {
             networkHandler.NameClient(username);
+        }
+
+        public void RemovePlayer()
+        {
+            networkHandler.RemovePlayer();
         }
     }
 }

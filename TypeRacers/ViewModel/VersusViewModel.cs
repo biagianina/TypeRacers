@@ -31,12 +31,14 @@ namespace TypeRacers.ViewModel
             
             // first time getting opponents
             Opponents = model.GetOpponents();
-            StartingTime = model.GetStartingTime();
-            SetTimers();
+            WaitingTime = model.GetWaitingTime();
+            SecondsToGetReady = WaitingTime.ToString();
+            //SetTimers();
             //check how many players can we display on the screen
             UpdateShownPlayers();
 
             ExitProgramCommand = new CommandHandler(() => ExitProgram(), () => true);
+            RemovePlayer = new CommandHandler(() => RemovePlayerFromPlayroom(), () => true);
             RestartSearchingOpponentsCommand = new CommandHandler(() => RestartSearchingOpponents(), () => true);
             //start searching for 30 seconds and subscribe to timer
             model.StartSearchingOpponents();
@@ -45,25 +47,8 @@ namespace TypeRacers.ViewModel
             CanUserType = false;
         }
 
-        private void SetTimers()
-        {
-            var start = DateTime.Parse(StartingTime);
-            var now = DateTime.Parse(DateTime.UtcNow.ToString("h:mm:ss"));
-            var secondsToStart = start.Subtract(now);
-            SecondsToGetReady = secondsToStart.Seconds.ToString();
-            StartTime = DateTime.Parse(StartingTime);
-            EnableGetReadyAlert = true;
-
-            int.TryParse(SecondsToGetReady, out int seconds);
-
-            if (seconds < 0)
-            {
-                EnableGetReadyAlert = false;
-            }
-
-            TriggerPropertyChanged(nameof(EnableGetReadyAlert));
-        }
-
+     
+        public CommandHandler RemovePlayer { get; }
         public CommandHandler RestartSearchingOpponentsCommand { get; }
         public CommandHandler ExitProgramCommand { get; }
 
@@ -83,11 +68,9 @@ namespace TypeRacers.ViewModel
 
         public Visibility ShowSecondOpponent { get; set; }
 
+        public int WaitingTime { get; set; }
         public int OpponentsCount { get; set; }
-
-
         public string StartingTime { get; set; }
-
         public int ElapsedTimeFrom30SecondsTimer { get; set; }
         public bool InputValidation
         {
@@ -196,6 +179,15 @@ namespace TypeRacers.ViewModel
         public string SecondsToGetReady { get; set; }
         public string SecondsInGame { get; internal set; } = "90 seconds";
         public DateTime StartTime { get; set; }
+        private void SetTimers()
+        {
+            var start = DateTime.Parse(StartingTime);
+            var now = DateTime.Parse(DateTime.UtcNow.ToString("h:mm:ss"));
+            var secondsToStart = start.Subtract(now);
+            SecondsToGetReady = secondsToStart.Seconds.ToString();
+            StartTime = DateTime.Parse(StartingTime);
+            
+        }
 
         public void ReportProgress()
         {
@@ -284,6 +276,11 @@ namespace TypeRacers.ViewModel
         {
             Application.Current.Shutdown();
         }
+
+        private void RemovePlayerFromPlayroom()
+        {
+            model.RemovePlayer();
+        }
         public void UpdateOpponents(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int> updatedOpponentsAndElapsedTime)
 
         {
@@ -293,6 +290,23 @@ namespace TypeRacers.ViewModel
             TriggerPropertyChanged(nameof(ElapsedTimeFrom30SecondsTimer));
             TriggerPropertyChanged(nameof(OpponentsCount));
             UpdateShownPlayers();
+            CheckIfRaceCanStart();
+            EnableGetReadyAlert = true;
+
+            int.TryParse(SecondsToGetReady, out int seconds);
+
+            if (seconds < 0)
+            {
+                EnableGetReadyAlert = false;
+            }
+
+            TriggerPropertyChanged(nameof(EnableGetReadyAlert));
+
+            TriggerPropertyChanged(nameof(Opponents));
+        }
+
+        public void CheckIfRaceCanStart()
+        {
 
             if (DateTime.UtcNow.ToString("h:mm:ss").Equals(StartingTime) && OpponentsCount < 2)
             {
@@ -304,16 +318,8 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(Opponents));
                 //enabling input
 
-                //we stop the timer after 30 seconds
                 return;
             }
-
-            TriggerPropertyChanged(nameof(Opponents));
-        }
-
-        public void CheckIfRaceCanStart()
-        {
-
         }
         public void UpdateShownPlayers()
         {
