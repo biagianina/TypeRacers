@@ -13,10 +13,9 @@ namespace TypeRacers.Client
         NetworkStream stream;
         Timer timer;
         readonly int interval = 1000; // 1 second
-        readonly int totalTime = 30000; // 15 seconds or 15000 ms
         int elapsedTime = 0; // Elapsed time in ms
         List<Tuple<string, Tuple<string, string, int>>> opponents;
-
+        bool playerIsRemoved;
 
 
         public delegate void TimerTickHandler(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int> opponentsAndElapsedTime);
@@ -29,11 +28,10 @@ namespace TypeRacers.Client
             elapsedTime = value.Item2;
             OnOpponentsChangedAndTimeChanged(value);
         }
-
-        public string StartingTime { get; set; }
+        public int TimeToSearchForOpponents { get; set; }
         private string LocalPlayerProgress { get; set; }
         private int PlayroomNumber { get; set; }
-        public static string Name { get; set; }
+        public string Name { get; set; }
         public void StartTimerForSearchingOpponents()
         {
             timer = new Timer(interval);
@@ -45,12 +43,18 @@ namespace TypeRacers.Client
         {
             Name = username;
         }
+
+        public void RemovePlayerFromRoom()
+        {
+            playerIsRemoved = true;
+        }
+
         void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
             timer.Stop();
-            if (elapsedTime > totalTime)
+
+            if (elapsedTime > TimeToSearchForOpponents)
             {
-                elapsedTime = 0;
                 //we stop the timer after 30 seconds
                 return;
             }
@@ -108,9 +112,16 @@ namespace TypeRacers.Client
             }
             else
             {
-                toSend = "0&0&" + PlayroomNumber + "$" + Name + "#";
+                if (playerIsRemoved)
+                {
+                    Name += "_removed";
+                    playerIsRemoved = false;
+                }
 
+
+                toSend = "0&0&" + PlayroomNumber + "$" + Name + "#";
             }
+
             byte[] bytesToSend = Encoding.ASCII.GetBytes(toSend);
             stream.Write(bytesToSend, 0, bytesToSend.Length);
 
@@ -134,12 +145,19 @@ namespace TypeRacers.Client
                 {
                     var nameAndInfos = v.Split(':');
 
+
                     var progressInfoAndPlayroomNumber = nameAndInfos.LastOrDefault().Split('&');
 
-                    var opponentInfo = new Tuple<string, string, int>(progressInfoAndPlayroomNumber[0], progressInfoAndPlayroomNumber[1],
-                        Convert.ToInt32(progressInfoAndPlayroomNumber[2]));
+                    if (progressInfoAndPlayroomNumber.Count() == 3)
+                    {
 
-                    opponents.Add(new Tuple<string, Tuple<string, string, int>>(nameAndInfos.FirstOrDefault(), opponentInfo));
+                        var opponentInfo = new Tuple<string, string, int>(progressInfoAndPlayroomNumber[0], progressInfoAndPlayroomNumber[1],
+                            Convert.ToInt32(progressInfoAndPlayroomNumber[2]));
+
+                        opponents.Add(new Tuple<string, Tuple<string, string, int>>(nameAndInfos.FirstOrDefault(), opponentInfo));
+
+                    }
+
                 }
 
                 return opponents;
@@ -174,11 +192,11 @@ namespace TypeRacers.Client
                 var dataWithoutHashtag = recievedData.Remove(recievedData.Length - 1);
                 var textToType = dataWithoutHashtag.Substring(0, dataWithoutHashtag.IndexOf('$'));
                 //getting the starting time
-                StartingTime = dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('%') + 1);
+                var timeToSearch = dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('%') + 1);
+                TimeToSearchForOpponents = (DateTime.Parse(timeToSearch) - DateTime.UtcNow).Seconds;
                 //getting room number
-                PlayroomNumber = Convert.ToInt32(dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('$') + 1, (dataWithoutHashtag.Length - textToType.Length - StartingTime.Length - 2)));
-
-
+                PlayroomNumber = Convert.ToInt32(dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('$') + 1, (dataWithoutHashtag.Length - textToType.Length - timeToSearch.Length - 2)));
+                
 
                 client.Close();
                 return textToType;

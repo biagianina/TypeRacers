@@ -57,6 +57,7 @@
             <Button Grid.Column="0"
                     Name="Back"
                     Click="BackBtn_Click"
+                    Command="{Binding RemovePlayer}"
                     Margin="10 5"
                     Width="70"
                     Height="30"

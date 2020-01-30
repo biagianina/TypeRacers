@@ -16,16 +16,27 @@ namespace Server
         {
             Players = new Dictionary<string, Tuple<string, string, int>>();
             currentTime = DateTime.UtcNow;
-            StartingTime = (string.Format("{0:hh:mm:ss tt}", currentTime.AddSeconds(30)));
+
+            TimeToWaitForOpponents = string.Format("{0:hh:mm:ss tt}", currentTime.AddSeconds(20));
+
         }
 
         public Dictionary<string, Tuple<string, string, int>> Players { get; set; }
-        public string StartingTime { get; set; }
+
+        public string TimeToWaitForOpponents { get; set; }
         public int PlayroomSize { get; set; }
         public int PlayroomNumber { get; set; }
         public bool ExistsInPlayroom(string currentClientKey)
         {
             return Players.ContainsKey(currentClientKey);
+        }
+
+        public void RemovePlayer(string clientKey)
+        {
+            if (ExistsInPlayroom(clientKey))
+            {
+                Players.Remove(clientKey);
+            }
         }
 
         public bool AddPlayersToRoom(string currentClientKey, Tuple<string, string, int> clientInfo)
