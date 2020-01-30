@@ -53,7 +53,7 @@ namespace TypeRacers.Client
         {
             timer.Stop();
 
-            if (elapsedTime > TimeToSearchForOpponents + 2000)
+            if (elapsedTime > TimeToSearchForOpponents)
             {
                 //we stop the timer after 30 seconds
                 return;

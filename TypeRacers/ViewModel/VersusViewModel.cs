@@ -113,7 +113,7 @@ namespace TypeRacers.ViewModel
                     return 0;
                 }
 
-                return (numberOfCharactersTyped / 5) * 60 / ((int)(DateTime.Now - DateTime.Parse(StartingTime)).TotalSeconds / 1000);
+                return (numberOfCharactersTyped / 5) * 60 / ((int)(DateTime.UtcNow - DateTime.Parse(StartingTime)).TotalSeconds / 1000);
             }
         }
         public int CurrentWordLength
@@ -294,6 +294,13 @@ namespace TypeRacers.ViewModel
            
             UpdateShownPlayers();
 
+            CheckStartTimeWasSet();
+            
+            CheckIfWaitingTimeHasPassed();
+        }
+
+        public void CheckStartTimeWasSet()
+        {
             if (!string.IsNullOrEmpty(model.GetStartingTime()))
             {
                 EnableSearchingAnimation = false;
@@ -301,12 +308,12 @@ namespace TypeRacers.ViewModel
                 StartingTime = model.GetStartingTime();
                 StartTime = DateTime.Parse(StartingTime);
                 SecondsToGetReady = StartTime.Subtract(DateTime.UtcNow).Seconds.ToString();
-                                
+
                 int.TryParse(SecondsToGetReady, out int seconds);
 
                 if (seconds < 0)
                 {
-                  EnableGetReadyAlert = false;
+                    EnableGetReadyAlert = false;
                 }
 
                 TriggerPropertyChanged(nameof(SecondsToGetReady));
@@ -314,18 +321,24 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(EnableGetReadyAlert));
             }
 
-            CheckIfWaitingTimeHasPassed();
         }
 
         public void CheckIfWaitingTimeHasPassed()
         {
             if (TimeToStart.Subtract(DateTime.UtcNow) <= TimeSpan.Zero)
             {
-                EnableSearchingAnimation = false;
-                TriggerPropertyChanged(nameof(EnableSearchingAnimation));
-              
-                EnableRestartOrExitAlert = true;
-                TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
+                if (OpponentsCount == 2)
+                {
+                    CheckStartTimeWasSet();
+                }
+                else
+                {
+                    EnableSearchingAnimation = false;
+                    TriggerPropertyChanged(nameof(EnableSearchingAnimation));
+
+                    EnableRestartOrExitAlert = true;
+                    TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
+                }
             }
         }
         public void UpdateShownPlayers()
