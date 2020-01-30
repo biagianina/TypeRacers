@@ -22,7 +22,6 @@ namespace TypeRacers.Client
         public event TimerTickHandler OpponentsChanged;
 
         private void SetOpponentsAndElapsedTime(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int> value)
-
         {
             opponents = value.Item1;
             elapsedTime = value.Item2;
@@ -67,6 +66,7 @@ namespace TypeRacers.Client
 
                 timer.Enabled = true;
             }
+
             elapsedTime += interval;
         }
 
@@ -193,7 +193,7 @@ namespace TypeRacers.Client
                 var textToType = dataWithoutHashtag.Substring(0, dataWithoutHashtag.IndexOf('$'));
                 //getting the starting time
                 var timeToSearch = dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('%') + 1);
-                TimeToSearchForOpponents = (DateTime.Parse(timeToSearch) - DateTime.UtcNow).Seconds;
+                TimeToSearchForOpponents = (DateTime.Parse(timeToSearch) - DateTime.UtcNow).Seconds * 1000;
                 //getting room number
                 PlayroomNumber = Convert.ToInt32(dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('$') + 1, (dataWithoutHashtag.Length - textToType.Length - timeToSearch.Length - 2)));
                 

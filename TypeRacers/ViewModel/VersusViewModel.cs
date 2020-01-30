@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-
+using System.Windows.Media.Animation;
 
 namespace TypeRacers.ViewModel
 {
@@ -32,7 +32,11 @@ namespace TypeRacers.ViewModel
             // first time getting opponents
             Opponents = model.GetOpponents();
             WaitingTime = model.GetWaitingTime();
+            StartTime = DateTime.UtcNow.AddSeconds(WaitingTime/1000);
             SecondsToGetReady = WaitingTime.ToString();
+            WaitingAnimationRepeat = new RepeatBehavior(WaitingTime / 1000);
+            EnableSearchingAnimation = true;
+            SearchingForOpponents = true;
             //SetTimers();
             //check how many players can we display on the screen
             UpdateShownPlayers();
@@ -192,19 +196,24 @@ namespace TypeRacers.ViewModel
             }
         }
         public bool EnableGetReadyAlert { get; set; }
+        public bool CanGameStart { get; private set; } = true;
         public bool EnableRestartOrExitAlert { get; set; }
         public string SecondsToGetReady { get; set; }
+        public RepeatBehavior WaitingAnimationRepeat { get; }
+        public bool EnableSearchingAnimation { get; private set; }
+        public bool SearchingForOpponents { get; private set; }
         public string SecondsInGame { get; internal set; } = "90 seconds";
         public DateTime StartTime { get; set; }
-        private void SetTimers()
-        {
-            var start = DateTime.Parse(StartingTime);
-            var now = DateTime.Parse(DateTime.UtcNow.ToString("h:mm:ss"));
-            var secondsToStart = start.Subtract(now);
-            SecondsToGetReady = secondsToStart.Seconds.ToString();
-            StartTime = DateTime.Parse(StartingTime);
+
+        //private void SetTimers()
+        //{
+        //    var start = DateTime.Parse(StartingTime);
+        //    var now = DateTime.Parse(DateTime.UtcNow.ToString("h:mm:ss"));
+        //    var secondsToStart = start.Subtract(now);
+        //    SecondsToGetReady = secondsToStart.Seconds.ToString();
+        //    StartTime = DateTime.Parse(StartingTime);
             
-        }
+        //}
 
         public void ReportProgress()
         {
@@ -308,14 +317,14 @@ namespace TypeRacers.ViewModel
             TriggerPropertyChanged(nameof(OpponentsCount));
             UpdateShownPlayers();
             CheckIfRaceCanStart();
-            EnableGetReadyAlert = true;
+            //EnableGetReadyAlert = true;
 
-            int.TryParse(SecondsToGetReady, out int seconds);
+            //int.TryParse(SecondsToGetReady, out int seconds);
 
-            if (seconds < 0)
-            {
-                EnableGetReadyAlert = false;
-            }
+            //if (seconds < 0)
+            //{
+            //    EnableGetReadyAlert = false;
+            //}
 
             TriggerPropertyChanged(nameof(EnableGetReadyAlert));
 
@@ -325,14 +334,16 @@ namespace TypeRacers.ViewModel
         public void CheckIfRaceCanStart()
         {
 
-            if (DateTime.Parse(StartingTime).Subtract(DateTime.UtcNow) <= TimeSpan.Zero && OpponentsCount < 2)
+            if (StartTime.Subtract(DateTime.UtcNow) <= TimeSpan.Zero && OpponentsCount < 2)
             {
                 EnableGetReadyAlert = false;
                 TriggerPropertyChanged(nameof(EnableGetReadyAlert));
+                CanGameStart = false;
+                TriggerPropertyChanged(nameof(CanGameStart));
                 EnableRestartOrExitAlert = true;
                 TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
             }
-            if (OpponentsCount == 3 || DateTime.UtcNow.Subtract(DateTime.Parse(StartingTime)) <= TimeSpan.Zero && OpponentsCount == 2)
+            if (OpponentsCount == 3 || DateTime.UtcNow.Subtract(StartTime) <= TimeSpan.Zero && OpponentsCount == 2)
             {
                 TriggerPropertyChanged(nameof(Opponents));
                 //enabling input

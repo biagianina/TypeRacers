@@ -219,6 +219,9 @@
     <Resource Include="Images\pink.png" />
     <Resource Include="Images\yellow.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\loading.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>copy "$(SolutionDir)Texts.txt" "$(TargetDir)"</PreBuildEvent>

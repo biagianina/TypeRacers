@@ -10,8 +10,7 @@
       Style="{StaticResource AppStyle}"
       Title="Practice"
       MinHeight="450"
-      MinWidth="450"
-      MaxWidth="800">
+      MinWidth="450">
 
 <Page.Resources>
         <vm:PracticeViewModel

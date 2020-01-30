@@ -8,12 +8,12 @@
       xmlns:vm="clr-namespace:TypeRacers.ViewModel"
       MinHeight="450"
       MinWidth="450"
-      MaxWidth="800"
       Title="Versus"
       Style="{StaticResource AppStyle}">
 
     <Page.Resources>
         <vm:VersusViewModel x:Key="VersusVM" />
+        <BooleanToVisibilityConverter x:Key="VisibleConverter" />
     </Page.Resources>
 
     <Grid Height="auto"
@@ -37,23 +37,15 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <StackPanel Grid.Column="2"
-                        Orientation="Vertical"
-                        HorizontalAlignment="Right">
-                <TextBlock FontFamily="Times New Roman"
-                           FontSize="12"
-                           Foreground="White"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Center"
-                           Text="Searching for opponents...." />
-                <TextBlock FontFamily="Times New Roman"
-                           FontSize="12"
-                           VerticalAlignment="Top"
-                           HorizontalAlignment="Center"
-                           Foreground="White"
-                           Text="{Binding OpponentsCount, UpdateSourceTrigger=PropertyChanged,
+              
+            <TextBlock Grid.Column="2"
+                       FontFamily="Times New Roman"
+                       FontSize="12"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Foreground="White"
+                       Text="{Binding OpponentsCount, UpdateSourceTrigger=PropertyChanged,
                             StringFormat='Number of players: {0}'}" />
-            </StackPanel>
             <Button Grid.Column="0"
                     Name="Back"
                     Click="BackBtn_Click"
@@ -96,6 +88,7 @@
                                           Width="auto"
                                           Height="auto"
                                           Margin="20"
+                                          RATUCSearchingForOpponents="{Binding EnableSearchingAnimation}"
                                           RATUCSecondsToStart="{Binding SecondsToGetReady,UpdateSourceTrigger=PropertyChanged}"
                                           RATUCStartTime="{Binding SecondsToGetReady, UpdateSourceTrigger=PropertyChanged}"
                                           RATUCInlines="{Binding TextToTypeStyles}"
@@ -109,7 +102,41 @@
                                           >
             </local:ReadAndTypeUserControl>
         </Grid>
-
+        <StackPanel Grid.Row="1"
+                    Visibility="{Binding CanGameStart, Converter={StaticResource VisibleConverter}}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+        <Image Source="pack://application:,,,/TypeRacers;component/Images/loading.png"
+               Width="100"
+               Height="100"
+               VerticalAlignment="Center"
+               HorizontalAlignment="Center"
+               RenderTransformOrigin="0.5, 0.5"
+               Visibility="{Binding CanGameStart}">
+            <Image.RenderTransform>
+                <RotateTransform x:Name="noFreeze" />
+            </Image.RenderTransform>
+            <Image.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
+                                             To="360"
+                                             Duration="0:0:1"
+                                             RepeatBehavior="{Binding WaitingAnimationRepeat}" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Image.Triggers>
+        </Image>
+            <Label Content="Searching for opponents"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Bottom"
+                   FontFamily="Times New Roman"
+                   FontSize="14"
+                   FontWeight="Bold"
+                   Foreground="#FF001263" />
+        </StackPanel>
         <Popup Name="TimerReadyPopup"
                IsOpen="{Binding EnableRestartOrExitAlert}"
                Placement="Center"
