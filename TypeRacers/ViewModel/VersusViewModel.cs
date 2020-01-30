@@ -113,7 +113,9 @@ namespace TypeRacers.ViewModel
                     return 0;
                 }
 
-                return (numberOfCharactersTyped / 5) * 60 / ((int)(DateTime.UtcNow - DateTime.Parse(StartingTime)).TotalSeconds / 1000);
+                var secondsInGame = (StartTime - DateTime.UtcNow).Seconds;
+
+                return (numberOfCharactersTyped / 5) * 60 / secondsInGame;
             }
         }
         public int CurrentWordLength
@@ -325,7 +327,7 @@ namespace TypeRacers.ViewModel
 
         public void CheckIfWaitingTimeHasPassed()
         {
-            if (TimeToStart.Subtract(DateTime.UtcNow) <= TimeSpan.Zero)
+            if (TimeToStart.Subtract(DateTime.UtcNow) <= TimeSpan.Zero && string.IsNullOrEmpty(StartingTime))
             {
                 if (OpponentsCount == 2)
                 {
