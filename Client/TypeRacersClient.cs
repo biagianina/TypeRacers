@@ -23,6 +23,7 @@ namespace TypeRacers.Client
 
         private void SetOpponentsAndElapsedTime(Tuple<List<Tuple<string, Tuple<string, string, int, string>>>, int> value)
 
+
         {
             opponents = value.Item1;
             elapsedTime = value.Item2;
@@ -68,6 +69,7 @@ namespace TypeRacers.Client
 
                 timer.Enabled = true;
             }
+
             elapsedTime += interval;
         }
 

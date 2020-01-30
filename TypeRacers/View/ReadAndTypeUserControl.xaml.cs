@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using TypeRacers.ViewModel;
 
@@ -125,6 +126,17 @@ namespace TypeRacers.View
             }
         }
 
+        public readonly static DependencyProperty RATUCSearchingForOpponentsProperty = DependencyProperty.Register("RATUCSearchingForOpponents", typeof(bool), typeof(ReadAndTypeUserControl));
+
+        public bool RATUCSearchingForOpponents
+        {
+            get { return (bool)GetValue(RATUCSearchingForOpponentsProperty); }
+            set
+            {
+                SetValue(RATUCSearchingForOpponentsProperty, value);
+            }
+        }
+
         public readonly static DependencyProperty RATUCStartTimeProperty = DependencyProperty.Register("RATUCStartTime", typeof(int), typeof(ReadAndTypeUserControl));
 
         public int RATUCStartTime
@@ -135,7 +147,7 @@ namespace TypeRacers.View
                 SetValue(RATUCStartTimeProperty, value);
             }
         }
-  
+       
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);

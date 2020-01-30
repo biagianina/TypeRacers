@@ -18,6 +18,7 @@
 
         <TextBlock vm:TextBlockExtensions.BindableInlines="{Binding RATUCInlines}"
                    Grid.Row="1"
+                   MaxWidth="800"
                    FontFamily="Arial"
                    Foreground="White"
                    Name="displayText"
