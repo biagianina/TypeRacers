@@ -108,7 +108,6 @@ namespace TypeRacers.Server
                     opponents += a.Key + ":" + a.Value.Item1 + "&" + a.Value.Item2 + "&" + a.Value.Item3 + "/";
                 }
             }
-
             
             opponents += "*" + playrooms[currentPlayerPlayroomNumber].GameStartingTime + "/";
 

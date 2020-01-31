@@ -16,8 +16,8 @@
                             Background="#00000000"
                             Orientation="Horizontal">
                             <Image
-                                Width="120"
-                                Height="150"
+                                Width="80"
+                                Height="80"
                                 Margin="2"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
@@ -40,8 +40,8 @@
                                     Height="65"
                                     Background="#00000000"
                                     Orientation="Horizontal">
-                            <Image Width="120"
-                                   Height="150"
+                            <Image Width="80"
+                                   Height="80"
                                    Margin="2"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
@@ -61,17 +61,16 @@
                 <Setter.Value>
                     <ControlTemplate>
                         <StackPanel Width="auto"
-                                    Height="65"
+                                    Height="auto"
                                     Background="#00000000"
                                     Orientation="Horizontal">
-                            <Image Width="120"
-                                   Height="150"
+                            <Image Width="80"
+                                   Height="80"
                                    Margin="2"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    Source="pack://application:,,,/TypeRacers;component/Images/pink.png">
                             </Image>
-
                         </StackPanel>
                     </ControlTemplate>
                 </Setter.Value>

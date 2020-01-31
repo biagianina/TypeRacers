@@ -5,18 +5,25 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:TypeRacers.View">
 
-    <StackPanel Width="auto"
+    <Grid Width="auto"
                 Height="auto"
                 DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:CarAndProgressUserControl}}"
                 Visibility="{Binding CAPUCCanBeShown}">
-        <Line Stroke="#FF13110E"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <Line Grid.Row="0" Stroke="#FF13110E"
               StrokeDashArray="2 2"
             StrokeThickness="3"
               X2="{Binding ActualWidth, Mode=OneWay, 
                RelativeSource={RelativeSource FindAncestor, 
                AncestorType={x:Type local:CarAndProgressUserControl}}}" />
 
-        <TextBlock Width="auto"
+        <TextBlock Grid.Row="1"
+                   Width="auto"
                    Height="auto"
                    FontFamily="Times New Roman"
                    Foreground="#FF000A74"
@@ -33,22 +40,24 @@
                 </MultiBinding>
             </TextBlock.Text>
         </TextBlock>
-        <Slider Width="auto"
-                Height="auto"
-                Margin="0,0,0,20"
+        <Slider Grid.Row="2"
+                Width="auto"
+                Height="50"
+                Margin="0,0,0,2"
                 IsHitTestVisible="False"
             Focusable="False"
             Style="{Binding CAPUCSliderStyle}"
             Maximum="100"
             Value="{Binding CAPUCSliderProgress, Mode=OneWay}" />
- 
-        <Line Stroke="#FF13110E"
+
+        <Line Grid.Row="3"
+            Stroke="#FF13110E"
               StrokeDashArray="2 2"
               StrokeThickness="3"
               X2="{Binding ActualWidth, Mode=OneWay, 
                RelativeSource={RelativeSource FindAncestor, 
                AncestorType={x:Type local:CarAndProgressUserControl}}}" />
 
-    </StackPanel>
+    </Grid>
 
 </UserControl>
