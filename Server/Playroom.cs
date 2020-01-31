@@ -28,8 +28,9 @@ namespace Server
             if (PlayroomSize == 3 || DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow <= TimeSpan.Zero && PlayroomSize == 2)
             {
                 currentTime = DateTime.UtcNow;
-                currentTime = currentTime.AddSeconds(15);
+                currentTime = currentTime.AddSeconds(10);
                 GameStartingTime = string.Format("{0:H:mm:ss tt}", currentTime);
+                GameStarted = true;
             }
 
             Console.WriteLine(DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow);
@@ -37,6 +38,8 @@ namespace Server
         }
         public int PlayroomSize { get; set; }
         public int PlayroomNumber { get; set; }
+        public bool GameStarted { get; internal set; }
+
         public bool ExistsInPlayroom(string currentClientKey)
         {
             return Players.ContainsKey(currentClientKey);

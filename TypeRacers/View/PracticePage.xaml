@@ -42,7 +42,7 @@
         <local:CarAndProgressUserControl Grid.Row="2"
                                              VerticalAlignment="Center"
                                              CAPUCName="You"
-                                             CAPUCProgress="{Binding Progress}"
+                                             CAPUCProgress="{Binding WPMProgress}"
                                              CAPUCSliderProgress="{Binding SliderProgress}"
                                              CAPUCSliderStyle="{StaticResource YellowSliderStyle}" />
 

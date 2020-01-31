@@ -180,10 +180,13 @@ namespace TypeRacers.Server
             }
 
             newClient = currentPlayroom.AddPlayersToRoom(currrentClient, clientInfo);
-           
+
             CheckNewClient(currentPlayroom.PlayroomNumber);
 
-            currentPlayroom.CheckIfPlayersCanStart();
+            if (!currentPlayroom.GameStarted)
+            {
+                currentPlayroom.CheckIfPlayersCanStart();
+            }            
         }
     }
 }

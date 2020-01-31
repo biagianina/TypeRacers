@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 
 namespace TypeRacers.ViewModel
 {
@@ -33,12 +32,8 @@ namespace TypeRacers.ViewModel
             Opponents = model.GetOpponents();
             WaitingTime = model.GetWaitingTime();
             TimeToStart = DateTime.UtcNow.AddSeconds(WaitingTime /1000);
-
-            WaitingAnimationRepeat = new RepeatBehavior(WaitingTime / 1000);
             EnableSearchingAnimation = true;
-            SearchingForOpponents = true;
 
-            //SetTimers();
             //check how many players can we display on the screen
             UpdateShownPlayers();
 
@@ -113,9 +108,9 @@ namespace TypeRacers.ViewModel
                     return 0;
                 }
 
-                var secondsInGame = (StartTime - DateTime.UtcNow).Seconds;
-
-                return (numberOfCharactersTyped / 5) * 60 / secondsInGame;
+                var wordperminut = (numberOfCharactersTyped / 5) * 60;
+                var secondsInGame = (int)(DateTime.UtcNow - StartTime).TotalSeconds;
+                return wordperminut / secondsInGame;
             }
         }
         public int CurrentWordLength
@@ -184,10 +179,7 @@ namespace TypeRacers.ViewModel
         public bool EnableGetReadyAlert { get; set; }
         public bool EnableRestartOrExitAlert { get; set; }
         public string SecondsToGetReady { get; set; }
-        public RepeatBehavior WaitingAnimationRepeat { get; }
         public bool EnableSearchingAnimation { get; private set; }
-        public bool SearchingForOpponents { get; private set; }
-        public string SecondsInGame { get; internal set; } = "90 seconds";
         public DateTime StartTime { get; set; }
         
         public void ReportProgress()
@@ -300,7 +292,6 @@ namespace TypeRacers.ViewModel
             
             CheckIfWaitingTimeHasPassed();
         }
-
         public void CheckStartTimeWasSet()
         {
             if (!string.IsNullOrEmpty(model.GetStartingTime()))
@@ -322,9 +313,7 @@ namespace TypeRacers.ViewModel
                 EnableGetReadyAlert = true;
                 TriggerPropertyChanged(nameof(EnableGetReadyAlert));
             }
-
         }
-
         public void CheckIfWaitingTimeHasPassed()
         {
             if (TimeToStart.Subtract(DateTime.UtcNow) <= TimeSpan.Zero && string.IsNullOrEmpty(StartingTime))
@@ -337,7 +326,7 @@ namespace TypeRacers.ViewModel
                 {
                     EnableSearchingAnimation = false;
                     TriggerPropertyChanged(nameof(EnableSearchingAnimation));
-
+                    
                     EnableRestartOrExitAlert = true;
                     TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
                 }
