@@ -266,8 +266,8 @@ namespace TypeRacers.ViewModel
         {
             EnableRestartOrExitAlert = false;
             TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
-            model.StartSearchingOpponents();
-            model.SubscribeToSearchingOpponents(UpdateOpponents);
+
+            model.RestartSearch();
 
         }
         private void ExitProgram()

@@ -36,21 +36,12 @@ namespace TypeRacers.Client
         public string PlayersStartingTime { get; set; } = string.Empty;
         private int PlayroomNumber { get; set; }
         public string Name { get; set; }
+        public bool RestartSearch { get; set; }
         public void StartTimerForSearchingOpponents()
         {
             timer = new Timer(interval);
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Enabled = true;
-        }
-
-        public void NameClient(string username)
-        {
-            Name = username;
-        }
-
-        public void RemovePlayerFromRoom()
-        {
-            playerIsRemoved = true;
         }
 
         void OnTimedEvent(object sender, ElapsedEventArgs e)
@@ -59,6 +50,7 @@ namespace TypeRacers.Client
 
             if (elapsedTime > TimeToSearchForOpponents)
             {
+                elapsedTime = 0;
                 //we stop the timer after 30 seconds
                 return;
             }
@@ -74,6 +66,16 @@ namespace TypeRacers.Client
 
             elapsedTime += interval;
         }
+        public void NameClient(string username)
+        {
+            Name = username;
+        }
+
+        public void RemovePlayerFromRoom()
+        {
+            playerIsRemoved = true;
+        }
+
 
         protected void OnOpponentsChangedAndTimeChanged(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>> opponentsAndElapsedTime)
         {

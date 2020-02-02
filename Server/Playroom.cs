@@ -33,8 +33,18 @@ namespace Server
                 GameStartingTime = string.Format("{0:H:mm:ss tt}", currentTime);
                 GameStarted = true;
             }
-        }
 
+            if ((PlayroomSize == 1 || PlayroomSize == 0) && DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow <= TimeSpan.Zero)
+            {
+                ResetPlayroom();
+            }
+        }
+        private void ResetPlayroom()
+        {
+            currentTime = DateTime.UtcNow;
+            TimeToWaitForOpponents = string.Format("{0:MM/dd/yy H:mm:ss tt}", currentTime.AddSeconds(10));
+        }
+        
         public int PlayroomSize { get; set; }
         public int PlayroomNumber { get; set; }
         public bool GameStarted { get; internal set; }
