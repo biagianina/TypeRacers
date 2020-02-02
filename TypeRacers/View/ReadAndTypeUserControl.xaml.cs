@@ -209,7 +209,7 @@ namespace TypeRacers.View
             timer.Start();
         }
 
-        private int secondsInGame = 90;
+        private int secondsInGame = 190;
 
         private void GameTimer_Tick(object sender, EventArgs e)
         {

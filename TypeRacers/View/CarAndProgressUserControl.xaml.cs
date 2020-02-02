@@ -72,5 +72,23 @@ namespace TypeRacers.View
                 SetValue(CAPUCCanBeShownProperty, value);
             }
         }
+
+        public bool CAPUCShowRanking
+        {
+            get { return (bool)GetValue(CAPUCShowRankingProperty); }
+            set { SetValue(CAPUCShowRankingProperty, value); }
+        }
+
+        public static readonly DependencyProperty CAPUCShowRankingProperty = DependencyProperty.Register("CAPUCShowRanking", typeof(bool), typeof(CarAndProgressUserControl));
+
+        public string CAPUCRanking
+        {
+            get { return (string)GetValue(CAPUCRankingProperty); }
+            set { SetValue(CAPUCRankingProperty, value); }
+        }
+
+        public static readonly DependencyProperty CAPUCRankingProperty = DependencyProperty.Register("CAPUCRanking", typeof(string), typeof(CarAndProgressUserControl));
+
+
     }
 }

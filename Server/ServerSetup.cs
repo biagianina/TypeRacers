@@ -100,6 +100,7 @@ namespace TypeRacers.Server
         private void SendOpponents()
         {
             string opponents = string.Empty;
+            string rank = "!";
 
             foreach (var a in playrooms[currentPlayerPlayroomNumber].Players)
             {
@@ -109,7 +110,12 @@ namespace TypeRacers.Server
                 }
             }
             
-            opponents += "*" + playrooms[currentPlayerPlayroomNumber].GameStartingTime + "/";
+            foreach (var playerRank in playrooms[currentPlayerPlayroomNumber].Rank)
+            {
+                rank += playerRank.Key + ":" + playerRank.Value.Item1 + "&" + playerRank.Value.Item2 + ";";
+            }
+
+            opponents += "*" + playrooms[currentPlayerPlayroomNumber].GameStartingTime + "/" + rank + "/";
 
             byte[] broadcastBytes = Encoding.ASCII.GetBytes(opponents + "#");
             networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);

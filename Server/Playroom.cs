@@ -14,12 +14,13 @@ namespace Server
         public Playroom()
         {
             Players = new Dictionary<string, Tuple<string, string, int>>();
+            Rank = new Dictionary<string, Tuple<bool, int>>();
             currentTime = DateTime.UtcNow;
             TimeToWaitForOpponents = string.Format("{0:MM/dd/yy H:mm:ss tt}", currentTime.AddSeconds(20));
         }
 
         public Dictionary<string, Tuple<string, string, int>> Players { get; set; }
-
+        public Dictionary<string, Tuple<bool, int>> Rank { get; set; }
         public string GameStartingTime { get; set; } = string.Empty;
         public string TimeToWaitForOpponents { get; set; }
 
@@ -32,10 +33,8 @@ namespace Server
                 GameStartingTime = string.Format("{0:H:mm:ss tt}", currentTime);
                 GameStarted = true;
             }
-
-            Console.WriteLine(DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow);
-
         }
+
         public int PlayroomSize { get; set; }
         public int PlayroomNumber { get; set; }
         public bool GameStarted { get; internal set; }
@@ -51,16 +50,24 @@ namespace Server
                 Players.Remove(clientKey);
             }
         }
+
+        private int Place { get; set; } = 1;
         public bool AddPlayersToRoom(string currentClientKey, Tuple<string, string, int> clientInfo)
         {
-
             if (Players.ContainsKey(currentClientKey))
             {
                 Players[currentClientKey] = clientInfo;
+                if (Rank[currentClientKey].Item1 == false && clientInfo.Item2.Equals("100"))
+                {
+                    Rank[currentClientKey] = new Tuple<bool, int>(true, Place);
+                    Place += 1;
+                }
                 return false;
             }
 
             Players.Add(currentClientKey, clientInfo);
+            Rank.Add(currentClientKey, new Tuple<bool, int>(false, 0));
+
             PlayroomSize++;
 
             return true;

@@ -42,8 +42,8 @@
                 </MultiBinding>
             </TextBlock.Text>
         </TextBlock>
-            <Label Visibility="{Binding CAPUCPlacementShow, Converter={StaticResource VisibleConverter}}"
-                   Content="{Binding CAPUCTopPlacement}"
+            <Label Visibility="{Binding CAPUCShowRanking, Converter={StaticResource VisibleConverter}}"
+                   Content="{Binding CAPUCRanking}"
                    FontSize="15"
                    FontFamily="Times New Roman"
                    Foreground="#FF000A74"

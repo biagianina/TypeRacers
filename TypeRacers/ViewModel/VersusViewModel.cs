@@ -13,6 +13,8 @@ namespace TypeRacers.ViewModel
     {
         string textToType;
         InputCharacterValidation userInputValidator;
+        public Dictionary<string, Tuple<bool, int>> Rank { get; set; }
+
         bool isValid;
         int spaceIndex;
         int correctChars;
@@ -28,6 +30,7 @@ namespace TypeRacers.ViewModel
             TextToType = model.GetGeneratedTextToTypeFromServer();
             userInputValidator = new InputCharacterValidation(TextToType);
 
+            Rank = model.GetRanking();
             // first time getting opponents
             Opponents = model.GetOpponents();
             WaitingTime = model.GetWaitingTime();
@@ -46,7 +49,6 @@ namespace TypeRacers.ViewModel
             CanUserType = false;
         }
 
-
         public CommandHandler RemovePlayer { get; }
         public CommandHandler RestartSearchingOpponentsCommand { get; }
         public CommandHandler ExitProgramCommand { get; }
@@ -63,6 +65,7 @@ namespace TypeRacers.ViewModel
 
         public IEnumerable<Tuple<string, Tuple<string, string, int>>> Opponents { get; private set; }
 
+        public IEnumerable<Tuple<string, Tuple<string, string, bool, string>>> OpponentsAndRanking { get; private set; }
         public Visibility ShowFirstOpponent { get; set; }
 
         public Visibility ShowSecondOpponent { get; set; }
@@ -181,7 +184,9 @@ namespace TypeRacers.ViewModel
         public string SecondsToGetReady { get; set; }
         public bool EnableSearchingAnimation { get; private set; }
         public DateTime StartTime { get; set; }
-        
+        public bool ShowRanking { get; private set; }
+        public string RankingPlace { get; private set; }
+
         public void ReportProgress()
         {
             model.ReportProgress(WPMProgress, SliderProgress);
@@ -274,14 +279,18 @@ namespace TypeRacers.ViewModel
         {
             model.RemovePlayer();
         }
-        public void UpdateOpponents(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int> updatedOpponentsAndElapsedTime)
-
+        public void UpdateOpponents(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>> updatedOpponentsAndRankingAndElapsedTime)
         {
-            Opponents = updatedOpponentsAndElapsedTime.Item1;
+            Opponents = updatedOpponentsAndRankingAndElapsedTime.Item1;
             TriggerPropertyChanged(nameof(Opponents));
 
-            ElapsedTimeFromWaitingTimer = updatedOpponentsAndElapsedTime.Item2;
+            ElapsedTimeFromWaitingTimer = updatedOpponentsAndRankingAndElapsedTime.Item2;
             TriggerPropertyChanged(nameof(ElapsedTimeFromWaitingTimer));
+
+            Rank = updatedOpponentsAndRankingAndElapsedTime.Item3;
+            TriggerPropertyChanged(nameof(Rank));
+
+            SetOpponentsAndRanking();
 
             OpponentsCount = Opponents.Count() + 1;
             TriggerPropertyChanged(nameof(OpponentsCount));
@@ -292,6 +301,33 @@ namespace TypeRacers.ViewModel
             
             CheckIfWaitingTimeHasPassed();
         }
+
+        private void SetOpponentsAndRanking()
+        {
+            List<Tuple<string, Tuple<string, string, bool, string>>> opponentsAndRanking = new List<Tuple<string, Tuple<string, string, bool, string>>>();
+            foreach (var rank in Rank)
+            {
+                foreach (var opponent in Opponents)
+                {
+                    if (opponent.Item1.Equals(rank.Key))
+                    {
+                        opponentsAndRanking.Add(new Tuple<string, Tuple<string, string, bool, string>>(rank.Key, new Tuple<string, string, bool, string>(opponent.Item2.Item1, opponent.Item2.Item2, rank.Value.Item1, rank.Value.Item2.ToString())));
+                        break;
+                    }
+                    else
+                    {
+                        ShowRanking = rank.Value.Item1;
+                        TriggerPropertyChanged(nameof(ShowRanking));
+                        RankingPlace = rank.Value.Item2.ToString();
+                        TriggerPropertyChanged(nameof(RankingPlace));
+                    }
+                }
+            }
+
+            OpponentsAndRanking = opponentsAndRanking.AsEnumerable();
+            TriggerPropertyChanged(nameof(OpponentsAndRanking));
+        }
+
         public void CheckStartTimeWasSet()
         {
             if (!string.IsNullOrEmpty(model.GetStartingTime()))

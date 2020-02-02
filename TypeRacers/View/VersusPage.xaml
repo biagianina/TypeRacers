@@ -34,15 +34,6 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-              
-            <TextBlock Grid.Column="2"
-                       FontFamily="Times New Roman"
-                       FontSize="12"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       Foreground="White"
-                       Text="{Binding OpponentsCount, UpdateSourceTrigger=PropertyChanged,
-                            StringFormat='Number of players: {0}'}" />
             <Button Grid.Column="0"
                     Name="Back"
                     Click="BackBtn_Click"
@@ -62,19 +53,25 @@
 
                 <local:CarAndProgressUserControl CAPUCProgress="{Binding WPMProgress, UpdateSourceTrigger=PropertyChanged}"
                                                  CAPUCName="You"
+                                                 CAPUCShowRanking="{Binding ShowRanking}"
+                                                 CAPUCRanking="{Binding RankingPlace}"
                                                  CAPUCSliderProgress="{Binding SliderProgress, UpdateSourceTrigger=PropertyChanged}"
                                                  CAPUCSliderStyle="{StaticResource GreenSliderStyle}"/>
 
                 <local:CarAndProgressUserControl CAPUCCanBeShown="{Binding ShowFirstOpponent}"                                                 
-                                                 CAPUCName="{Binding Opponents[0].Item1, UpdateSourceTrigger=PropertyChanged}"
-                                                 CAPUCProgress="{Binding Opponents[0].Item2.Item1, UpdateSourceTrigger=PropertyChanged}"
-                                                 CAPUCSliderProgress="{Binding Opponents[0].Item2.Item2, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCName="{Binding OpponentsAndRanking[0].Item1, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCProgress="{Binding OpponentsAndRanking[0].Item2.Item1, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCSliderProgress="{Binding OpponentsAndRanking[0].Item2.Item2, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCShowRanking="{Binding OpponentsAndRanking[0].Item2.Item3, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCRanking="{Binding OpponentsAndRanking[0].Item2.Item4, UpdateSourceTrigger=PropertyChanged}"
                                                  CAPUCSliderStyle="{StaticResource YellowSliderStyle}" />
 
-                <local:CarAndProgressUserControl CAPUCCanBeShown="{Binding ShowSecondOpponent}"                                                
-                                                 CAPUCName="{Binding Opponents[1].Item1,  UpdateSourceTrigger=PropertyChanged}"
-                                                 CAPUCProgress="{Binding Opponents[1].Item2.Item1, UpdateSourceTrigger=PropertyChanged}"
-                                                 CAPUCSliderProgress="{Binding Opponents[1].Item2.Item2, UpdateSourceTrigger=PropertyChanged}"
+                <local:CarAndProgressUserControl CAPUCCanBeShown="{Binding ShowSecondOpponent}"
+                                                 CAPUCName="{Binding OpponentsAndRanking[1].Item1, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCProgress="{Binding OpponentsAndRanking[1].Item2.Item1, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCSliderProgress="{Binding OpponentsAndRanking[1].Item2.Item2, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCShowRanking="{Binding OpponentsAndRanking[1].Item2.Item3, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCRanking="{Binding OpponentsAndRanking[1].Item2.Item4, UpdateSourceTrigger=PropertyChanged}"
                                                  CAPUCSliderStyle="{StaticResource PinkSliderStyle}"
                                                  />
 

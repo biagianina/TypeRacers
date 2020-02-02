@@ -26,7 +26,7 @@ namespace TypeRacers
         {
             client.StartTimerForSearchingOpponents();
         }
-        public void SubscribeToSearchingOpponentsTimer(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, int>> updateOpponentsListAndElapsedTime)
+        public void SubscribeToSearchingOpponentsTimer(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>>> updateOpponentsListAndElapsedTime)
         {
             timerTickHandler = new TypeRacersClient.TimerTickHandler(updateOpponentsListAndElapsedTime);
             client.OpponentsChanged += new TypeRacersClient.TimerTickHandler(timerTickHandler);
@@ -35,6 +35,11 @@ namespace TypeRacers
 
         {
             return client.GetOpponentsProgress();
+        }
+
+        public Dictionary<string, Tuple<bool, int>> GetRanking()
+        {
+            return client.Rank;
         }
         public string GetTextFromServer()
         {

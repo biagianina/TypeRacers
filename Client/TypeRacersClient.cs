@@ -14,20 +14,24 @@ namespace TypeRacers.Client
         Timer timer;
         readonly int interval = 1000; // 1 second
         int elapsedTime = 0; // Elapsed time in ms
+        private Dictionary<string, Tuple<bool, int>> rank;
         List<Tuple<string, Tuple<string, string, int>>> opponents;
         bool playerIsRemoved;
 
 
-        public delegate void TimerTickHandler(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int> opponentsAndElapsedTime);
+        public delegate void TimerTickHandler(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>> opponentsAndRankingAndElapsedTime);
         public event TimerTickHandler OpponentsChanged;
 
-        private void SetOpponentsAndElapsedTime(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int> value)
+        private void SetOpponentsAndElapsedTime(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>> value)
         {
             opponents = value.Item1;
             elapsedTime = value.Item2;
+            rank = value.Item3;
             OnOpponentsChangedAndTimeChanged(value);
         }
         public int TimeToSearchForOpponents { get; set; }
+
+        public Dictionary<string, Tuple<bool, int>> Rank { get; set; } = new Dictionary<string, Tuple<bool, int>>();
         private string LocalPlayerProgress { get; set; }
         public string PlayersStartingTime { get; set; } = string.Empty;
         private int PlayroomNumber { get; set; }
@@ -63,7 +67,7 @@ namespace TypeRacers.Client
                 // here I am performing the task
                 //getting the opponents each second for 30 seconds from server through Client
 
-                SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, int>(GetOpponentsProgress(), elapsedTime));
+                SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>>(GetOpponentsProgress(), elapsedTime, Rank));
 
                 timer.Enabled = true;
             }
@@ -71,7 +75,7 @@ namespace TypeRacers.Client
             elapsedTime += interval;
         }
 
-        protected void OnOpponentsChangedAndTimeChanged(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int> opponentsAndElapsedTime)
+        protected void OnOpponentsChangedAndTimeChanged(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>> opponentsAndElapsedTime)
         {
             if (opponentsAndElapsedTime != null)
             {
@@ -90,7 +94,7 @@ namespace TypeRacers.Client
             byte[] bytesToSend = Encoding.ASCII.GetBytes(LocalPlayerProgress + "&" + PlayroomNumber + "$" + Name + "#");
             stream.Write(bytesToSend, 0, bytesToSend.Length);
 
-            SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, int>(GetOpponentsProgress(), elapsedTime));
+            SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>>(GetOpponentsProgress(), elapsedTime, Rank));
 
             stream.Flush();
         }
@@ -146,17 +150,43 @@ namespace TypeRacers.Client
                     }
                     else
                     {
-                        var nameAndInfos = v.Split(':');
-
-                        var progressInfoAndPlayroomInfo = nameAndInfos.LastOrDefault().Split('&');
-
-                        if (progressInfoAndPlayroomInfo.Count() == 3)
+                        if (v.First().Equals('!'))
                         {
-                            var wpmProgress = progressInfoAndPlayroomInfo[0];
-                            var carProgress = progressInfoAndPlayroomInfo[1];
-                            var playroomNumber = Convert.ToInt32(progressInfoAndPlayroomInfo[2]);
-                            var opponentInfo = new Tuple<string, string, int>(wpmProgress, carProgress, playroomNumber);
-                            opponents.Add(new Tuple<string, Tuple<string, string, int>>(nameAndInfos.FirstOrDefault(), opponentInfo));
+                            var rank = v.Substring(1).Split(';');
+                            foreach (var r in rank)
+                            {
+                                if (!string.IsNullOrEmpty(r))
+                                {
+                                    var nameAndRank = r.Split(':');
+                                    var name = nameAndRank[0];
+                                    var currentRank = nameAndRank[1].Split('&');
+                                    var rankToAdd = new Tuple<bool, int>(Convert.ToBoolean(currentRank[0]), Convert.ToInt32(currentRank[1]));
+                                    if (!Rank.ContainsKey(name))
+                                    {
+                                        Rank.Add(name, rankToAdd);
+                                    } 
+                                    else
+                                    {
+                                        Rank[name] = rankToAdd;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+
+                            var nameAndInfos = v.Split(':');
+
+                            var progressInfoAndPlayroomInfo = nameAndInfos.LastOrDefault().Split('&');
+
+                            if (progressInfoAndPlayroomInfo.Count() == 3)
+                            {
+                                var wpmProgress = progressInfoAndPlayroomInfo[0];
+                                var carProgress = progressInfoAndPlayroomInfo[1];
+                                var playroomNumber = Convert.ToInt32(progressInfoAndPlayroomInfo[2]);
+                                var opponentInfo = new Tuple<string, string, int>(wpmProgress, carProgress, playroomNumber);
+                                opponents.Add(new Tuple<string, Tuple<string, string, int>>(nameAndInfos.FirstOrDefault(), opponentInfo));
+                            }
                         }
                     }
                 }

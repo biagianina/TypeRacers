@@ -22,10 +22,14 @@ namespace TypeRacers.Model
         {
             return networkHandler.GetStartingTime();
         }
-        public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, int>> updateOpponentsAndElapsedTime)
-
+        public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>>> updateOpponentsAndElapsedTime)
         {
             networkHandler.SubscribeToSearchingOpponentsTimer(updateOpponentsAndElapsedTime);
+        }
+
+        public Dictionary<string, Tuple<bool, int>> GetRanking()
+        {
+            return networkHandler.GetRanking();
         }
 
         public int GetWaitingTime()

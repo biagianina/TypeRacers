@@ -15,6 +15,6 @@ namespace TypeRacers
 
         List<Tuple<string, Tuple<string, string, int>>> GetOpponents();
 
-
+        Dictionary<string, Tuple<bool, int>> GetRanking();
     }
 }
