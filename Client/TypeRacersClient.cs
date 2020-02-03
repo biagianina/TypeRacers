@@ -91,6 +91,7 @@ namespace TypeRacers.Client
             {
                 throw new Exception("Lost connection with server");
             }
+            client.Close();
 
         }
         public void NameClient(string username)

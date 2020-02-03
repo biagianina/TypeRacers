@@ -86,6 +86,9 @@ namespace TypeRacers.Server
 
         private void CheckNewClient(int roomNumber)
         {
+            Console.WriteLine("playroom size: " + currentPlayroom.PlayroomSize);
+
+
             if (newClient)
             {
                 byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + roomNumber + "%" + currentPlayroom.TimeToWaitForOpponents + "*" + currentPlayroom.GameStartingTime + "#"); //generates random text from text document
