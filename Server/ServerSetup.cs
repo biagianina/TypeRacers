@@ -25,7 +25,7 @@ namespace TypeRacers.Server
 
 
         //to avoid generating different texts from users in same competition
-        public static string CompetitionText { get; } = ServerGeneratedText.GetText();
+        public static string CompetitionText { get; set; } = ServerGeneratedText.GetText();
         public void Setup()
         {
             server = new TcpListener(IPAddress.IPv6Any, 80);
@@ -77,16 +77,7 @@ namespace TypeRacers.Server
         }
         private void CheckClientReceievedData(string dataReceived)
         {
-            if (dataReceived.Contains("_restart"))
-            {
-                Console.WriteLine("restart");
-                Console.WriteLine("sent new time: " + currentPlayroom.TimeToWaitForOpponents);
-                byte[] broadcastBytes = Encoding.ASCII.GetBytes(currentPlayroom.TimeToWaitForOpponents + "#");
-                networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
-                networkStream.Close();
-                client.Close();
-                return;
-            }
+            CheckIfGameIsRestarted(dataReceived);
 
             //progress and slider progress
             string progress = dataReceived.Substring(0, dataReceived.IndexOf('$'));
@@ -98,6 +89,7 @@ namespace TypeRacers.Server
                 progressInfoAndPlayerRoomInfo[1], Convert.ToInt32(progressInfoAndPlayerRoomInfo[2]));
 
             string username = dataReceived.Substring(dataReceived.IndexOf('$') + 1);
+            
             currentClient = username.Substring(0, username.Length - 1);
 
             if (currentClient == string.Empty)
@@ -107,14 +99,33 @@ namespace TypeRacers.Server
 
             currentPlayerPlayroomNumber = clientInfo.Item3;
 
+            CheckIfClientLeftGame(currentClient);
+
+            CheckCurrentPlayroom(currentClient, currentPlayerPlayroomNumber, clientInfo);
+        }
+
+        private void CheckIfClientLeftGame(string currentClient)
+        {
             if (currentClient.Contains("_removed"))
             {
                 string toRemove = currentClient.Substring(0, currentClient.IndexOf('_'));
                 currentPlayroom.RemovePlayer(toRemove);
                 return;
             }
+        }
 
-            CheckCurrentPlayroom(currentClient, currentPlayerPlayroomNumber, clientInfo);
+        private void CheckIfGameIsRestarted(string dataReceived)
+        {
+            if (dataReceived.Contains("_restart"))
+            {
+                Console.WriteLine("restart");
+                Console.WriteLine("sent new time: " + currentPlayroom.TimeToWaitForOpponents);
+                byte[] broadcastBytes = Encoding.ASCII.GetBytes(currentPlayroom.TimeToWaitForOpponents + "#");
+                networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
+                networkStream.Close();
+                client.Close();
+                return;
+            }
         }
 
         public void CheckCurrentPlayroom(string currrentClient, int roomNumber, Tuple<string, string, int> clientInfo)
@@ -147,11 +158,13 @@ namespace TypeRacers.Server
         {
             Console.WriteLine("playroom size: " + currentPlayroom.PlayroomSize);
 
-
             if (newClient)
             {
+                GetNewCompetitionText();
+                
                 byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + roomNumber + "%" + currentPlayroom.TimeToWaitForOpponents + "*" + currentPlayroomStartingTime + "#"); //generates random text from text document
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
+                
                 networkStream.Close();
                 client.Close();
             }
@@ -171,23 +184,24 @@ namespace TypeRacers.Server
             string opponents = string.Empty;
             string rank = "!";
 
-            foreach (var a in playrooms[currentPlayerPlayroomNumber].Players)
-            {
-                if (!a.Key.ToString().Equals(currentClient))
-                {
-                    opponents += a.Key + ":" + a.Value.Item1 + "&" + a.Value.Item2 + "&" + a.Value.Item3 + "/";
-                }
-            }
 
-            foreach (var playerRank in playrooms[currentPlayerPlayroomNumber].Rank)
+            opponents += playrooms[currentPlayerPlayroomNumber].Players.Aggregate(string.Empty, (localOpp, p) =>
             {
-                rank += playerRank.Key + ":" + playerRank.Value.Item1 + "&" + playerRank.Value.Item2 + ";";
-            }
+                if (!p.Key.Equals(currentClient))
+                {
+                    localOpp += (p.Key + ":" + p.Value.Item1 + "&" + p.Value.Item2 + "&" + p.Value.Item3 + "/");
+                }
+
+                return localOpp;
+            });
+
+            rank += playrooms[currentPlayerPlayroomNumber].Rank.Aggregate(string.Empty, (localRank, r) => localRank += r.Key + ":" + r.Value.Item1 + "&" + r.Value.Item2 + ";");
 
             opponents += "*" + currentPlayroomStartingTime + "/" + rank + "/";
 
             byte[] broadcastBytes = Encoding.ASCII.GetBytes(opponents + "#");
             networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
+           
             networkStream.Close();
             client.Close();
         }
@@ -201,6 +215,11 @@ namespace TypeRacers.Server
             };
             playrooms.Add(newPlayroom);
             return playrooms.Last();
+        }
+
+        private void GetNewCompetitionText()
+        {
+            CompetitionText = ServerGeneratedText.GetText();
         }
     }  
 }
