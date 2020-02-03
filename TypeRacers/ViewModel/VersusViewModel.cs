@@ -73,7 +73,6 @@ namespace TypeRacers.ViewModel
         public int WaitingTime { get; set; }
         public DateTime TimeToStart { get; private set; }
         public int OpponentsCount { get; set; }
-        public string StartingTime { get; set; }
         public int ElapsedTimeFromWaitingTimer { get; set; }
         public bool InputValidation
         {
@@ -334,17 +333,9 @@ namespace TypeRacers.ViewModel
             {
                 EnableSearchingAnimation = false;
                 TriggerPropertyChanged(nameof(EnableSearchingAnimation));
-                StartingTime = model.GetStartingTime();
-                StartTime = DateTime.Parse(StartingTime);
-                SecondsToGetReady = StartTime.Subtract(DateTime.UtcNow).Seconds.ToString();
-
-                int.TryParse(SecondsToGetReady, out int seconds);
-
-                if (seconds < 0)
-                {
-                    EnableGetReadyAlert = false;
-                }
-
+                StartTime = DateTime.Parse(model.GetStartingTime());
+                TriggerPropertyChanged(nameof(StartTime));
+                SecondsToGetReady = (StartTime - DateTime.UtcNow).Seconds.ToString();
                 TriggerPropertyChanged(nameof(SecondsToGetReady));
                 EnableGetReadyAlert = true;
                 TriggerPropertyChanged(nameof(EnableGetReadyAlert));
@@ -352,7 +343,7 @@ namespace TypeRacers.ViewModel
         }
         public void CheckIfWaitingTimeHasPassed()
         {
-            if (TimeToStart.Subtract(DateTime.UtcNow) <= TimeSpan.Zero && string.IsNullOrEmpty(StartingTime))
+            if (TimeToStart.Subtract(DateTime.UtcNow) <= TimeSpan.Zero && string.IsNullOrEmpty(model.GetStartingTime()))
             {
                 if (OpponentsCount == 2)
                 {

@@ -140,39 +140,44 @@ namespace TypeRacers.Client
                 currentOpponents.Remove("#");
 
                 opponents = new List<Tuple<string, Tuple<string, string, int>>>();
-                foreach (var v in currentOpponents)
-                {
-                    if (v.First().Equals('*'))
-                    {
-                        PlayersStartingTime = v.Substring(1);
-                        if (!string.IsNullOrEmpty(PlayersStartingTime))
-                        {
-                            GameStarted = true;
-                            interval = 3000;
-                            TimeToSearchForOpponents += 90000 + (DateTime.Parse(PlayersStartingTime) - DateTime.UtcNow).Milliseconds;
-                        }
-                    }
-                    else
-                    {
-                        if (v.First().Equals('!'))
-                        {
-                            var rank = v.Substring(1).Split(';');
-                            SetRanking(rank);
-                        }
-                        else
-                        {
-
-                            var nameAndInfos = v.Split(':');
-                            SetInfo(nameAndInfos);
-                        }
-                    }
-                }
+                SetInfoOrRanking(currentOpponents);
 
                 return opponents;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw new Exception("Lost connection with server");
+                throw e;
+            }
+        }
+
+        private void SetInfoOrRanking(List<string> currentOpponents)
+        {
+            foreach (var v in currentOpponents)
+            {
+                if (v.First().Equals('*'))
+                {
+                    PlayersStartingTime = v.Substring(1);
+                    if (!string.IsNullOrEmpty(PlayersStartingTime))
+                    {
+                        GameStarted = true;
+                        interval = 3000;
+                        TimeToSearchForOpponents += 90000 + (DateTime.Parse(PlayersStartingTime) - DateTime.UtcNow).Milliseconds;
+                    }
+                }
+                else
+                {
+                    if (v.First().Equals('!'))
+                    {
+                        var rank = v.Substring(1).Split(';');
+                        SetRanking(rank);
+                    }
+                    else
+                    {
+
+                        var nameAndInfos = v.Split(':');
+                        SetInfo(nameAndInfos);
+                    }
+                }
             }
         }
 
@@ -262,9 +267,9 @@ namespace TypeRacers.Client
                 client.Close();
                 return textToType;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw new Exception("Lost connection with server");
+                throw e;
             }
         }
     }

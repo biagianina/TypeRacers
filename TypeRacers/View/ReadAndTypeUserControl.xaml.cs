@@ -16,7 +16,6 @@ namespace TypeRacers.View
     public partial class ReadAndTypeUserControl : UserControl, INotifyPropertyChanged
     {
         DispatcherTimer timer;
-        private int secondsToStart;
         public ReadAndTypeUserControl()
         {
             InitializeComponent();
@@ -147,7 +146,19 @@ namespace TypeRacers.View
                 SetValue(RATUCStartTimeProperty, value);
             }
         }
-       
+
+        public DateTime RATUCStartingTime
+        {
+            get { return (DateTime)GetValue(RATUCStartingTimeProperty); }
+            set { SetValue(RATUCStartingTimeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for StartingTime.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty RATUCStartingTimeProperty =
+            DependencyProperty.Register("RATUCStartingTime", typeof(DateTime), typeof(ReadAndTypeUserControl));
+
+
+
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
@@ -157,27 +168,25 @@ namespace TypeRacers.View
         {
             timer = new DispatcherTimer()
             {
-                Interval = TimeSpan.FromSeconds(1)
+                Interval = TimeSpan.FromSeconds(0.5)
             };
 
             timer.Tick += Timer_Tick;
 
             timer.Start();
-            
-            secondsToStart = 3;
 
-            if (RATUCStartTime != 0)
+            RATUCStartTime = 3;
+
+            if (RATUCStartingTime != null)
             {
-                secondsToStart = RATUCStartTime;
+                RATUCStartTime = (RATUCStartingTime - DateTime.UtcNow).Seconds;
             }
         }
 
        
         private void Timer_Tick(object sender, EventArgs e)
         {
-           secondsToStart--;
-
-            if (secondsToStart < 0)
+            if (RATUCStartingTime - DateTime.UtcNow < TimeSpan.Zero)
             {
                 timer.Stop();
                 RATUCGetReadyAlert = false;
@@ -187,10 +196,10 @@ namespace TypeRacers.View
                 TriggerPropertyChanged(nameof(RATUCCanType));
             }
 
-            RATUCSecondsToStart = secondsToStart.ToString();
+            RATUCSecondsToStart = (RATUCStartingTime - DateTime.UtcNow).Seconds.ToString();
             TriggerPropertyChanged(nameof(RATUCSecondsToStart));
 
-            if (secondsToStart == 0)
+            if (RATUCSecondsToStart.Equals("0"))
             {
                 RATUCSecondsToStart = "START!";
                 TriggerPropertyChanged(nameof(RATUCSecondsToStart));
