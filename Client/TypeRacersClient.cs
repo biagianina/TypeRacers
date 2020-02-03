@@ -12,7 +12,7 @@ namespace TypeRacers.Client
         TcpClient client;
         NetworkStream stream;
         Timer timer;
-        readonly int interval = 1000; // 1 second
+        int interval = 1000; // 1 second
         int elapsedTime = 0; // Elapsed time in ms
         private Dictionary<string, Tuple<bool, int>> rank;
         List<Tuple<string, Tuple<string, string, int>>> opponents;
@@ -32,10 +32,12 @@ namespace TypeRacers.Client
         public int TimeToSearchForOpponents { get; set; }
 
         public Dictionary<string, Tuple<bool, int>> Rank { get; set; } = new Dictionary<string, Tuple<bool, int>>();
-        private string LocalPlayerProgress { get; set; }
+        public string LocalPlayerProgress { get; set; }
         public string PlayersStartingTime { get; set; } = string.Empty;
         private int PlayroomNumber { get; set; }
         public string Name { get; set; }
+        public bool GameStarted { get; private set; }
+
         public void StartTimerForSearchingOpponents()
         {
             timer = new Timer(interval);
@@ -66,9 +68,14 @@ namespace TypeRacers.Client
             {
                 // here I am performing the task
                 //getting the opponents each second for 30 seconds from server through Client
-
-                SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>>(GetOpponentsProgress(), elapsedTime, Rank));
-
+                if (GameStarted)
+                {
+                    SendProgressToServer(LocalPlayerProgress);
+                }
+                else
+                {
+                    SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>>(GetOpponentsProgress(), elapsedTime, Rank));
+                }
                 timer.Enabled = true;
             }
 
@@ -88,8 +95,7 @@ namespace TypeRacers.Client
             client = new TcpClient("localhost", 80);
             stream = client.GetStream();
 
-            //getting the current progress from versus view model
-            LocalPlayerProgress = progress;
+           
             //writing the progress to stream
             byte[] bytesToSend = Encoding.ASCII.GetBytes(LocalPlayerProgress + "&" + PlayroomNumber + "$" + Name + "#");
             stream.Write(bytesToSend, 0, bytesToSend.Length);
@@ -147,6 +153,12 @@ namespace TypeRacers.Client
                     if (v.First().Equals('*'))
                     {
                         PlayersStartingTime = v.Substring(1);
+                        if (!string.IsNullOrEmpty(PlayersStartingTime))
+                        {
+                            GameStarted = true;
+                            interval = 3000;
+                            TimeToSearchForOpponents += 90000 + (DateTime.Parse(PlayersStartingTime) - DateTime.UtcNow).Milliseconds;
+                        }
                     }
                     else
                     {
@@ -164,7 +176,7 @@ namespace TypeRacers.Client
                                     if (!Rank.ContainsKey(name))
                                     {
                                         Rank.Add(name, rankToAdd);
-                                    } 
+                                    }
                                     else
                                     {
                                         Rank[name] = rankToAdd;

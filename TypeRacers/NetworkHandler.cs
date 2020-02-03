@@ -48,7 +48,7 @@ namespace TypeRacers
       
         public void SendProgressToServer(string progress)
         {
-            client.SendProgressToServer(progress);
+            client.LocalPlayerProgress = progress;
         }
 
         public void NameClient(string username)
