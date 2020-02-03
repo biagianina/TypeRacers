@@ -19,8 +19,8 @@ namespace TypeRacers.ViewModel
         int incorrectChars;
         int currentWordIndex;
         private bool alert;
-        Model.Model model;
-        private DateTime startTime;
+        readonly Model.Model model;
+        private readonly DateTime startTime;
         int numberOfCharactersTyped;
 
         public PracticeViewModel()
@@ -152,7 +152,7 @@ namespace TypeRacers.ViewModel
         public bool GetReadyAlert { get; internal set; }
         public string SecondsToGetReady { get; internal set; } = "3";
 
-        public void CheckUserInput(string value)
+        private void CheckUserInput(string value)
         {
             //checks if current word is typed, clears textbox, reintializes remaining text to the validation, sends progress 
             if (isValid && value.EndsWith(" "))
@@ -178,7 +178,7 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(WPMProgress));//recalculates progress 
             }
         }
-        public void HighlightText()
+        private void HighlightText()
         {
             if (!Keyboard.IsKeyDown(Key.Back))
             {
