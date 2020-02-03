@@ -165,24 +165,7 @@ namespace TypeRacers.Client
                         if (v.First().Equals('!'))
                         {
                             var rank = v.Substring(1).Split(';');
-                            foreach (var r in rank)
-                            {
-                                if (!string.IsNullOrEmpty(r))
-                                {
-                                    var nameAndRank = r.Split(':');
-                                    var name = nameAndRank[0];
-                                    var currentRank = nameAndRank[1].Split('&');
-                                    var rankToAdd = new Tuple<bool, int>(Convert.ToBoolean(currentRank[0]), Convert.ToInt32(currentRank[1]));
-                                    if (!Rank.ContainsKey(name))
-                                    {
-                                        Rank.Add(name, rankToAdd);
-                                    }
-                                    else
-                                    {
-                                        Rank[name] = rankToAdd;
-                                    }
-                                }
-                            }
+                            SetRanking(rank);
                         }
                         else
                         {
@@ -210,6 +193,29 @@ namespace TypeRacers.Client
                 throw new Exception("Lost connection with server");
             }
         }
+
+        private void SetRanking(string[] rank)
+        {
+            foreach (var r in rank)
+            {
+                if (!string.IsNullOrEmpty(r))
+                {
+                    var nameAndRank = r.Split(':');
+                    var name = nameAndRank[0];
+                    var currentRank = nameAndRank[1].Split('&');
+                    var rankToAdd = new Tuple<bool, int>(Convert.ToBoolean(currentRank[0]), Convert.ToInt32(currentRank[1]));
+                    if (!Rank.ContainsKey(name))
+                    {
+                        Rank.Add(name, rankToAdd);
+                    }
+                    else
+                    {
+                        Rank[name] = rankToAdd;
+                    }
+                }
+            }
+        }
+
         public string GetMessageFromServer()
         {
             //connecting to server
