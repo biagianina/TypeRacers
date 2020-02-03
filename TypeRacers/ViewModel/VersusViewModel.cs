@@ -351,7 +351,7 @@ namespace TypeRacers.ViewModel
         {
             if (TimeToStart.Subtract(DateTime.UtcNow) <= TimeSpan.Zero && string.IsNullOrEmpty(model.GetStartingTime()))
             {
-                if (OpponentsCount == 2)
+                if (Opponents.Count() == 1)
                 {
                     CheckStartTimeWasSet();
                 }

@@ -9,15 +9,22 @@ namespace TypeRacers.Client
 {
     public class TypeRacersClient
     {
+        public int TimeToSearchForOpponents { get; set; }
+        public Dictionary<string, Tuple<bool, int>> Rank { get; set; } = new Dictionary<string, Tuple<bool, int>>();
+        public string LocalPlayerProgress { get; set; } = "0&0";
+        public string PlayersStartingTime { get; set; } = string.Empty;
+        private int PlayroomNumber { get; set; }
+        public string Name { get; set; }
+        public bool GameStarted { get; private set; }
+
+
         TcpClient client;
         NetworkStream stream;
         Timer timer;
         int interval = 1000; // 1 second
         int elapsedTime = 0; // Elapsed time in ms
-        private Dictionary<string, Tuple<bool, int>> rank;
         List<Tuple<string, Tuple<string, string, int>>> opponents;
         bool playerIsRemoved;
-
 
         public delegate void TimerTickHandler(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>> opponentsAndRankingAndElapsedTime);
         public event TimerTickHandler OpponentsChanged;
@@ -26,18 +33,10 @@ namespace TypeRacers.Client
         {
             opponents = value.Item1;
             elapsedTime = value.Item2;
-            rank = value.Item3;
+            Rank = value.Item3;
             OnOpponentsChangedAndTimeChanged(value);
         }
-        public int TimeToSearchForOpponents { get; set; }
-
-        public Dictionary<string, Tuple<bool, int>> Rank { get; set; } = new Dictionary<string, Tuple<bool, int>>();
-        public string LocalPlayerProgress { get; set; }
-        public string PlayersStartingTime { get; set; } = string.Empty;
-        private int PlayroomNumber { get; set; }
-        public string Name { get; set; }
-        public bool GameStarted { get; private set; }
-
+       
         public void StartTimerForSearchingOpponents()
         {
             timer = new Timer(interval);
@@ -111,7 +110,6 @@ namespace TypeRacers.Client
             playerIsRemoved = true;
         }
 
-
         protected void OnOpponentsChangedAndTimeChanged(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>> opponentsAndElapsedTime)
         {
             if (opponentsAndElapsedTime != null)
@@ -127,7 +125,7 @@ namespace TypeRacers.Client
 
            
             //writing the progress to stream
-            byte[] bytesToSend = Encoding.ASCII.GetBytes(LocalPlayerProgress + "&" + PlayroomNumber + "$" + Name + "#");
+            byte[] bytesToSend = Encoding.ASCII.GetBytes(progress + "&" + PlayroomNumber + "$" + Name + "#");
             stream.Write(bytesToSend, 0, bytesToSend.Length);
 
             SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>>(GetOpponentsProgress(), elapsedTime, Rank));
@@ -263,7 +261,7 @@ namespace TypeRacers.Client
             }
         }
 
-        public string GetMessageFromServer()
+        public string FirstTimeConnectingToServer()
         {
             //connecting to server
             client = new TcpClient("localhost", 80);
@@ -271,7 +269,7 @@ namespace TypeRacers.Client
 
             try
             {
-                byte[] bytesToSend = Encoding.ASCII.GetBytes("0&0&" + PlayroomNumber + "$" + Name + "#");
+                byte[] bytesToSend = Encoding.ASCII.GetBytes(LocalPlayerProgress + "&" + PlayroomNumber + "$" + Name + "#");
 
                 stream.Write(bytesToSend, 0, bytesToSend.Length);
 
@@ -294,7 +292,12 @@ namespace TypeRacers.Client
                 TimeToSearchForOpponents = (DateTime.Parse(timers.FirstOrDefault()) - DateTime.UtcNow).Seconds * 1000;
                 PlayersStartingTime = timers.LastOrDefault();
                 PlayroomNumber = Convert.ToInt32(dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('$') + 1, (dataWithoutHashtag.Length - textToType.Length - times.Length - 2)));
-                client.Close();
+               
+                if (stream.DataAvailable)
+                {
+                    client.Close();
+                }
+
                 return textToType;
             }
             catch (Exception e)

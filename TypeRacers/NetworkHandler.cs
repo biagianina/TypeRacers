@@ -48,7 +48,7 @@ namespace TypeRacers
         }
         public string GetTextFromServer()
         {
-            return client.GetMessageFromServer();
+            return client.FirstTimeConnectingToServer();
         }
       
         public void SendProgressToServer(string progress)

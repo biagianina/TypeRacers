@@ -16,7 +16,7 @@ namespace Server
             Players = new Dictionary<string, Tuple<string, string, int>>();
             Rank = new Dictionary<string, Tuple<bool, int>>();
             currentTime = DateTime.UtcNow;
-            TimeToWaitForOpponents = string.Format("{0:MM/dd/yy H:mm:ss tt}", currentTime.AddSeconds(20));
+            TimeToWaitForOpponents = string.Format("{0:MM/dd/yy H:mm:ss tt}", currentTime.AddSeconds(10));
         }
 
         public Dictionary<string, Tuple<string, string, int>> Players { get; set; }
@@ -24,20 +24,27 @@ namespace Server
         public string GameStartingTime { get; set; } = string.Empty;
         public string TimeToWaitForOpponents { get; set; }
 
-        public void CheckIfPlayersCanStart()
+        public string CheckIfPlayersCanStart()
         {
-            if (PlayroomSize == 3 ||(PlayroomSize == 2 && DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow <= TimeSpan.Zero))
+            if (PlayroomSize == 3)
             {
                 currentTime = DateTime.UtcNow;
                 currentTime = currentTime.AddSeconds(10);
                 GameStartingTime = string.Format("{0:H:mm:ss tt}", currentTime);
-                GameStarted = true;
             }
-
+            if (DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow <= TimeSpan.Zero && PlayroomSize == 2)
+            {            
+                currentTime = DateTime.UtcNow;
+                currentTime = currentTime.AddSeconds(10);
+                GameStartingTime = string.Format("{0:H:mm:ss tt}", currentTime);
+            }
+              
             if ((PlayroomSize == 1 || PlayroomSize == 0) && DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow <= TimeSpan.Zero)
             {
                 ResetPlayroom();
             }
+
+            return GameStartingTime;
         }
         private void ResetPlayroom()
         {
@@ -47,7 +54,6 @@ namespace Server
         
         public int PlayroomSize { get; set; }
         public int PlayroomNumber { get; set; }
-        public bool GameStarted { get; internal set; }
 
         public bool ExistsInPlayroom(string currentClientKey)
         {
