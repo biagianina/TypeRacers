@@ -186,13 +186,13 @@ namespace TypeRacers.ViewModel
         public bool ShowRanking { get; private set; }
         public string RankingPlace { get; private set; }
 
-        public void ReportProgress()
+        private void ReportProgress()
         {
             model.ReportProgress(WPMProgress, SliderProgress);
             Opponents = model.GetOpponents();
             TriggerPropertyChanged(nameof(Opponents));
         }
-        public void CheckUserInput(string value)
+        private void CheckUserInput(string value)
         {
             //checks if current word is typed, clears textbox, reintializes remaining text to the validation, sends progress 
             if (isValid && value.EndsWith(" "))
@@ -222,7 +222,7 @@ namespace TypeRacers.ViewModel
                 ReportProgress();
             }
         }
-        public void HighlightText()
+        private void HighlightText()
         {
             if (!Keyboard.IsKeyDown(Key.Back))
             {
@@ -284,7 +284,7 @@ namespace TypeRacers.ViewModel
         {
             model.RemovePlayer();
         }
-        public void UpdateOpponents(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>> updatedOpponentsAndRankingAndElapsedTime)
+        private void UpdateOpponents(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>> updatedOpponentsAndRankingAndElapsedTime)
         {
             Opponents = updatedOpponentsAndRankingAndElapsedTime.Item1;
             TriggerPropertyChanged(nameof(Opponents));
@@ -302,7 +302,7 @@ namespace TypeRacers.ViewModel
            
             UpdateShownPlayers();
 
-            CheckStartTimeWasSet();
+            CheckIfStartTimeWasSet();
             
             CheckIfWaitingTimeHasPassed();
         }
@@ -330,7 +330,7 @@ namespace TypeRacers.ViewModel
             TriggerPropertyChanged(nameof(OpponentsAndRanking));
         }
 
-        public void CheckStartTimeWasSet()
+        private void CheckIfStartTimeWasSet()
         {
             if (!string.IsNullOrEmpty(model.GetStartingTime()))
             {
@@ -344,13 +344,13 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(EnableGetReadyAlert));
             }
         }
-        public void CheckIfWaitingTimeHasPassed()
+        private void CheckIfWaitingTimeHasPassed()
         {
             if (TimeToStart.Subtract(DateTime.UtcNow) <= TimeSpan.Zero && string.IsNullOrEmpty(model.GetStartingTime()))
             {
                 if (Opponents.Count() == 1)
                 {
-                    CheckStartTimeWasSet();
+                    CheckIfStartTimeWasSet();
                 }
                 else
                 {
@@ -362,7 +362,7 @@ namespace TypeRacers.ViewModel
                 }
             }
         }
-        public void UpdateShownPlayers()
+        private void UpdateShownPlayers()
         {
             if (Opponents.Count() == 0)
             {

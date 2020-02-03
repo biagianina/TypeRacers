@@ -158,9 +158,7 @@ namespace TypeRacers.Server
             Console.WriteLine("playroom size: " + currentPlayroom.PlayroomSize);
 
             if (newClient)
-            {
-                GetNewCompetitionText();
-                
+            {                
                 byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + roomNumber + "%" + currentPlayroom.TimeToWaitForOpponents + "*" + currentPlayroomStartingTime + "#"); //generates random text from text document
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
                 
@@ -207,6 +205,7 @@ namespace TypeRacers.Server
 
         private Playroom CreateNewPlayroom()
         {
+            GetNewCompetitionText();
             playroomCount++;
             var newPlayroom = new Playroom
             {
