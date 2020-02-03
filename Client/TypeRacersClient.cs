@@ -134,15 +134,7 @@ namespace TypeRacers.Client
 
             try
             {
-                byte[] inStream = new byte[client.ReceiveBufferSize];
-                int read = stream.Read(inStream, 0, inStream.Length);
-                string text = Encoding.ASCII.GetString(inStream, 0, read);
-
-                while (!text[read - 1].Equals('#'))
-                {
-                    read = stream.Read(inStream, 0, inStream.Length);
-                    text += Encoding.ASCII.GetString(inStream, text.Length, read);
-                }
+                var text = GetDataFromServer();
 
                 var currentOpponents = text.Split('/').ToList();
                 currentOpponents.Remove("#");
@@ -184,8 +176,24 @@ namespace TypeRacers.Client
             }
         }
 
+        private string GetDataFromServer()
+        {
+            byte[] inStream = new byte[client.ReceiveBufferSize];
+            int read = stream.Read(inStream, 0, inStream.Length);
+            string text = Encoding.ASCII.GetString(inStream, 0, read);
+
+            while (!text[read - 1].Equals('#'))
+            {
+                read = stream.Read(inStream, 0, inStream.Length);
+                text += Encoding.ASCII.GetString(inStream, text.Length, read);
+            }
+
+            return text;
+        }
+
         private void SetInfo(string[] nameAndInfos)
         {
+
             var progressInfoAndPlayroomInfo = nameAndInfos.LastOrDefault().Split('&');
 
             if (progressInfoAndPlayroomInfo.Count() == 3)
