@@ -11,6 +11,8 @@ namespace TypeRacers.Server
 {
     class ServerSetup
     {
+        private static string CompetitionText { get; set; } = ServerGeneratedText.GetText();
+
         private bool newClient;
         private TcpListener server;
         private NetworkStream networkStream;
@@ -23,9 +25,6 @@ namespace TypeRacers.Server
         readonly int maxPlayroomSize = 3;
         TcpClient client;
 
-
-        //to avoid generating different texts from users in same competition
-        public static string CompetitionText { get; set; } = ServerGeneratedText.GetText();
         public void Setup()
         {
             server = new TcpListener(IPAddress.IPv6Any, 80);
@@ -128,7 +127,7 @@ namespace TypeRacers.Server
             }
         }
 
-        public void CheckCurrentPlayroom(string currrentClient, int roomNumber, Tuple<string, string, int> clientInfo)
+        private void CheckCurrentPlayroom(string currrentClient, int roomNumber, Tuple<string, string, int> clientInfo)
         {
             if (!playrooms.Any())
             {
@@ -206,7 +205,7 @@ namespace TypeRacers.Server
             client.Close();
         }
 
-        public Playroom CreateNewPlayroom()
+        private Playroom CreateNewPlayroom()
         {
             playroomCount++;
             var newPlayroom = new Playroom
