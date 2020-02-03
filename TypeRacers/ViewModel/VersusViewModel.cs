@@ -312,20 +312,17 @@ namespace TypeRacers.ViewModel
             List<Tuple<string, Tuple<string, string, bool, string>>> opponentsAndRanking = new List<Tuple<string, Tuple<string, string, bool, string>>>();
             foreach (var rank in Rank)
             {
-                foreach (var opponent in Opponents)
+                var player = Opponents.FirstOrDefault(op => op.Item1.Equals(rank.Key));
+                if (player != default)
                 {
-                    if (opponent.Item1.Equals(rank.Key))
-                    {
-                        opponentsAndRanking.Add(new Tuple<string, Tuple<string, string, bool, string>>(rank.Key, new Tuple<string, string, bool, string>(opponent.Item2.Item1, opponent.Item2.Item2, rank.Value.Item1, rank.Value.Item2.ToString())));
-                        break;
-                    }
-                    else
-                    {
-                        ShowRanking = rank.Value.Item1;
-                        TriggerPropertyChanged(nameof(ShowRanking));
-                        RankingPlace = rank.Value.Item2.ToString();
-                        TriggerPropertyChanged(nameof(RankingPlace));
-                    }
+                    opponentsAndRanking.Add(new Tuple<string, Tuple<string, string, bool, string>>(rank.Key, new Tuple<string, string, bool, string>(player.Item2.Item1, player.Item2.Item2, rank.Value.Item1, Convert.ToString(rank.Value.Item2))));
+                }
+                else
+                {
+                    ShowRanking = rank.Value.Item1;
+                    TriggerPropertyChanged(nameof(ShowRanking));
+                    RankingPlace = rank.Value.Item2.ToString();
+                    TriggerPropertyChanged(nameof(RankingPlace));
                 }
             }
 

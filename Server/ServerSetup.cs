@@ -21,6 +21,7 @@ namespace TypeRacers.Server
         int currentPlayerPlayroomNumber;
         private object currentPlayroomStartingTime;
         readonly int maxPlayroomSize = 3;
+        TcpClient client;
 
 
         //to avoid generating different texts from users in same competition
@@ -48,8 +49,7 @@ namespace TypeRacers.Server
         {
             while (true)
             {
-                TcpClient client = server.AcceptTcpClient();
-
+                client = server.AcceptTcpClient();
                 //creates the stream
                 networkStream = client.GetStream();
                 //reads from stream
@@ -68,10 +68,7 @@ namespace TypeRacers.Server
 
                 CheckClientReceievedData(dataReceived);
                 //check if reading from the stream has been done on the other end in order to close client
-                if (networkStream.DataAvailable)
-                {
-                    client.Close();
-                }
+              
 
                 Console.WriteLine("info: " + dataReceived);
                 Console.WriteLine("Disconnected client");
@@ -80,13 +77,14 @@ namespace TypeRacers.Server
         }
         private void CheckClientReceievedData(string dataReceived)
         {
-
             if (dataReceived.Contains("_restart"))
             {
                 Console.WriteLine("restart");
                 Console.WriteLine("sent new time: " + currentPlayroom.TimeToWaitForOpponents);
                 byte[] broadcastBytes = Encoding.ASCII.GetBytes(currentPlayroom.TimeToWaitForOpponents + "#");
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
+                networkStream.Close();
+                client.Close();
                 return;
             }
 
@@ -154,6 +152,8 @@ namespace TypeRacers.Server
             {
                 byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + roomNumber + "%" + currentPlayroom.TimeToWaitForOpponents + "*" + currentPlayroomStartingTime + "#"); //generates random text from text document
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
+                networkStream.Close();
+                client.Close();
             }
             else
             {
@@ -188,6 +188,8 @@ namespace TypeRacers.Server
 
             byte[] broadcastBytes = Encoding.ASCII.GetBytes(opponents + "#");
             networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
+            networkStream.Close();
+            client.Close();
         }
 
         public Playroom CreateNewPlayroom()

@@ -142,19 +142,18 @@ namespace TypeRacers.Client
             string toSend;
 
             //writing the progress to stream
-            if (LocalPlayerProgress != null)
+
+            if (playerIsRemoved)
             {
-                toSend = LocalPlayerProgress + "&" + PlayroomNumber +  "$" + Name + "#";
+                var removedName  = Name + "_removed";
+
+                toSend = LocalPlayerProgress + "&" + PlayroomNumber + "$" + removedName + "#";
+                playerIsRemoved = false;
             }
             else
             {
-                if (playerIsRemoved)
-                {
-                    Name += "_removed";
-                    playerIsRemoved = false;
-                }
+                toSend = LocalPlayerProgress + "&" + PlayroomNumber + "$" + Name + "#";
 
-                toSend = "0&0&" + PlayroomNumber + "$" + Name + "#";
             }
 
             byte[] bytesToSend = Encoding.ASCII.GetBytes(toSend);
@@ -208,7 +207,6 @@ namespace TypeRacers.Client
                 }
             }
         }
-
         private string GetDataFromServer()
         {
             byte[] inStream = new byte[client.ReceiveBufferSize];
@@ -219,6 +217,11 @@ namespace TypeRacers.Client
             {
                 read = stream.Read(inStream, 0, inStream.Length);
                 text += Encoding.ASCII.GetString(inStream, text.Length, read);
+            }
+
+            if (stream.DataAvailable)
+            {
+                client.Close();
             }
 
             return text;
@@ -293,11 +296,6 @@ namespace TypeRacers.Client
                 PlayersStartingTime = timers.LastOrDefault();
                 PlayroomNumber = Convert.ToInt32(dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('$') + 1, (dataWithoutHashtag.Length - textToType.Length - times.Length - 2)));
                
-                if (stream.DataAvailable)
-                {
-                    client.Close();
-                }
-
                 return textToType;
             }
             catch (Exception e)

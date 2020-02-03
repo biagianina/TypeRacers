@@ -168,7 +168,7 @@ namespace TypeRacers.View
         {
             timer = new DispatcherTimer()
             {
-                Interval = TimeSpan.FromSeconds(0.5)
+                Interval = TimeSpan.FromMilliseconds(300)
             };
 
             timer.Tick += Timer_Tick;
@@ -218,7 +218,7 @@ namespace TypeRacers.View
             timer.Start();
         }
 
-        private int secondsInGame = 90;
+        private int secondsInGame = 190;
 
         private void GameTimer_Tick(object sender, EventArgs e)
         {
