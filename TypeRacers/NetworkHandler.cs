@@ -25,7 +25,7 @@ namespace TypeRacers
 
         public void RestartSearch()
         {
-            client.RestartSearch = true;
+            client.RestartSearch();
         }
         public void StartSearchingOpponents()
         {

@@ -36,14 +36,13 @@ namespace TypeRacers.Client
         public string PlayersStartingTime { get; set; } = string.Empty;
         private int PlayroomNumber { get; set; }
         public string Name { get; set; }
-        public bool RestartSearch { get; set; }
         public void StartTimerForSearchingOpponents()
         {
             timer = new Timer(interval);
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Enabled = true;
         }
-
+      
         void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
             timer.Stop();
@@ -65,6 +64,34 @@ namespace TypeRacers.Client
             }
 
             elapsedTime += interval;
+        }
+
+        public void RestartSearch()
+        {
+            //connecting to server
+            client = new TcpClient("localhost", 80);
+            stream = client.GetStream();
+
+            //writing the progress to stream
+
+            string toSend = Name + "_restart" + "#";
+
+            byte[] bytesToSend = Encoding.ASCII.GetBytes(toSend);
+            stream.Write(bytesToSend, 0, bytesToSend.Length);
+
+            try
+            {
+                byte[] inStream = new byte[client.ReceiveBufferSize];
+                int read = stream.Read(inStream, 0, inStream.Length);
+                string text = Encoding.ASCII.GetString(inStream, 0, read);
+                var dataWithoutHashtag = text.Remove(text.Length - 1);
+
+            }
+            catch (Exception)
+            {
+                throw new Exception("Lost connection with server");
+            }
+
         }
         public void NameClient(string username)
         {
