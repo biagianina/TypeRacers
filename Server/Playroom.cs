@@ -10,6 +10,14 @@ namespace Server
 {
     class Playroom
     {
+        public int PlayroomSize { get; set; }
+        public int PlayroomNumber { get; set; }
+        public Dictionary<string, Tuple<string, string, int>> Players { get; set; }
+        public Dictionary<string, Tuple<bool, int>> Rank { get; set; }
+        public string GameStartingTime { get; set; } = string.Empty;
+        public string TimeToWaitForOpponents { get; set; }
+        private int Place { get; set; } = 1;
+
         DateTime currentTime;
         public Playroom()
         {
@@ -18,12 +26,7 @@ namespace Server
             currentTime = DateTime.UtcNow;
             TimeToWaitForOpponents = string.Format("{0:MM/dd/yy H:mm:ss tt}", currentTime.AddSeconds(10));
         }
-
-        public Dictionary<string, Tuple<string, string, int>> Players { get; set; }
-        public Dictionary<string, Tuple<bool, int>> Rank { get; set; }
-        public string GameStartingTime { get; set; } = string.Empty;
-        public string TimeToWaitForOpponents { get; set; }
-
+       
         public string CheckIfPlayersCanStart()
         {
             if (PlayroomSize == 3)
@@ -46,15 +49,7 @@ namespace Server
 
             return GameStartingTime;
         }
-        private void ResetPlayroom()
-        {
-            currentTime = DateTime.UtcNow;
-            TimeToWaitForOpponents = string.Format("{0:MM/dd/yy H:mm:ss tt}", currentTime.AddSeconds(10));
-        }
-        
-        public int PlayroomSize { get; set; }
-        public int PlayroomNumber { get; set; }
-
+       
         public bool ExistsInPlayroom(string currentClientKey)
         {
             return Players.ContainsKey(currentClientKey);
@@ -67,8 +62,7 @@ namespace Server
             }
             PlayroomSize--;
         }
-
-        private int Place { get; set; } = 1;
+       
         public bool AddPlayersToRoom(string currentClientKey, Tuple<string, string, int> clientInfo)
         {         
             if (Players.ContainsKey(currentClientKey))
@@ -89,6 +83,12 @@ namespace Server
             PlayroomSize++;
 
             return true;
+        }
+
+        private void ResetPlayroom()
+        {
+            currentTime = DateTime.UtcNow;
+            TimeToWaitForOpponents = string.Format("{0:MM/dd/yy H:mm:ss tt}", currentTime.AddSeconds(10));
         }
     }
 }
