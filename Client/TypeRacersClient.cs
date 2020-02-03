@@ -9,7 +9,7 @@ namespace TypeRacers.Client
 {
     public class TypeRacersClient
     {
-        public int TimeToSearchForOpponents { get; set; }
+        public int Time { get; set; }
         public Dictionary<string, Tuple<bool, int>> Rank { get; set; } = new Dictionary<string, Tuple<bool, int>>();
         public string LocalPlayerProgress { get; set; } = "0&0";
         public string PlayersStartingTime { get; set; } = string.Empty;
@@ -48,7 +48,7 @@ namespace TypeRacers.Client
         {
             timer.Stop();
 
-            if (elapsedTime > TimeToSearchForOpponents)
+            if (elapsedTime > Time)
             {
                 elapsedTime = 0;
                 //we stop the timer after 30 seconds
@@ -183,12 +183,14 @@ namespace TypeRacers.Client
             {
                 if (v.First().Equals('*'))
                 {
-                    PlayersStartingTime = v.Substring(1);
                     if (!string.IsNullOrEmpty(PlayersStartingTime))
                     {
                         GameStarted = true;
-                        interval = 3000;
-                        TimeToSearchForOpponents += 90000 + (DateTime.Parse(PlayersStartingTime) - DateTime.UtcNow).Milliseconds;
+                        Time = (DateTime.Parse(PlayersStartingTime) - DateTime.UtcNow).Seconds + 90000;
+                    }
+                    else
+                    {
+                        PlayersStartingTime = v.Substring(1);
                     }
                 }
                 else
@@ -244,7 +246,7 @@ namespace TypeRacers.Client
 
         private void SetRanking(string[] rank)
         {
-            foreach (var r in rank)
+            rank.Aggregate(Rank, (Rank, r) =>
             {
                 if (!string.IsNullOrEmpty(r))
                 {
@@ -261,7 +263,8 @@ namespace TypeRacers.Client
                         Rank[name] = rankToAdd;
                     }
                 }
-            }
+                return Rank;
+            });
         }
 
         public string FirstTimeConnectingToServer()
@@ -292,7 +295,7 @@ namespace TypeRacers.Client
                
                 var times = dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('%') + 1);
                 var timers = times.Split('*');
-                TimeToSearchForOpponents = (DateTime.Parse(timers.FirstOrDefault()) - DateTime.UtcNow).Seconds * 1000;
+                Time = (DateTime.Parse(timers.FirstOrDefault()) - DateTime.UtcNow).Seconds * 1000;
                 PlayersStartingTime = timers.LastOrDefault();
                 PlayroomNumber = Convert.ToInt32(dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('$') + 1, (dataWithoutHashtag.Length - textToType.Length - times.Length - 2)));
                

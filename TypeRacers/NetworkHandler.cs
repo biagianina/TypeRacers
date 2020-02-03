@@ -20,7 +20,7 @@ namespace TypeRacers
         }
         public int GetWaitingTime()
         {
-            return client.TimeToSearchForOpponents;
+            return client.Time;
         }
 
         public void RestartSearch()
