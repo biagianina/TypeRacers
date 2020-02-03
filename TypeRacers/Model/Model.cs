@@ -18,6 +18,11 @@ namespace TypeRacers.Model
         {
             networkHandler.StartSearchingOpponents();
         }
+
+        public void RestartSearch()
+        {
+            networkHandler.RestartSearch();
+        }
         public string GetStartingTime()
         {
             return networkHandler.GetStartingTime();

@@ -265,9 +265,15 @@ namespace TypeRacers.ViewModel
         {
             EnableRestartOrExitAlert = false;
             TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
-            model.StartSearchingOpponents();
-            model.SubscribeToSearchingOpponents(UpdateOpponents);
 
+            model.RestartSearch();
+            WaitingTime = model.GetWaitingTime();
+            TimeToStart = DateTime.UtcNow.AddSeconds(WaitingTime / 1000);
+
+            
+            model.StartSearchingOpponents();
+            EnableSearchingAnimation = true;
+            TriggerPropertyChanged(nameof(EnableSearchingAnimation));
         }
         private void ExitProgram()
         {

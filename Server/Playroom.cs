@@ -26,15 +26,25 @@ namespace Server
 
         public void CheckIfPlayersCanStart()
         {
-            if (PlayroomSize == 3 || DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow <= TimeSpan.Zero && PlayroomSize == 2)
+            if (PlayroomSize == 3 ||(PlayroomSize == 2 && DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow <= TimeSpan.Zero))
             {
                 currentTime = DateTime.UtcNow;
                 currentTime = currentTime.AddSeconds(10);
                 GameStartingTime = string.Format("{0:H:mm:ss tt}", currentTime);
                 GameStarted = true;
             }
-        }
 
+            if ((PlayroomSize == 1 || PlayroomSize == 0) && DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow <= TimeSpan.Zero)
+            {
+                ResetPlayroom();
+            }
+        }
+        private void ResetPlayroom()
+        {
+            currentTime = DateTime.UtcNow;
+            TimeToWaitForOpponents = string.Format("{0:MM/dd/yy H:mm:ss tt}", currentTime.AddSeconds(10));
+        }
+        
         public int PlayroomSize { get; set; }
         public int PlayroomNumber { get; set; }
         public bool GameStarted { get; internal set; }
@@ -49,11 +59,12 @@ namespace Server
             {
                 Players.Remove(clientKey);
             }
+            PlayroomSize--;
         }
 
         private int Place { get; set; } = 1;
         public bool AddPlayersToRoom(string currentClientKey, Tuple<string, string, int> clientInfo)
-        {
+        {         
             if (Players.ContainsKey(currentClientKey))
             {
                 Players[currentClientKey] = clientInfo;
@@ -65,6 +76,7 @@ namespace Server
                 return false;
             }
 
+            Console.WriteLine("adding: " + currentClientKey);
             Players.Add(currentClientKey, clientInfo);
             Rank.Add(currentClientKey, new Tuple<bool, int>(false, 0));
 

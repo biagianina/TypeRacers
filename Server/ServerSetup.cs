@@ -86,6 +86,9 @@ namespace TypeRacers.Server
 
         private void CheckNewClient(int roomNumber)
         {
+            Console.WriteLine("playroom size: " + currentPlayroom.PlayroomSize);
+
+
             if (newClient)
             {
                 byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + roomNumber + "%" + currentPlayroom.TimeToWaitForOpponents + "*" + currentPlayroom.GameStartingTime + "#"); //generates random text from text document
@@ -125,6 +128,16 @@ namespace TypeRacers.Server
 
         private void CheckClientReceievedData(string dataReceived)
         {
+
+            if (dataReceived.Contains("_restart"))
+            {
+                Console.WriteLine("restart");
+                Console.WriteLine("sent new time: " + currentPlayroom.TimeToWaitForOpponents);
+                byte[] broadcastBytes = Encoding.ASCII.GetBytes(currentPlayroom.TimeToWaitForOpponents + "#");
+                networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
+                return;
+            }
+
             //progress and slider progress
             string progress = dataReceived.Substring(0, dataReceived.IndexOf('$'));
 

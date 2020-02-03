@@ -22,6 +22,11 @@ namespace TypeRacers
         {
             return client.TimeToSearchForOpponents;
         }
+
+        public void RestartSearch()
+        {
+            client.RestartSearch();
+        }
         public void StartSearchingOpponents()
         {
             client.StartTimerForSearchingOpponents();

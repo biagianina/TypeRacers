@@ -44,23 +44,14 @@ namespace TypeRacers.Client
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Enabled = true;
         }
-
-        public void NameClient(string username)
-        {
-            Name = username;
-        }
-
-        public void RemovePlayerFromRoom()
-        {
-            playerIsRemoved = true;
-        }
-
+      
         void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
             timer.Stop();
 
             if (elapsedTime > TimeToSearchForOpponents)
             {
+                elapsedTime = 0;
                 //we stop the timer after 30 seconds
                 return;
             }
@@ -81,6 +72,45 @@ namespace TypeRacers.Client
 
             elapsedTime += interval;
         }
+
+        public void RestartSearch()
+        {
+            //connecting to server
+            client = new TcpClient("localhost", 80);
+            stream = client.GetStream();
+
+            //writing the progress to stream
+
+            string toSend = Name + "_restart" + "#";
+
+            byte[] bytesToSend = Encoding.ASCII.GetBytes(toSend);
+            stream.Write(bytesToSend, 0, bytesToSend.Length);
+
+            try
+            {
+                byte[] inStream = new byte[client.ReceiveBufferSize];
+                int read = stream.Read(inStream, 0, inStream.Length);
+                string text = Encoding.ASCII.GetString(inStream, 0, read);
+                var dataWithoutHashtag = text.Remove(text.Length - 1);
+
+            }
+            catch (Exception)
+            {
+                throw new Exception("Lost connection with server");
+            }
+            client.Close();
+
+        }
+        public void NameClient(string username)
+        {
+            Name = username;
+        }
+
+        public void RemovePlayerFromRoom()
+        {
+            playerIsRemoved = true;
+        }
+
 
         protected void OnOpponentsChangedAndTimeChanged(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>> opponentsAndElapsedTime)
         {
