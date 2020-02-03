@@ -171,17 +171,7 @@ namespace TypeRacers.Client
                         {
 
                             var nameAndInfos = v.Split(':');
-
-                            var progressInfoAndPlayroomInfo = nameAndInfos.LastOrDefault().Split('&');
-
-                            if (progressInfoAndPlayroomInfo.Count() == 3)
-                            {
-                                var wpmProgress = progressInfoAndPlayroomInfo[0];
-                                var carProgress = progressInfoAndPlayroomInfo[1];
-                                var playroomNumber = Convert.ToInt32(progressInfoAndPlayroomInfo[2]);
-                                var opponentInfo = new Tuple<string, string, int>(wpmProgress, carProgress, playroomNumber);
-                                opponents.Add(new Tuple<string, Tuple<string, string, int>>(nameAndInfos.FirstOrDefault(), opponentInfo));
-                            }
+                            SetInfo(nameAndInfos);
                         }
                     }
                 }
@@ -191,6 +181,20 @@ namespace TypeRacers.Client
             catch (Exception)
             {
                 throw new Exception("Lost connection with server");
+            }
+        }
+
+        private void SetInfo(string[] nameAndInfos)
+        {
+            var progressInfoAndPlayroomInfo = nameAndInfos.LastOrDefault().Split('&');
+
+            if (progressInfoAndPlayroomInfo.Count() == 3)
+            {
+                var wpmProgress = progressInfoAndPlayroomInfo[0];
+                var carProgress = progressInfoAndPlayroomInfo[1];
+                var playroomNumber = Convert.ToInt32(progressInfoAndPlayroomInfo[2]);
+                var opponentInfo = new Tuple<string, string, int>(wpmProgress, carProgress, playroomNumber);
+                opponents.Add(new Tuple<string, Tuple<string, string, int>>(nameAndInfos.FirstOrDefault(), opponentInfo));
             }
         }
 
