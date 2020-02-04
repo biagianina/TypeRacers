@@ -76,7 +76,10 @@ namespace TypeRacers.Server
         }
         private void CheckClientReceievedData(string dataReceived)
         {
-            CheckIfGameIsRestarted(dataReceived);
+            if (CheckIfGameIsRestarted(dataReceived))
+            {
+                return;
+            }
 
             //progress and slider progress
             string progress = dataReceived.Substring(0, dataReceived.IndexOf('$'));
@@ -113,7 +116,7 @@ namespace TypeRacers.Server
             }
         }
 
-        private void CheckIfGameIsRestarted(string dataReceived)
+        private bool CheckIfGameIsRestarted(string dataReceived)
         {
             if (dataReceived.Contains("_restart"))
             {
@@ -123,8 +126,9 @@ namespace TypeRacers.Server
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
                 networkStream.Close();
                 client.Close();
-                return;
+                return true;
             }
+            return false;
         }
 
         private void CheckCurrentPlayroom(string currrentClient, int roomNumber, Tuple<string, string, int> clientInfo)
