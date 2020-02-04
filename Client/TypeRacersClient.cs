@@ -197,7 +197,7 @@ namespace TypeRacers.Client
             client = new TcpClient("localhost", 80);
             stream = client.GetStream();
 
-           
+
             //writing the progress to stream
             byte[] bytesToSend = Encoding.ASCII.GetBytes(progress + "&" + PlayroomNumber + "$" + Name + "#");
             stream.Write(bytesToSend, 0, bytesToSend.Length);
@@ -209,35 +209,38 @@ namespace TypeRacers.Client
         //receiving the opponents and their progress in a List
         private void SetInfoOrRanking(List<string> currentOpponents)
         {
-            foreach (var v in currentOpponents)
-            {
-                if (v.First().Equals('*'))
+           
+                foreach (var v in currentOpponents)
                 {
-                    if (!string.IsNullOrEmpty(PlayersStartingTime))
+                    if (v.FirstOrDefault().Equals('*'))
                     {
-                        GameStarted = true;
-                        Time = (DateTime.Parse(PlayersStartingTime) - DateTime.UtcNow).Seconds + 90000;
+                        if (!string.IsNullOrEmpty(PlayersStartingTime))
+                        {
+                            GameStarted = true;
+                            Time = (DateTime.Parse(PlayersStartingTime) - DateTime.UtcNow).Seconds + 90000;
+                        }
+                        else
+                        {
+                            PlayersStartingTime = v.Substring(1);
+                        }
                     }
                     else
                     {
-                        PlayersStartingTime = v.Substring(1);
-                    }
-                }
-                else
-                {
-                    if (v.First().Equals('!'))
-                    {
-                        var rank = v.Substring(1).Split(';');
-                        SetRanking(rank);
-                    }
-                    else
-                    {
+                        if (v.FirstOrDefault().Equals('!'))
+                        {
+                            var rank = v.Substring(1).Split(';');
+                            SetRanking(rank);
+                        }
+                        else
+                        {
 
-                        var nameAndInfos = v.Split(':');
-                        SetInfo(nameAndInfos);
+                            var nameAndInfos = v.Split(':');
+                            SetInfo(nameAndInfos);
+                        }
                     }
                 }
-            }
+            
+           
         }
         private string GetDataFromServer()
         {
@@ -245,7 +248,7 @@ namespace TypeRacers.Client
             int read = stream.Read(inStream, 0, inStream.Length);
             string text = Encoding.ASCII.GetString(inStream, 0, read);
 
-            while (!text[read - 1].Equals('#'))
+            while (!string.IsNullOrEmpty(text) && !text[read - 1].Equals('#'))
             {
                 read = stream.Read(inStream, 0, inStream.Length);
                 text += Encoding.ASCII.GetString(inStream, text.Length, read);
