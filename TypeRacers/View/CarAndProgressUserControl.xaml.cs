@@ -89,6 +89,23 @@ namespace TypeRacers.View
 
         public static readonly DependencyProperty CAPUCRankingProperty = DependencyProperty.Register("CAPUCRanking", typeof(string), typeof(CarAndProgressUserControl));
 
+        public bool  CAPUCShowFinishResults
+        {
+            get { return (bool)GetValue(CAPUCShowFinishResultsProperty); }
+            set { SetValue(CAPUCShowFinishResultsProperty, value); }
+        }
+
+        public static readonly DependencyProperty CAPUCShowFinishResultsProperty =
+            DependencyProperty.Register("CAPUCShowFinishResults", typeof(bool), typeof(CarAndProgressUserControl));
+
+        public string CAPUCAccuracy
+        {
+            get { return (string)GetValue(CAPUCAccuracyProperty); }
+            set { SetValue(CAPUCAccuracyProperty, value); }
+        }
+
+        public static readonly DependencyProperty CAPUCAccuracyProperty =
+            DependencyProperty.Register("CAPUCAccuracy", typeof(string), typeof(CarAndProgressUserControl));
 
     }
 }

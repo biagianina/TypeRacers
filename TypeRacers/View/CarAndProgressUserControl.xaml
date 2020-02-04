@@ -53,7 +53,8 @@
                    FontWeight="Bold"
                    ContentStringFormat="Place: {0}"/>
         </StackPanel>
-        <Slider Grid.Row="2"
+        <Slider  x:Name="Car"
+                Grid.Row="2"
                 Width="auto"
                 Height="50"
                 Margin="0,0,0,2"
@@ -70,7 +71,55 @@
               X2="{Binding ActualWidth, Mode=OneWay, 
                RelativeSource={RelativeSource FindAncestor, 
                AncestorType={x:Type local:CarAndProgressUserControl}}}" />
+        <Popup x:Name="PopupInfo"
+               AllowsTransparency="True"
+               HorizontalOffset="-10"
+               IsOpen="{Binding CAPUCShowFinishResults,
+                        Mode=OneWay,
+                        UpdateSourceTrigger=PropertyChanged}"
+               VerticalOffset="-30"
+               Placement="{Binding ElementName=Car}"
+               HorizontalAlignment="Right">
 
+            <Canvas Width="450"
+                    Height="300">
+                <Path x:Name="Container"
+                      Canvas.Left="0"
+                      Canvas.Top="0"
+                      Margin="20"
+                      Data="M 0,40 L15,50 15,120 280,120 280,0 15,0 15,30"
+                      Fill="#3D155F"
+                      Stroke="Black">
+                    <Path.Effect>
+                        <DropShadowEffect BlurRadius="10"
+                                          Opacity="0.5"
+                                          ShadowDepth="4" />
+                    </Path.Effect>
+                </Path>
+                <TextBlock Canvas.Left="50"
+                           Canvas.Top="28"
+                           Width="240"
+                           Height="100"
+                           TextWrapping="Wrap"
+                           FontFamily="Times New Roman"
+                           Foreground="#DF678C"
+                           Margin="5"
+                           FontSize="18"
+                           TextAlignment="Justify"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           FontWeight="Bold">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}You finnished this race on place: {1} &#x0a;Your typing accuracy is: {0}% &#x0a;Your typing speed is: {2} WPM">
+                            <Binding Path="CAPUCAccuracy" />
+                            <Binding Path="CAPUCRanking" />
+                            <Binding Path="CAPUCProgress" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+
+            </Canvas>
+        </Popup>
     </Grid>
 
 </UserControl>

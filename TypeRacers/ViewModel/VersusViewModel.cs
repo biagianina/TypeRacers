@@ -13,8 +13,6 @@ namespace TypeRacers.ViewModel
     {
         string textToType;
         InputCharacterValidation userInputValidator;
-        public Dictionary<string, Tuple<bool, int>> Rank { get; set; }
-
         bool isValid;
         int spaceIndex;
         int correctChars;
@@ -23,6 +21,8 @@ namespace TypeRacers.ViewModel
         private bool alert;
         readonly Model.Model model;
         private int numberOfCharactersTyped;
+        private int incorrectTyping;
+        private int correctTyping;
 
         public VersusViewModel()
         {
@@ -48,7 +48,7 @@ namespace TypeRacers.ViewModel
             model.SubscribeToSearchingOpponents(UpdateOpponents);
             CanUserType = false;
         }
-
+        public Dictionary<string, Tuple<bool, int>> Rank { get; set; }
         public CommandHandler RemovePlayer { get; }
         public CommandHandler RestartSearchingOpponentsCommand { get; }
         public CommandHandler ExitProgramCommand { get; }
@@ -185,6 +185,8 @@ namespace TypeRacers.ViewModel
         public DateTime StartTime { get; set; }
         public bool ShowRanking { get; private set; }
         public string RankingPlace { get; private set; }
+        public int Accuracy { get; private set; }
+        public bool OpenFinishPopup { get; private set; }
 
         private void ReportProgress()
         {
@@ -211,16 +213,23 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(WPMProgress));
                 //recalculates progress 
                 ReportProgress();
-            }
+            }  
+            
             //checks if current word is the last one
             if (InputValidation && textToType.Length + spaceIndex == TextToType.Length)
             {
                 AllTextTyped = true;
                 TriggerPropertyChanged(nameof(AllTextTyped));
+                Accuracy = incorrectTyping * 100 / correctTyping;
+                TriggerPropertyChanged(nameof(Accuracy));
+                OpenFinishPopup = true;
+                TriggerPropertyChanged(nameof(OpenFinishPopup));
                 TriggerPropertyChanged(nameof(SliderProgress));
                 TriggerPropertyChanged(nameof(WPMProgress));//recalculates progress 
                 ReportProgress();
             }
+
+            
         }
         private void HighlightText()
         {
@@ -228,6 +237,7 @@ namespace TypeRacers.ViewModel
             {
                 if (isValid)
                 {
+                    correctTyping++;
                     TypingAlert = false;
                     correctChars = textToType.Length;
                     incorrectChars = 0;
@@ -235,6 +245,7 @@ namespace TypeRacers.ViewModel
 
                 if (!isValid)
                 {
+                    incorrectTyping++;
                     incorrectChars++;
                     if (CurrentWordLength - correctChars - incorrectChars < 0)
                     {

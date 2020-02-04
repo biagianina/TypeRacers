@@ -20,8 +20,9 @@ namespace TypeRacers.ViewModel
         int currentWordIndex;
         private bool alert;
         readonly Model.Model model;
-        private readonly DateTime startTime;
         int numberOfCharactersTyped;
+        private int correctTyping;
+        private int incorrectTyping;
 
         public PracticeViewModel()
         {
@@ -30,7 +31,8 @@ namespace TypeRacers.ViewModel
             userInputValidator = new InputCharacterValidation(TextToType);
             GetReadyAlert = true;
             TriggerPropertyChanged(nameof(GetReadyAlert));
-            startTime = DateTime.UtcNow;
+            StartTime = DateTime.UtcNow.AddSeconds(5);
+            SecondsToGetReady = (StartTime -DateTime.UtcNow).Seconds.ToString();
         }
 
         public IEnumerable<Inline> TextToTypeStyles
@@ -80,7 +82,7 @@ namespace TypeRacers.ViewModel
                     return 0;
                 }
 
-                return (numberOfCharactersTyped / 5) * 60/ ((int)(DateTime.UtcNow - startTime).TotalSeconds);
+                return (numberOfCharactersTyped / 5) * 60/ ((int)(DateTime.UtcNow - StartTime).TotalSeconds);
             }
         }
         public int CurrentWordLength
@@ -150,7 +152,10 @@ namespace TypeRacers.ViewModel
         public bool CanUserType { get; internal set; }
         public string SecondsInGame { get; internal set; } = "90 seconds";
         public bool GetReadyAlert { get; internal set; }
-        public string SecondsToGetReady { get; internal set; } = "3";
+        public string SecondsToGetReady { get; internal set; }
+        public int Accuracy { get; private set; }
+        public bool ShowFinishResults { get; private set; }
+        public DateTime StartTime { get; private set; }
 
         private void CheckUserInput(string value)
         {
@@ -175,6 +180,10 @@ namespace TypeRacers.ViewModel
             {
                 AllTextTyped = true;
                 TriggerPropertyChanged(nameof(AllTextTyped));
+                ShowFinishResults = true;
+                TriggerPropertyChanged(nameof(ShowFinishResults));
+                Accuracy = 100 - (incorrectTyping * 100 / correctTyping);
+                TriggerPropertyChanged(nameof(Accuracy));
                 TriggerPropertyChanged(nameof(WPMProgress));//recalculates progress 
             }
         }
@@ -186,11 +195,13 @@ namespace TypeRacers.ViewModel
                 {
                     TypingAlert = false;
                     correctChars = textToType.Length;
+                    correctTyping++;
                     incorrectChars = 0;
                 }
 
                 if (!isValid)
                 {
+                    incorrectTyping++;
                     incorrectChars++;
                     if (CurrentWordLength - correctChars - incorrectChars < 0)
                     {

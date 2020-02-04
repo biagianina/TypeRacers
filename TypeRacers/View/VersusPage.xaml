@@ -53,6 +53,8 @@
 
                 <local:CarAndProgressUserControl CAPUCProgress="{Binding WPMProgress, UpdateSourceTrigger=PropertyChanged}"
                                                  CAPUCName="You"
+                                                 CAPUCAccuracy="{Binding Accuracy, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCShowFinishResults="{Binding OpenFinishPopup, UpdateSourceTrigger=PropertyChanged}"
                                                  CAPUCShowRanking="{Binding ShowRanking}"
                                                  CAPUCRanking="{Binding RankingPlace}"
                                                  CAPUCSliderProgress="{Binding SliderProgress, UpdateSourceTrigger=PropertyChanged}"
