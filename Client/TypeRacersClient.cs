@@ -27,6 +27,11 @@ namespace TypeRacers.Client
 
         public delegate void TimerTickHandler(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>> opponentsAndRankingAndElapsedTime);
         public event TimerTickHandler OpponentsChanged;
+
+        public void NameClient(string username)
+        {
+            Name = username;
+        }
         public void StartTimerForSearchingOpponents()
         {
             timer = new Timer(interval);
@@ -81,18 +86,8 @@ namespace TypeRacers.Client
 
             //writing the progress to stream
 
-            if (playerIsRemoved)
-            {
-                var removedName = Name + "_removed";
+            toSend = LocalPlayerProgress + "&" + PlayroomNumber + "$" + Name + "#";
 
-                toSend = LocalPlayerProgress + "&" + PlayroomNumber + "$" + removedName + "#";
-                playerIsRemoved = false;
-            }
-            else
-            {
-                toSend = LocalPlayerProgress + "&" + PlayroomNumber + "$" + Name + "#";
-
-            }
 
             byte[] bytesToSend = Encoding.ASCII.GetBytes(toSend);
             stream.Write(bytesToSend, 0, bytesToSend.Length);
@@ -142,18 +137,30 @@ namespace TypeRacers.Client
             client.Close();
 
         }
-        public void NameClient(string username)
-        {
-            Name = username;
-        }
+
         public void RemovePlayerFromRoom()
         {
-            playerIsRemoved = true;
+            //connecting to server
+            client = new TcpClient("localhost", 80);
+            stream = client.GetStream();
+
+            //writing the progress to stream
+
+            string toSend = Name + "_removed" + "#";
+
+            byte[] bytesToSend = Encoding.ASCII.GetBytes(toSend);
+            stream.Write(bytesToSend, 0, bytesToSend.Length);
+
+            timer.Stop();
         }
         void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
             timer.Stop();
 
+            if (playerIsRemoved)
+            {
+                return;
+            }
             if (elapsedTime > Time)
             {
                 elapsedTime = 0;
@@ -209,38 +216,38 @@ namespace TypeRacers.Client
         //receiving the opponents and their progress in a List
         private void SetInfoOrRanking(List<string> currentOpponents)
         {
-           
-                foreach (var v in currentOpponents)
+
+            foreach (var v in currentOpponents)
+            {
+                if (v.FirstOrDefault().Equals('*'))
                 {
-                    if (v.FirstOrDefault().Equals('*'))
+                    if (!string.IsNullOrEmpty(PlayersStartingTime))
                     {
-                        if (!string.IsNullOrEmpty(PlayersStartingTime))
-                        {
-                            GameStarted = true;
-                            Time = (DateTime.Parse(PlayersStartingTime) - DateTime.UtcNow).Seconds + 90000;
-                        }
-                        else
-                        {
-                            PlayersStartingTime = v.Substring(1);
-                        }
+                        GameStarted = true;
+                        Time = (DateTime.Parse(PlayersStartingTime) - DateTime.UtcNow).Seconds + 90000;
                     }
                     else
                     {
-                        if (v.FirstOrDefault().Equals('!'))
-                        {
-                            var rank = v.Substring(1).Split(';');
-                            SetRanking(rank);
-                        }
-                        else
-                        {
-
-                            var nameAndInfos = v.Split(':');
-                            SetInfo(nameAndInfos);
-                        }
+                        PlayersStartingTime = v.Substring(1);
                     }
                 }
-            
-           
+                else
+                {
+                    if (v.FirstOrDefault().Equals('!'))
+                    {
+                        var rank = v.Substring(1).Split(';');
+                        SetRanking(rank);
+                    }
+                    else
+                    {
+
+                        var nameAndInfos = v.Split(':');
+                        SetInfo(nameAndInfos);
+                    }
+                }
+            }
+
+
         }
         private string GetDataFromServer()
         {

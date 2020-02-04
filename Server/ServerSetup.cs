@@ -67,7 +67,7 @@ namespace TypeRacers.Server
 
                 CheckClientReceievedData(dataReceived);
                 //check if reading from the stream has been done on the other end in order to close client
-              
+
 
                 Console.WriteLine("info: " + dataReceived);
                 Console.WriteLine("Disconnected client");
@@ -76,7 +76,7 @@ namespace TypeRacers.Server
         }
         private void CheckClientReceievedData(string dataReceived)
         {
-            if (CheckIfGameIsRestarted(dataReceived))
+            if (CheckIfGameIsRestarted(dataReceived) || CheckIfClientLeftGame(dataReceived))
             {
                 return;
             }
@@ -91,7 +91,7 @@ namespace TypeRacers.Server
                 progressInfoAndPlayerRoomInfo[1], Convert.ToInt32(progressInfoAndPlayerRoomInfo[2]));
 
             string username = dataReceived.Substring(dataReceived.IndexOf('$') + 1);
-            
+
             currentClient = username.Substring(0, username.Length - 1);
 
             if (currentClient == string.Empty)
@@ -106,14 +106,16 @@ namespace TypeRacers.Server
             CheckCurrentPlayroom(currentClient, currentPlayerPlayroomNumber, clientInfo);
         }
 
-        private void CheckIfClientLeftGame(string currentClient)
+        private bool CheckIfClientLeftGame(string currentClient)
         {
             if (currentClient.Contains("_removed"))
             {
                 string toRemove = currentClient.Substring(0, currentClient.IndexOf('_'));
                 currentPlayroom.RemovePlayer(toRemove);
-                return;
+                return true;
             }
+
+            return false;
         }
 
         private bool CheckIfGameIsRestarted(string dataReceived)
@@ -133,39 +135,44 @@ namespace TypeRacers.Server
 
         private void CheckCurrentPlayroom(string currrentClient, int roomNumber, Tuple<string, string, int> clientInfo)
         {
-            if (!playrooms.Any())
-            {
-                playrooms.Add(new Playroom());
-                currentPlayroom = playrooms.Last();
-            }
 
-            currentPlayroom = playrooms[roomNumber];
-
-            if (currentPlayroom.PlayroomSize == maxPlayroomSize && !currentPlayroom.ExistsInPlayroom(currentClient))
+            if (!CheckIfClientLeftGame(currrentClient))
             {
-                if (playrooms.Last().PlayroomSize == maxPlayroomSize)
+                if (!playrooms.Any())
                 {
-                    currentPlayroom = CreateNewPlayroom();
-                }
-                else
-                {
+                    playrooms.Add(new Playroom());
                     currentPlayroom = playrooms.Last();
                 }
+
+                currentPlayroom = playrooms[roomNumber];
+
+                if (currentPlayroom.PlayroomSize == maxPlayroomSize && !currentPlayroom.ExistsInPlayroom(currentClient))
+                {
+                    if (playrooms.Last().PlayroomSize == maxPlayroomSize)
+                    {
+                        currentPlayroom = CreateNewPlayroom();
+                    }
+                    else
+                    {
+                        currentPlayroom = playrooms.Last();
+                    }
+                }
+
+                newClient = currentPlayroom.AddPlayersToRoom(currrentClient, clientInfo);
+
+                CheckNewClient(currentPlayroom.PlayroomNumber);
             }
-
-            newClient = currentPlayroom.AddPlayersToRoom(currrentClient, clientInfo);
-
-            CheckNewClient(currentPlayroom.PlayroomNumber);
+   
         }
         private void CheckNewClient(int roomNumber)
         {
             Console.WriteLine("playroom size: " + currentPlayroom.PlayroomSize);
 
             if (newClient)
-            {                
+            {
                 byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + roomNumber + "%" + currentPlayroom.TimeToWaitForOpponents + "*" + currentPlayroomStartingTime + "#"); //generates random text from text document
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
-                
+
                 networkStream.Close();
                 client.Close();
             }
@@ -202,7 +209,7 @@ namespace TypeRacers.Server
 
             byte[] broadcastBytes = Encoding.ASCII.GetBytes(opponents + "#");
             networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
-           
+
             networkStream.Close();
             client.Close();
         }
@@ -223,5 +230,5 @@ namespace TypeRacers.Server
         {
             CompetitionText = ServerGeneratedText.GetText();
         }
-    }  
+    }
 }
