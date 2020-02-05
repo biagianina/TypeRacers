@@ -25,20 +25,26 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="20" />
             </Grid.RowDefinitions>
-        <Button Name="Back"                
-                Click="Back_click"
-                Grid.Row="1"
-                Margin="10 5"
-                Width="70"
-                Height="30"
-                HorizontalAlignment="Left"
-                Style="{StaticResource RoundButtonTemplate}"
-                Background="#FF591F74"
-                Content="Back"
-                BorderBrush="#FF9133BD"
-                BorderThickness="5"
-                FontFamily="Times New Roman"
-                FontWeight="Bold" />
+        <Button
+            Name="Back"
+            Click="Back_click"
+            Grid.Row="1"
+            Margin="10 5"
+            Width="70"
+            Height="30"
+            HorizontalAlignment="Left"
+            Style="{StaticResource RoundButtonTemplate}"
+            Background="#e84a5f"
+            Content="Back"
+            BorderBrush="#FF9133BD"
+            BorderThickness="5"
+            FontFamily="Times New Roman"
+            FontWeight="Bold">
+            <Button.Effect>
+                <DropShadowEffect
+                    Color="#FF853C95" />
+            </Button.Effect>
+        </Button>
         <local:CarAndProgressUserControl Grid.Row="2"
                                              VerticalAlignment="Center"
                                              CAPUCName="You"

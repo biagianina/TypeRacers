@@ -34,19 +34,26 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Button Grid.Column="0"
-                    Name="Back"
-                    Click="BackBtn_Click"
-                    Command="{Binding RemovePlayer}"
-                    Margin="10 5"
-                    Width="70"
-                    Height="30"
-                    HorizontalAlignment="Left"
-                    Style="{StaticResource RoundButtonTemplate}"
-                    Background="#FF591F74"
-                    Content="Back"
-                    BorderBrush="#FFAE00FF"
-                    BorderThickness="5" />
+            <Button
+                Grid.Column="0"
+                Name="Back"
+                Click="BackBtn_Click"
+                Command="{Binding RemovePlayer}"
+                Margin="10 5"
+                Width="70"
+                Height="30"
+                HorizontalAlignment="Left"
+                Style="{StaticResource RoundButtonTemplate}"
+                Background="#e84a5f"
+                Content="Back"
+                BorderBrush="#FFAE00FF"
+                BorderThickness="5">
+
+                <Button.Effect>
+                    <DropShadowEffect
+                        Color="#FF853C95" />
+                </Button.Effect>
+            </Button>
             <StackPanel Grid.Row="1"
                         Grid.ColumnSpan="3"
                         VerticalAlignment="Center">
@@ -131,7 +138,7 @@
                    FontFamily="Times New Roman"
                    FontSize="14"
                    FontWeight="Bold"
-                   Foreground="#FF001263" />
+                   Foreground="White" />
         </StackPanel>
         <Popup Name="TimerReadyPopup"
                IsOpen="{Binding EnableRestartOrExitAlert}"

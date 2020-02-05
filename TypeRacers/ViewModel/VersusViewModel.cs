@@ -55,9 +55,9 @@ namespace TypeRacers.ViewModel
 
         public IEnumerable<Inline> TextToTypeStyles
         {
-            get => new[] { new Run() { Text = TextToType.Substring(0, spaceIndex) , Foreground = Brushes.Gold},
-                new Run() { Text = TextToType.Substring(spaceIndex, correctChars), Foreground = Brushes.Gold, TextDecorations = TextDecorations.Underline},
-                new Run() { Text = TextToType.Substring(correctChars + spaceIndex, incorrectChars), TextDecorations = TextDecorations.Underline, Background = Brushes.IndianRed},
+            get => new[] { new Run() { Text = TextToType.Substring(0, spaceIndex) , Foreground = Brushes.Salmon},
+                new Run() { Text = TextToType.Substring(spaceIndex, correctChars), Foreground = Brushes.Salmon, TextDecorations = TextDecorations.Underline},
+                new Run() { Text = TextToType.Substring(correctChars + spaceIndex, incorrectChars), TextDecorations = TextDecorations.Underline, Background = Brushes.White},
                 new Run() {Text = TextToType.Substring(spaceIndex + correctChars + incorrectChars, CurrentWordLength - correctChars - incorrectChars), TextDecorations = TextDecorations.Underline},
                 new Run() {Text = TextToType.Substring(spaceIndex + CurrentWordLength) }
                 };
@@ -147,7 +147,7 @@ namespace TypeRacers.ViewModel
                 }
                 if (!isValid)
                 {
-                    return "IndianRed";
+                    return "Salmon";
                 }
 
                 return default;
