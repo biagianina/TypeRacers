@@ -20,7 +20,7 @@ namespace TypeRacers.Client
         TcpClient client;
         NetworkStream stream;
         Timer timer;
-        readonly int interval = 1000; // 1 second
+        int interval = 1000; // 1 second
         int elapsedTime = 0; // Elapsed time in ms
         List<Tuple<string, Tuple<string, string, int>>> opponents;
         bool playerIsRemoved;
@@ -224,6 +224,7 @@ namespace TypeRacers.Client
                     if (!string.IsNullOrEmpty(PlayersStartingTime))
                     {
                         GameStarted = true;
+                        interval = 3000;
                         Time = (DateTime.Parse(PlayersStartingTime) - DateTime.UtcNow).Seconds + 90000;
                     }
                     else
@@ -246,8 +247,6 @@ namespace TypeRacers.Client
                     }
                 }
             }
-
-
         }
         private string GetDataFromServer()
         {
