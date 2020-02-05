@@ -24,7 +24,7 @@ namespace Server
             Players = new Dictionary<string, Tuple<string, string, int>>();
             Rank = new Dictionary<string, Tuple<bool, int>>();
             currentTime = DateTime.UtcNow;
-            TimeToWaitForOpponents = string.Format("{0:MM/dd/yy H:mm:ss tt}", currentTime.AddSeconds(10));
+            TimeToWaitForOpponents = string.Format("{0:MM/dd/yy H:mm:ss tt}", currentTime.AddSeconds(30));
         }
 
         public string CheckIfPlayersCanStart()

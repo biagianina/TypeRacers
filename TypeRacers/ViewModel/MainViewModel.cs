@@ -37,9 +37,11 @@ namespace TypeRacers.ViewModel
 
                 UsernameEntered = true;
                 TriggerPropertyChanged(nameof(UsernameEntered));
-                Model.Model.NameClient(value);
+                Name = value;
             }
         }
+
+        public static string Name { get; private set; }
 
         private void NavigateContest()
         {

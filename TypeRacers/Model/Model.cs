@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using TypeRacers.Client;
+using TypeRacers.ViewModel;
 
 namespace TypeRacers.Model
 {
     public class Model
     {
-        readonly static NetworkHandler networkHandler = new NetworkHandler();
+        readonly NetworkHandler networkHandler = new NetworkHandler();
 
+        public Model()
+        {
+            networkHandler.NameClient(MainViewModel.Name);
+        }
         public List<Tuple<string, Tuple<string, string, int>>> GetOpponents()
-
         {
             return networkHandler.GetOpponents();
         }
@@ -59,10 +63,5 @@ namespace TypeRacers.Model
         {
             networkHandler.RemovePlayer();
         }
-        internal static void NameClient(string username)
-        {
-            networkHandler.NameClient(username);
-        }
-
     }
 }
