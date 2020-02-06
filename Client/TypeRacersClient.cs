@@ -21,7 +21,7 @@ namespace TypeRacers.Client
         TcpClient client;
         NetworkStream stream;
         Timer timer;
-        int interval = 1000; // 1 second
+        readonly int interval = 1000; // 1 second
         int elapsedTime = 0; // Elapsed time in ms
         List<Tuple<string, Tuple<string, string, int>>> opponents;
 
@@ -143,9 +143,22 @@ namespace TypeRacers.Client
             {
                 throw new Exception("Lost connection with server");
             }
-          
         }
+        public void SendProgressToServer(string progress)
+        {
+            //connecting to server
+            client = new TcpClient("localhost", 80);
+            stream = client.GetStream();
 
+
+            //writing the progress to stream
+            byte[] bytesToSend = Encoding.ASCII.GetBytes(progress + "&" + PlayroomNumber + "$" + Name + "#");
+            stream.Write(bytesToSend, 0, bytesToSend.Length);
+
+            SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>>(GetOpponentsProgress(), elapsedTime, Rank));
+
+            stream.Flush();
+        }
         public void RemovePlayerFromRoom()
         {
             //connecting to server
@@ -208,21 +221,7 @@ namespace TypeRacers.Client
                 OpponentsChanged(opponentsAndElapsedTime);
             }
         }
-        public void SendProgressToServer(string progress)
-        {
-            //connecting to server
-            client = new TcpClient("localhost", 80);
-            stream = client.GetStream();
-
-
-            //writing the progress to stream
-            byte[] bytesToSend = Encoding.ASCII.GetBytes(progress + "&" + PlayroomNumber + "$" + Name + "#");
-            stream.Write(bytesToSend, 0, bytesToSend.Length);
-
-            SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>>(GetOpponentsProgress(), elapsedTime, Rank));
-
-            stream.Flush();
-        }
+       
         //receiving the opponents and their progress in a List
         private void SetInfoOrRanking(List<string> currentOpponents)
         {
@@ -269,7 +268,6 @@ namespace TypeRacers.Client
         }
         private void SetInfo(string[] nameAndInfos)
         {
-
             var progressInfoAndPlayroomInfo = nameAndInfos.LastOrDefault().Split('&');
 
             if (progressInfoAndPlayroomInfo.Count() == 3)

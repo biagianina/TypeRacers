@@ -153,8 +153,7 @@ namespace TypeRacers.View
             set { SetValue(RATUCStartingTimeProperty, value); }
         }
 
-        public static readonly DependencyProperty RATUCStartingTimeProperty =
-            DependencyProperty.Register("RATUCStartingTime", typeof(DateTime), typeof(ReadAndTypeUserControl));
+        public static readonly DependencyProperty RATUCStartingTimeProperty = DependencyProperty.Register("RATUCStartingTime", typeof(DateTime), typeof(ReadAndTypeUserControl));
 
         public DateTime RATUCEndingTime
         {
@@ -162,10 +161,7 @@ namespace TypeRacers.View
             set { SetValue(RATUCEndingTimeProperty, value); }
         }
 
-        public static readonly DependencyProperty RATUCEndingTimeProperty =
-            DependencyProperty.Register("RATUCEndingTime", typeof(DateTime), typeof(ReadAndTypeUserControl));
-
-
+        public static readonly DependencyProperty RATUCEndingTimeProperty = DependencyProperty.Register("RATUCEndingTime", typeof(DateTime), typeof(ReadAndTypeUserControl));
 
         public bool RATUCStartReportingProgress
         {
@@ -173,11 +169,7 @@ namespace TypeRacers.View
             set { SetValue(RATUCStartReportingProgressProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for RATUCStartReportingProgress.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty RATUCStartReportingProgressProperty =
-            DependencyProperty.Register("RATUCStartReportingProgress", typeof(bool), typeof(ReadAndTypeUserControl));
-
-
+        public static readonly DependencyProperty RATUCStartReportingProgressProperty = DependencyProperty.Register("RATUCStartReportingProgress", typeof(bool), typeof(ReadAndTypeUserControl));
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
@@ -202,18 +194,20 @@ namespace TypeRacers.View
                 RATUCStartTime = (RATUCStartingTime - DateTime.UtcNow).Seconds;
             }
         }
-
        
         private void Timer_Tick(object sender, EventArgs e)
         {
             if (RATUCStartingTime - DateTime.UtcNow < TimeSpan.Zero)
             {
                 timer.Stop();
+
                 RATUCGetReadyAlert = false;
                 TriggerPropertyChanged(nameof(RATUCGetReadyAlert));
+
                 RATUCCanType = true;
-                StartGameTimer();
                 TriggerPropertyChanged(nameof(RATUCCanType));
+
+                StartGameTimer();
             }
 
             RATUCSecondsToStart = (RATUCStartingTime - DateTime.UtcNow).Seconds.ToString();
@@ -237,7 +231,6 @@ namespace TypeRacers.View
 
             timer.Start();
         }
-
         
         private void GameTimer_Tick(object sender, EventArgs e)
         {
@@ -249,8 +242,10 @@ namespace TypeRacers.View
                 timer.Stop();
                 RATUCCanType = false;
                 TriggerPropertyChanged(nameof(RATUCCanType));
+
                 RATUCStartReportingProgress = false;
                 TriggerPropertyChanged(nameof(RATUCStartReportingProgress));
+
                 RATUCSecondsInGame = "You finnished!";
                 TriggerPropertyChanged(nameof(RATUCSecondsInGame));
             }

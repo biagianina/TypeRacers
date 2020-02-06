@@ -12,7 +12,6 @@ namespace TypeRacers.Server
     class ServerSetup
     {
         private static string CompetitionText { get; set; } = ServerGeneratedText.GetText();
-
         private bool newClient;
         private TcpListener server;
         private NetworkStream networkStream;
@@ -35,9 +34,9 @@ namespace TypeRacers.Server
             {
                 server.Start();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw new Exception("Server setup failed");
+                throw e;
             }
 
             Console.WriteLine("Server started");
@@ -64,10 +63,8 @@ namespace TypeRacers.Server
                     dataReceived += Encoding.ASCII.GetString(buffer, dataReceived.Length, bytesRead);
                 }
 
-
                 CheckClientReceievedData(dataReceived);
                 //check if reading from the stream has been done on the other end in order to close client
-
 
                 Console.WriteLine("info: " + dataReceived);
                 Console.WriteLine("Disconnected client");
@@ -130,12 +127,12 @@ namespace TypeRacers.Server
                 client.Close();
                 return true;
             }
+
             return false;
         }
 
         private void CheckCurrentPlayroom(string currrentClient, int roomNumber, Tuple<string, string, int> clientInfo)
         {
-
             if (!CheckIfClientLeftGame(currrentClient))
             {
                 if (!playrooms.Any())
@@ -205,7 +202,6 @@ namespace TypeRacers.Server
 
             string opponents = string.Empty;
             string rank = "!";
-
 
             opponents += playrooms[currentPlayerPlayroomNumber].Players.Aggregate(string.Empty, (localOpp, p) =>
             {

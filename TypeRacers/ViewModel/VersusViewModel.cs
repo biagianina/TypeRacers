@@ -226,6 +226,7 @@ namespace TypeRacers.ViewModel
                 userInputValidator = new InputCharacterValidation(TextToType.Substring(spaceIndex));
                 numberOfCharactersTyped += CurrentInputText.Length;
                 textToType = string.Empty;
+
                 TriggerPropertyChanged(nameof(SliderProgress));
                 TriggerPropertyChanged(nameof(WPMProgress));
             }  
@@ -235,12 +236,16 @@ namespace TypeRacers.ViewModel
             {
                 AllTextTyped = true;
                 TriggerPropertyChanged(nameof(AllTextTyped));
+
                 EndTime = DateTime.UtcNow;
                 TriggerPropertyChanged(nameof(EndTime));
+
                 Accuracy = 100 - (incorrectTyping * 100 / correctTyping);
                 TriggerPropertyChanged(nameof(Accuracy));
+
                 OpenFinishPopup = true;
                 TriggerPropertyChanged(nameof(OpenFinishPopup));
+
                 TriggerPropertyChanged(nameof(SliderProgress));
                 TriggerPropertyChanged(nameof(WPMProgress));//recalculates progress 
             }
@@ -294,9 +299,8 @@ namespace TypeRacers.ViewModel
             model.RestartSearch();
             WaitingTime = model.GetWaitingTime();
             TimeToStart = DateTime.UtcNow.AddSeconds((DateTime.Parse(WaitingTime) - DateTime.UtcNow).Seconds);
-
-
             model.StartSearchingOpponents();
+          
             EnableSearchingAnimation = true;
             TriggerPropertyChanged(nameof(EnableSearchingAnimation));
         }

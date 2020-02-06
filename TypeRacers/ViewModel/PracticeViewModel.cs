@@ -182,13 +182,18 @@ namespace TypeRacers.ViewModel
             {
                 AllTextTyped = true;
                 TriggerPropertyChanged(nameof(AllTextTyped));
+
                 EndTime = DateTime.UtcNow;
                 TriggerPropertyChanged(nameof(EndTime));
+
                 ShowFinishResults = true;
                 TriggerPropertyChanged(nameof(ShowFinishResults));
+
                 Accuracy = 100 - (incorrectTyping * 100 / correctTyping);
                 TriggerPropertyChanged(nameof(Accuracy));
-                TriggerPropertyChanged(nameof(WPMProgress));//recalculates progress 
+
+                TriggerPropertyChanged(nameof(WPMProgress));
+                TriggerPropertyChanged(nameof(SliderProgress));
             }
         }
         private void HighlightText()
