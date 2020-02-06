@@ -10,6 +10,7 @@ namespace Server
 {
     class Playroom
     {
+        public bool GameHasStarted { get; set; }
         public int PlayroomSize { get; set; }
         public int PlayroomNumber { get; set; }
         public Dictionary<string, Tuple<string, string, int>> Players { get; set; }
@@ -24,23 +25,18 @@ namespace Server
             Players = new Dictionary<string, Tuple<string, string, int>>();
             Rank = new Dictionary<string, Tuple<bool, int>>();
             currentTime = DateTime.UtcNow;
-            TimeToWaitForOpponents = string.Format("{0:MM/dd/yy H:mm:ss tt}", currentTime.AddSeconds(30));
+            TimeToWaitForOpponents = string.Format("{0:MM/dd/yy H:mm:ss tt}", currentTime.AddSeconds(15));
         }
 
         public string CheckIfPlayersCanStart()
         {
-            if (PlayroomSize == 3)
+            if (PlayroomSize == 3 || (DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow <= TimeSpan.Zero && PlayroomSize == 2))
             {
                 currentTime = DateTime.UtcNow;
                 currentTime = currentTime.AddSeconds(10);
                 GameStartingTime = string.Format("{0:H:mm:ss tt}", currentTime);
-            }
-            if (DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow <= TimeSpan.Zero && PlayroomSize == 2)
-            {
-                currentTime = DateTime.UtcNow;
-                currentTime = currentTime.AddSeconds(10);
-                GameStartingTime = string.Format("{0:H:mm:ss tt}", currentTime);
-            }
+                GameHasStarted = true;
+            }         
 
             if ((PlayroomSize == 1) && DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow <= TimeSpan.Zero)
             {
@@ -98,7 +94,7 @@ namespace Server
         private void ResetPlayroom()
         {
             currentTime = DateTime.UtcNow;
-            TimeToWaitForOpponents = string.Format("{0:MM/dd/yy H:mm:ss tt}", currentTime.AddSeconds(10));
+            TimeToWaitForOpponents = string.Format("{0:MM/dd/yy H:mm:ss tt}", currentTime.AddSeconds(15));
         }
     }
 }

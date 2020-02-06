@@ -13,7 +13,7 @@ namespace TypeRacers.Client
         public Dictionary<string, Tuple<bool, int>> Rank { get; set; } = new Dictionary<string, Tuple<bool, int>>();
         public string LocalPlayerProgress { get; set; } = "0&0";
         public string PlayersStartingTime { get; set; } = string.Empty;
-        private int PlayroomNumber { get; set; }
+        private int PlayroomNumber { get; set; } = -1;
         public string Name { get; set; }
         public bool GameStarted { get; private set; }
 
@@ -23,7 +23,6 @@ namespace TypeRacers.Client
         int interval = 1000; // 1 second
         int elapsedTime = 0; // Elapsed time in ms
         List<Tuple<string, Tuple<string, string, int>>> opponents;
-        bool playerIsRemoved;
 
         public delegate void TimerTickHandler(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>> opponentsAndRankingAndElapsedTime);
         public event TimerTickHandler OpponentsChanged;
@@ -156,11 +155,7 @@ namespace TypeRacers.Client
         void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
             timer.Stop();
-
-            if (playerIsRemoved)
-            {
-                return;
-            }
+ 
             if (elapsedTime > Time)
             {
                 elapsedTime = 0;
