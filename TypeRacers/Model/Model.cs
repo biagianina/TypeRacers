@@ -31,6 +31,11 @@ namespace TypeRacers.Model
         {
             return networkHandler.GetStartingTime();
         }
+
+        public string GetEndingTime()
+        {
+            return networkHandler.GetEndingTime();
+        }
         public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>>> updateOpponentsAndElapsedTime)
         {
             networkHandler.SubscribeToSearchingOpponentsTimer(updateOpponentsAndElapsedTime);
@@ -41,7 +46,7 @@ namespace TypeRacers.Model
             return networkHandler.GetRanking();
         }
 
-        public int GetWaitingTime()
+        public string GetWaitingTime()
         {
             return networkHandler.GetWaitingTime();
         }
@@ -62,6 +67,11 @@ namespace TypeRacers.Model
         public void RemovePlayer()
         {
             networkHandler.RemovePlayer();
+        }
+
+        internal void StartGameProgressReporting()
+        {
+            networkHandler.StartReportingGameProgress();
         }
     }
 }

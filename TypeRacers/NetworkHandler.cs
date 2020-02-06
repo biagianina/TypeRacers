@@ -18,9 +18,15 @@ namespace TypeRacers
         {
             return client.PlayersStartingTime;
         }
-        public int GetWaitingTime()
+
+        public string GetEndingTime()
         {
-            return client.Time;
+            return client.PlayersEndingTime;
+        }
+
+        public string GetWaitingTime()
+        {
+            return client.WaitingTime;
         }
 
         public void RestartSearch()
@@ -64,6 +70,11 @@ namespace TypeRacers
         public void RemovePlayer()
         {
            client.RemovePlayerFromRoom();
+        }
+
+        internal void StartReportingGameProgress()
+        {
+            client.StartTimerForGameProgressReports();
         }
     }
 }

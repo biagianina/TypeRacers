@@ -16,6 +16,7 @@ namespace Server
         public Dictionary<string, Tuple<string, string, int>> Players { get; set; }
         public Dictionary<string, Tuple<bool, int>> Rank { get; set; }
         public string GameStartingTime { get; set; } = string.Empty;
+        public string GameEndingTime { get; set; } = string.Empty;
         public string TimeToWaitForOpponents { get; set; }
         private int Place { get; set; } = 1;
 
@@ -30,15 +31,18 @@ namespace Server
 
         public string CheckIfPlayersCanStart()
         {
-            if (PlayroomSize == 3 || (DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow <= TimeSpan.Zero && PlayroomSize == 2))
+            if (PlayroomSize == 3 || (DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow.AddSeconds(1) <= TimeSpan.Zero && PlayroomSize == 2))
             {
                 currentTime = DateTime.UtcNow;
                 currentTime = currentTime.AddSeconds(10);
                 GameStartingTime = string.Format("{0:H:mm:ss tt}", currentTime);
+                GameEndingTime = string.Format("{0:H:mm:ss tt}", currentTime.AddSeconds(90));
+                Console.WriteLine(GameEndingTime);
+                Console.WriteLine(GameStartingTime);
                 GameHasStarted = true;
             }         
 
-            if ((PlayroomSize == 1) && DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow <= TimeSpan.Zero)
+            if ((PlayroomSize == 1) && DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow.AddSeconds(1) <= TimeSpan.Zero)
             {
                 ResetPlayroom();
             }
@@ -94,7 +98,7 @@ namespace Server
         private void ResetPlayroom()
         {
             currentTime = DateTime.UtcNow;
-            TimeToWaitForOpponents = string.Format("{0:MM/dd/yy H:mm:ss tt}", currentTime.AddSeconds(15));
+            TimeToWaitForOpponents = string.Format("{0:MM/dd/yy H:mm:ss tt}", currentTime.AddSeconds(20));
         }
     }
 }

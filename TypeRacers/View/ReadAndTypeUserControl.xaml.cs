@@ -153,9 +153,29 @@ namespace TypeRacers.View
             set { SetValue(RATUCStartingTimeProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for StartingTime.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty RATUCStartingTimeProperty =
             DependencyProperty.Register("RATUCStartingTime", typeof(DateTime), typeof(ReadAndTypeUserControl));
+
+        public DateTime RATUCEndingTime
+        {
+            get { return (DateTime)GetValue(RATUCEndingTimeProperty); }
+            set { SetValue(RATUCEndingTimeProperty, value); }
+        }
+
+        public static readonly DependencyProperty RATUCEndingTimeProperty =
+            DependencyProperty.Register("RATUCEndingTime", typeof(DateTime), typeof(ReadAndTypeUserControl));
+
+
+
+        public bool RATUCStartReportingProgress
+        {
+            get { return (bool)GetValue(RATUCStartReportingProgressProperty); }
+            set { SetValue(RATUCStartReportingProgressProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for RATUCStartReportingProgress.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty RATUCStartReportingProgressProperty =
+            DependencyProperty.Register("RATUCStartReportingProgress", typeof(bool), typeof(ReadAndTypeUserControl));
 
 
 
@@ -210,7 +230,7 @@ namespace TypeRacers.View
         {
             timer = new DispatcherTimer()
             {
-                Interval = TimeSpan.FromSeconds(1)
+                Interval = TimeSpan.FromMilliseconds(500)
             };
 
             timer.Tick += GameTimer_Tick;
@@ -218,26 +238,28 @@ namespace TypeRacers.View
             timer.Start();
         }
 
-        private int secondsInGame = 90;
-
+        
         private void GameTimer_Tick(object sender, EventArgs e)
         {
-            secondsInGame--;
+            RATUCStartReportingProgress = true;
+            TriggerPropertyChanged(nameof(RATUCStartReportingProgress));
 
-            if (secondsInGame < 0)
+            if (RATUCEndingTime - DateTime.UtcNow < TimeSpan.Zero)
             {
                 timer.Stop();
                 RATUCCanType = false;
                 TriggerPropertyChanged(nameof(RATUCCanType));
+                RATUCStartReportingProgress = false;
+                TriggerPropertyChanged(nameof(RATUCStartReportingProgress));
             }
 
-            if (secondsInGame > 0)
+            if (RATUCEndingTime - DateTime.UtcNow > TimeSpan.Zero)
             {
-                RATUCSecondsInGame = secondsInGame.ToString() + " seconds left";
+                RATUCSecondsInGame = ((int)(RATUCEndingTime - DateTime.UtcNow).TotalSeconds).ToString() + " seconds left";
                 TriggerPropertyChanged(nameof(RATUCSecondsInGame));
             }
 
-            if (secondsInGame == 0)
+            if (RATUCSecondsInGame.Equals("0 seconds left"))
             {
                 RATUCSecondsInGame = "Time is up!";
                 TriggerPropertyChanged(nameof(RATUCSecondsInGame));

@@ -23,6 +23,7 @@ namespace TypeRacers.ViewModel
         private int numberOfCharactersTyped;
         private int incorrectTyping;
         private int correctTyping;
+        private bool startReporting;
 
         public VersusViewModel()
         {
@@ -34,7 +35,7 @@ namespace TypeRacers.ViewModel
             // first time getting opponents
             Opponents = model.GetOpponents();
             WaitingTime = model.GetWaitingTime();
-            TimeToStart = DateTime.UtcNow.AddSeconds(WaitingTime /1000);
+            TimeToStart = DateTime.UtcNow.AddSeconds((DateTime.Parse(WaitingTime) - DateTime.UtcNow).Seconds);
             EnableSearchingAnimation = true;
 
             //check how many players can we display on the screen
@@ -70,7 +71,7 @@ namespace TypeRacers.ViewModel
 
         public Visibility ShowSecondOpponent { get; set; }
 
-        public int WaitingTime { get; set; }
+        public string WaitingTime { get; set; }
         public DateTime TimeToStart { get; private set; }
         public int OpponentsCount { get; set; }
         public int ElapsedTimeFromWaitingTimer { get; set; }
@@ -153,6 +154,18 @@ namespace TypeRacers.ViewModel
                 return default;
             }
         }
+
+        public bool StartReportingProgress 
+        { 
+            get => startReporting;
+
+            set
+            {
+                startReporting = value;
+                TriggerPropertyChanged(nameof(StartReportingProgress));
+                ReportProgress();
+            }
+        }
         public string TextToType { get; }
         public string CurrentInputText
         {
@@ -187,12 +200,16 @@ namespace TypeRacers.ViewModel
         public string RankingPlace { get; private set; }
         public int Accuracy { get; private set; }
         public bool OpenFinishPopup { get; private set; }
+        public DateTime EndTime { get; private set; }
 
         private void ReportProgress()
         {
-            model.ReportProgress(WPMProgress, SliderProgress);
-            Opponents = model.GetOpponents();
-            TriggerPropertyChanged(nameof(Opponents));
+            if (StartReportingProgress)
+            {
+                model.ReportProgress(WPMProgress, SliderProgress);
+                Opponents = model.GetOpponents();
+                TriggerPropertyChanged(nameof(Opponents));
+            }
         }
         private void CheckUserInput(string value)
         {
@@ -211,8 +228,6 @@ namespace TypeRacers.ViewModel
                 textToType = string.Empty;
                 TriggerPropertyChanged(nameof(SliderProgress));
                 TriggerPropertyChanged(nameof(WPMProgress));
-                //recalculates progress 
-                ReportProgress();
             }  
             
             //checks if current word is the last one
@@ -226,10 +241,7 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(OpenFinishPopup));
                 TriggerPropertyChanged(nameof(SliderProgress));
                 TriggerPropertyChanged(nameof(WPMProgress));//recalculates progress 
-                ReportProgress();
             }
-
-            
         }
         private void HighlightText()
         {
@@ -279,9 +291,9 @@ namespace TypeRacers.ViewModel
 
             model.RestartSearch();
             WaitingTime = model.GetWaitingTime();
-            TimeToStart = DateTime.UtcNow.AddSeconds(WaitingTime / 1000);
+            TimeToStart = DateTime.UtcNow.AddSeconds((DateTime.Parse(WaitingTime) - DateTime.UtcNow).Seconds);
 
-            
+
             model.StartSearchingOpponents();
             EnableSearchingAnimation = true;
             TriggerPropertyChanged(nameof(EnableSearchingAnimation));
@@ -347,10 +359,18 @@ namespace TypeRacers.ViewModel
             {
                 EnableSearchingAnimation = false;
                 TriggerPropertyChanged(nameof(EnableSearchingAnimation));
+
                 StartTime = DateTime.Parse(model.GetStartingTime());
                 TriggerPropertyChanged(nameof(StartTime));
+
+                EndTime = DateTime.Parse(model.GetEndingTime());
+                TriggerPropertyChanged(nameof(EndTime));
+
+                model.StartGameProgressReporting();
+
                 SecondsToGetReady = (StartTime - DateTime.UtcNow).Seconds.ToString();
                 TriggerPropertyChanged(nameof(SecondsToGetReady));
+
                 EnableGetReadyAlert = true;
                 TriggerPropertyChanged(nameof(EnableGetReadyAlert));
             }

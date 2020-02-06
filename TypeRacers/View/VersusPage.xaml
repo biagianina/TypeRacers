@@ -92,6 +92,8 @@
                                           Width="auto"
                                           Height="auto"
                                           Margin="20"
+                                          RATUCStartReportingProgress="{Binding StartReportingProgress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          RATUCEndingTime="{Binding EndTime, UpdateSourceTrigger=PropertyChanged}"
                                           RATUCSearchingForOpponents="{Binding EnableSearchingAnimation}"
                                           RATUCStartingTime="{Binding StartTime, UpdateSourceTrigger=PropertyChanged}"
                                           RATUCInlines="{Binding TextToTypeStyles}"

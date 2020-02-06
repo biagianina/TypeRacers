@@ -9,10 +9,11 @@ namespace TypeRacers.Client
 {
     public class TypeRacersClient
     {
-        public int Time { get; set; }
+        public string WaitingTime { get; set; }
         public Dictionary<string, Tuple<bool, int>> Rank { get; set; } = new Dictionary<string, Tuple<bool, int>>();
         public string LocalPlayerProgress { get; set; } = "0&0";
         public string PlayersStartingTime { get; set; } = string.Empty;
+        public string PlayersEndingTime { get; private set; }
         private int PlayroomNumber { get; set; } = -1;
         public string Name { get; set; }
         public bool GameStarted { get; private set; }
@@ -35,6 +36,12 @@ namespace TypeRacers.Client
         {
             timer = new Timer(interval);
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+            timer.Enabled = true;
+        }
+        public void StartTimerForGameProgressReports()
+        {
+            timer = new Timer(3000);
+            timer.Elapsed += new ElapsedEventHandler(OnTimedReportProgressEvent);
             timer.Enabled = true;
         }
         public string FirstTimeConnectingToServer()
@@ -64,9 +71,11 @@ namespace TypeRacers.Client
                 //getting room number
 
                 var times = dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('%') + 1);
-                var timers = times.Split('*');
-                Time = (DateTime.Parse(timers.FirstOrDefault()) - DateTime.UtcNow).Seconds * 1000;
-                PlayersStartingTime = timers.LastOrDefault();
+                var gameTimers = times.Split('*');
+                WaitingTime = gameTimers.FirstOrDefault();
+                var startAndEndTimes = gameTimers.LastOrDefault().Split('+');
+                PlayersStartingTime = startAndEndTimes.FirstOrDefault();
+                PlayersEndingTime = startAndEndTimes.LastOrDefault();
                 PlayroomNumber = Convert.ToInt32(dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('$') + 1, (dataWithoutHashtag.Length - textToType.Length - times.Length - 2)));
 
                 return textToType;
@@ -133,8 +142,7 @@ namespace TypeRacers.Client
             {
                 throw new Exception("Lost connection with server");
             }
-            client.Close();
-
+          
         }
 
         public void RemovePlayerFromRoom()
@@ -156,7 +164,7 @@ namespace TypeRacers.Client
         {
             timer.Stop();
  
-            if (elapsedTime > Time)
+            if (DateTime.Parse(WaitingTime) - DateTime.UtcNow < TimeSpan.Zero)
             {
                 elapsedTime = 0;
                 //we stop the timer after 30 seconds
@@ -164,20 +172,26 @@ namespace TypeRacers.Client
             }
             else
             {
-                // here I am performing the task
-                //getting the opponents each second for 30 seconds from server through Client
-                if (GameStarted)
-                {
-                    SendProgressToServer(LocalPlayerProgress);
-                }
-                else
-                {
-                    SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>>(GetOpponentsProgress(), elapsedTime, Rank));
-                }
-                timer.Enabled = true;
+                SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>>(GetOpponentsProgress(), elapsedTime, Rank));
             }
+            timer.Enabled = true;
 
             elapsedTime += interval;
+        }
+        private void OnTimedReportProgressEvent(object sender, ElapsedEventArgs e)
+        {
+            timer.Stop();
+
+            if(DateTime.Parse(PlayersEndingTime) -  DateTime.UtcNow < TimeSpan.Zero)
+            {
+                return;
+            }
+            else
+            {
+                SendProgressToServer(LocalPlayerProgress);
+            }
+
+            timer.Enabled = true;
         }
         private void SetOpponentsAndElapsedTime(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>> value)
         {
@@ -216,16 +230,10 @@ namespace TypeRacers.Client
             {
                 if (v.FirstOrDefault().Equals('*'))
                 {
-                    if (!string.IsNullOrEmpty(PlayersStartingTime))
-                    {
-                        GameStarted = true;
-                        interval = 3000;
-                        Time = (DateTime.Parse(PlayersStartingTime) - DateTime.UtcNow).Seconds + 90000;
-                    }
-                    else
-                    {
-                        PlayersStartingTime = v.Substring(1);
-                    }
+                    var times = v.Substring(1).Split('+');
+                    PlayersStartingTime = times.FirstOrDefault();
+                    PlayersEndingTime = times.LastOrDefault();
+
                 }
                 else
                 {
@@ -255,11 +263,7 @@ namespace TypeRacers.Client
                 text += Encoding.ASCII.GetString(inStream, text.Length, read);
             }
 
-            if (stream.DataAvailable)
-            {
-                client.Close();
-            }
-
+           
             return text;
         }
         private void SetInfo(string[] nameAndInfos)
