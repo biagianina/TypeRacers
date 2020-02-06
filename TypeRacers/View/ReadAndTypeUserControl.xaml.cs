@@ -251,6 +251,8 @@ namespace TypeRacers.View
                 TriggerPropertyChanged(nameof(RATUCCanType));
                 RATUCStartReportingProgress = false;
                 TriggerPropertyChanged(nameof(RATUCStartReportingProgress));
+                RATUCSecondsInGame = "You finnished!";
+                TriggerPropertyChanged(nameof(RATUCSecondsInGame));
             }
 
             if (RATUCEndingTime - DateTime.UtcNow > TimeSpan.Zero)

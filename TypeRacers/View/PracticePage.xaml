@@ -57,7 +57,7 @@
 
             <local:ReadAndTypeUserControl Grid.Row="3"
                                           Margin="20"
-                                          RATUCEndingTime="{Binding EndTime}"
+                                          RATUCEndingTime="{Binding EndTime, UpdateSourceTrigger=PropertyChanged}"
                                           RATUCCanType="{Binding CanUserType}"
                                           RATUCGetReadyAlert="{Binding GetReadyAlert}"
                                           RATUCInlines="{Binding TextToTypeStyles}"

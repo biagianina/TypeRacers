@@ -235,6 +235,8 @@ namespace TypeRacers.ViewModel
             {
                 AllTextTyped = true;
                 TriggerPropertyChanged(nameof(AllTextTyped));
+                EndTime = DateTime.UtcNow;
+                TriggerPropertyChanged(nameof(EndTime));
                 Accuracy = 100 - (incorrectTyping * 100 / correctTyping);
                 TriggerPropertyChanged(nameof(Accuracy));
                 OpenFinishPopup = true;

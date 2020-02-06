@@ -157,7 +157,7 @@ namespace TypeRacers.ViewModel
         public int Accuracy { get; private set; }
         public bool ShowFinishResults { get; private set; }
         public DateTime StartTime { get; private set; }
-        public DateTime EndTime { get; }
+        public DateTime EndTime { get; set; }
 
         private void CheckUserInput(string value)
         {
@@ -182,6 +182,8 @@ namespace TypeRacers.ViewModel
             {
                 AllTextTyped = true;
                 TriggerPropertyChanged(nameof(AllTextTyped));
+                EndTime = DateTime.UtcNow;
+                TriggerPropertyChanged(nameof(EndTime));
                 ShowFinishResults = true;
                 TriggerPropertyChanged(nameof(ShowFinishResults));
                 Accuracy = 100 - (incorrectTyping * 100 / correctTyping);
