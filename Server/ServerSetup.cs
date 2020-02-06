@@ -144,11 +144,9 @@ namespace TypeRacers.Server
                     currentPlayroom = playrooms.Last();
                 }
 
-                currentPlayroom = playrooms[roomNumber];
-
-                if (currentPlayroom.PlayroomSize == maxPlayroomSize && !currentPlayroom.ExistsInPlayroom(currentClient))
+                if (roomNumber == -1)
                 {
-                    if (playrooms.Last().PlayroomSize == maxPlayroomSize)
+                    if (playrooms.Last().GameHasStarted || playrooms.Last().PlayroomSize == maxPlayroomSize)
                     {
                         currentPlayroom = CreateNewPlayroom();
                     }
@@ -157,12 +155,28 @@ namespace TypeRacers.Server
                         currentPlayroom = playrooms.Last();
                     }
                 }
+                else
+                {
+                    currentPlayroom = playrooms[roomNumber];
+
+                    if (currentPlayroom.PlayroomSize == maxPlayroomSize && !currentPlayroom.ExistsInPlayroom(currentClient))
+                    {
+                        if (playrooms.Last().PlayroomSize == maxPlayroomSize)
+                        {
+                            currentPlayroom = CreateNewPlayroom();
+                        }
+                        else
+                        {
+                            currentPlayroom = playrooms.Last();
+                        }
+                    }
+                }
 
                 newClient = currentPlayroom.AddPlayersToRoom(currrentClient, clientInfo);
 
                 CheckNewClient(currentPlayroom.PlayroomNumber);
             }
-   
+
         }
         private void CheckNewClient(int roomNumber)
         {
@@ -170,7 +184,7 @@ namespace TypeRacers.Server
 
             if (newClient)
             {
-                byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + roomNumber + "%" + currentPlayroom.TimeToWaitForOpponents + "*" + currentPlayroomStartingTime + "#"); //generates random text from text document
+                byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + roomNumber + "%" + currentPlayroom.TimeToWaitForOpponents + "*" + currentPlayroom.GameStartingTime + "#"); //generates random text from text document
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
 
                 networkStream.Close();
