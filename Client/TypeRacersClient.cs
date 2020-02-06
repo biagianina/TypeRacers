@@ -136,6 +136,7 @@ namespace TypeRacers.Client
                 int read = stream.Read(inStream, 0, inStream.Length);
                 string text = Encoding.ASCII.GetString(inStream, 0, read);
                 var dataWithoutHashtag = text.Remove(text.Length - 1);
+                WaitingTime = dataWithoutHashtag;
 
             }
             catch (Exception)

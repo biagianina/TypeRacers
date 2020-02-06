@@ -31,7 +31,7 @@ namespace Server
 
         public string CheckIfPlayersCanStart()
         {
-            if (PlayroomSize == 3 || (DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow.AddSeconds(1) <= TimeSpan.Zero && PlayroomSize == 2))
+            if (PlayroomSize == 3 || (DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow.AddSeconds(2) <= TimeSpan.Zero && PlayroomSize == 2))
             {
                 currentTime = DateTime.UtcNow;
                 currentTime = currentTime.AddSeconds(10);
@@ -42,7 +42,7 @@ namespace Server
                 GameHasStarted = true;
             }         
 
-            if ((PlayroomSize == 1) && DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow.AddSeconds(1) <= TimeSpan.Zero)
+            if ((PlayroomSize == 1) && DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow.AddSeconds(2) <= TimeSpan.Zero)
             {
                 ResetPlayroom();
             }
