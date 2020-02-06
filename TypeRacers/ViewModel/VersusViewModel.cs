@@ -206,9 +206,9 @@ namespace TypeRacers.ViewModel
         {
             if (StartReportingProgress)
             {
-                model.ReportProgress(WPMProgress, SliderProgress);
                 Opponents = model.GetOpponents();
                 TriggerPropertyChanged(nameof(Opponents));
+                model.ReportProgress(WPMProgress, SliderProgress);
             }
         }
         private void CheckUserInput(string value)
@@ -235,7 +235,7 @@ namespace TypeRacers.ViewModel
             {
                 AllTextTyped = true;
                 TriggerPropertyChanged(nameof(AllTextTyped));
-                Accuracy = incorrectTyping * 100 / correctTyping;
+                Accuracy = 100 - (incorrectTyping * 100 / correctTyping);
                 TriggerPropertyChanged(nameof(Accuracy));
                 OpenFinishPopup = true;
                 TriggerPropertyChanged(nameof(OpenFinishPopup));

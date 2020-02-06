@@ -32,6 +32,7 @@ namespace TypeRacers.ViewModel
             GetReadyAlert = true;
             TriggerPropertyChanged(nameof(GetReadyAlert));
             StartTime = DateTime.UtcNow.AddSeconds(5);
+            EndTime = StartTime.AddSeconds(90);
             SecondsToGetReady = (StartTime -DateTime.UtcNow).Seconds.ToString();
         }
 
@@ -156,6 +157,7 @@ namespace TypeRacers.ViewModel
         public int Accuracy { get; private set; }
         public bool ShowFinishResults { get; private set; }
         public DateTime StartTime { get; private set; }
+        public DateTime EndTime { get; }
 
         private void CheckUserInput(string value)
         {

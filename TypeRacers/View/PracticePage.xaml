@@ -57,10 +57,11 @@
 
             <local:ReadAndTypeUserControl Grid.Row="3"
                                           Margin="20"
+                                          RATUCEndingTime="{Binding EndTime}"
                                           RATUCCanType="{Binding CanUserType}"
                                           RATUCGetReadyAlert="{Binding GetReadyAlert}"
                                           RATUCInlines="{Binding TextToTypeStyles}"
-                                          RATUCSecondsInGame="90 seconds"
+                                          RATUCSecondsInGame="90 seconds left"
                                           RATUCSecondsToStart="{Binding SecondsToGetReady}"
                                           RATUCStartingTime="{Binding StartTime}"
                                           RATUCAllTextTyped="{Binding AllTextTyped}"

@@ -96,8 +96,8 @@
                         Mode=OneWay,
                         UpdateSourceTrigger=PropertyChanged}"
             VerticalOffset="-30"
-            Placement="{Binding ElementName=Car}"
-            HorizontalAlignment="Right">
+            PlacementTarget="{Binding ElementName=Car}"
+            Placement="Right">
 
             <Canvas
                 Width="450"
