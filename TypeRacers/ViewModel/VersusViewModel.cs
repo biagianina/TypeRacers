@@ -67,6 +67,7 @@ namespace TypeRacers.ViewModel
         public IEnumerable<Tuple<string, Tuple<string, string, int>>> Opponents { get; private set; }
 
         public IEnumerable<Tuple<string, Tuple<string, string, bool, string>>> OpponentsAndRanking { get; private set; }
+
         public Visibility ShowFirstOpponent { get; set; }
 
         public Visibility ShowSecondOpponent { get; set; }

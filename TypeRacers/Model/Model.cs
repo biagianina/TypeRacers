@@ -8,10 +8,11 @@ namespace TypeRacers.Model
 {
     public class Model
     {
-        readonly NetworkHandler networkHandler = new NetworkHandler();
+        readonly NetworkHandler networkHandler;
 
         public Model()
         {
+            networkHandler = new NetworkHandler();
             networkHandler.NameClient(MainViewModel.Name);
         }
         public List<Tuple<string, Tuple<string, string, int>>> GetOpponents()
