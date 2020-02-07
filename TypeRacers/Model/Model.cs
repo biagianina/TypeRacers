@@ -36,9 +36,9 @@ namespace TypeRacers.Model
         {
             return networkHandler.GetEndingTime();
         }
-        public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>>> updateOpponentsAndElapsedTime)
+        public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>>> updateOpponents)
         {
-            networkHandler.SubscribeToSearchingOpponentsTimer(updateOpponentsAndElapsedTime);
+            networkHandler.SubscribeToSearchingOpponentsTimer(updateOpponents);
         }
 
         public Dictionary<string, Tuple<bool, int>> GetRanking()

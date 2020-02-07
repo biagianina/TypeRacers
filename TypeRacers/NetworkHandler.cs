@@ -37,9 +37,9 @@ namespace TypeRacers
         {
             client.StartTimerForSearchingOpponents();
         }
-        public void SubscribeToSearchingOpponentsTimer(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>>> updateOpponentsListAndElapsedTime)
+        public void SubscribeToSearchingOpponentsTimer(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>>> updateOpponentsList)
         {
-            timerTickHandler = new TypeRacersClient.TimerTickHandler(updateOpponentsListAndElapsedTime);
+            timerTickHandler = new TypeRacersClient.TimerTickHandler(updateOpponentsList);
             client.OpponentsChanged += new TypeRacersClient.TimerTickHandler(timerTickHandler);
         }
         public List<Tuple<string, Tuple<string, string, int>>> GetOpponents()

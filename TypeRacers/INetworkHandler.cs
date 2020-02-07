@@ -8,10 +8,18 @@ namespace TypeRacers
 {
     //interface for network handler
     interface INetworkHandler
-    { 
+    {
         void SendProgressToServer(string progress);
 
         string GetTextFromServer();
+
+        string GetStartingTime();
+
+        string GetEndingTime();
+
+        void RestartSearch();
+
+        void StartSearchingOpponents();
 
         List<Tuple<string, Tuple<string, string, int>>> GetOpponents();
 
