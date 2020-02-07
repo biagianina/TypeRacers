@@ -67,6 +67,7 @@ namespace TypeRacers.ViewModel
         public IEnumerable<Tuple<string, Tuple<string, string, int>>> Opponents { get; private set; }
 
         public IEnumerable<Tuple<string, Tuple<string, string, bool, string>>> OpponentsAndRanking { get; private set; }
+
         public Visibility ShowFirstOpponent { get; set; }
 
         public Visibility ShowSecondOpponent { get; set; }
@@ -74,7 +75,6 @@ namespace TypeRacers.ViewModel
         public string WaitingTime { get; set; }
         public DateTime TimeToStart { get; private set; }
         public int OpponentsCount { get; set; }
-        public int ElapsedTimeFromWaitingTimer { get; set; }
         public bool InputValidation
         {
             get => isValid;
@@ -313,15 +313,12 @@ namespace TypeRacers.ViewModel
         {
             model.RemovePlayer();
         }
-        private void UpdateOpponents(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>> updatedOpponentsAndRankingAndElapsedTime)
+        private void UpdateOpponents(Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>> updatedOpponentsAndRanking)
         {
-            Opponents = updatedOpponentsAndRankingAndElapsedTime.Item1;
+            Opponents = updatedOpponentsAndRanking.Item1;
             TriggerPropertyChanged(nameof(Opponents));
 
-            ElapsedTimeFromWaitingTimer = updatedOpponentsAndRankingAndElapsedTime.Item2;
-            TriggerPropertyChanged(nameof(ElapsedTimeFromWaitingTimer));
-
-            Rank = updatedOpponentsAndRankingAndElapsedTime.Item3;
+            Rank = updatedOpponentsAndRanking.Item2;
             TriggerPropertyChanged(nameof(Rank));
 
             SetOpponentsAndRanking();

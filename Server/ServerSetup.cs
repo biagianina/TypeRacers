@@ -181,7 +181,7 @@ namespace TypeRacers.Server
 
             if (newClient)
             {
-                byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + roomNumber + "%" + currentPlayroom.TimeToWaitForOpponents + "*" + currentPlayroom.GameStartingTime + "+" +currentPlayroom.GameEndingTime + "#"); //generates random text from text document
+                byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + roomNumber + "%" + currentPlayroom.TimeToWaitForOpponents + "*" + currentPlayroom.GameStartingTime + "+" + currentPlayroom.GameEndingTime + "#"); //generates random text from text document
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
 
                 networkStream.Close();
@@ -202,7 +202,6 @@ namespace TypeRacers.Server
 
             string opponents = string.Empty;
             string rank = "!";
-
             opponents += playrooms[currentPlayerPlayroomNumber].Players.Aggregate(string.Empty, (localOpp, p) =>
             {
                 if (!p.Key.Equals(currentClient))

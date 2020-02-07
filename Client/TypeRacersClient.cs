@@ -25,7 +25,7 @@ namespace TypeRacers.Client
         int elapsedTime = 0; // Elapsed time in ms
         List<Tuple<string, Tuple<string, string, int>>> opponents;
 
-        public delegate void TimerTickHandler(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>> opponentsAndRankingAndElapsedTime);
+        public delegate void TimerTickHandler(Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>> opponentsAndRanking);
         public event TimerTickHandler OpponentsChanged;
 
         public void NameClient(string username)
@@ -155,7 +155,7 @@ namespace TypeRacers.Client
             byte[] bytesToSend = Encoding.ASCII.GetBytes(progress + "&" + PlayroomNumber + "$" + Name + "#");
             stream.Write(bytesToSend, 0, bytesToSend.Length);
 
-            SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>>(GetOpponentsProgress(), elapsedTime, Rank));
+            SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>>(GetOpponentsProgress(), Rank));
 
             stream.Flush();
         }
@@ -186,7 +186,7 @@ namespace TypeRacers.Client
             }
             else
             {
-                SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>>(GetOpponentsProgress(), elapsedTime, Rank));
+                SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>>(GetOpponentsProgress(), Rank));
             }
             timer.Enabled = true;
 
@@ -207,14 +207,13 @@ namespace TypeRacers.Client
 
             timer.Enabled = true;
         }
-        private void SetOpponentsAndElapsedTime(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>> value)
+        private void SetOpponentsAndElapsedTime(Tuple<List<Tuple<string, Tuple<string, string, int>>>,  Dictionary<string, Tuple<bool, int>>> value)
         {
             opponents = value.Item1;
-            elapsedTime = value.Item2;
-            Rank = value.Item3;
+            Rank = value.Item2;
             OnOpponentsChangedAndTimeChanged(value);
         }
-        protected void OnOpponentsChangedAndTimeChanged(Tuple<List<Tuple<string, Tuple<string, string, int>>>, int, Dictionary<string, Tuple<bool, int>>> opponentsAndElapsedTime)
+        protected void OnOpponentsChangedAndTimeChanged(Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>> opponentsAndElapsedTime)
         {
             if (opponentsAndElapsedTime != null)
             {
