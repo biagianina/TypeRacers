@@ -39,7 +39,7 @@ namespace TypeRacers.Model
         }
         public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>>> updateOpponents)
         {
-            networkHandler.SubscribeToSearchingOpponentsTimer(updateOpponents);
+            networkHandler.SubscribeToSearchingOpponents(updateOpponents);
         }
 
         public Dictionary<string, Tuple<bool, int>> GetRanking()

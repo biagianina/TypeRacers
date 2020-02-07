@@ -23,7 +23,7 @@ namespace TypeRacers.Server
         private object currentPlayroomStartingTime;
         readonly int maxPlayroomSize = 3;
         TcpClient client;
-
+        Player currentPlayer;
         public void Setup()
         {
             server = new TcpListener(IPAddress.IPv6Any, 80);
@@ -83,10 +83,6 @@ namespace TypeRacers.Server
 
             var progressInfoAndPlayerRoomInfo = progress.Split('&');
 
-            //1 progress, 2 sliderprogress, 3 current client playroom, 
-            Tuple<string, string, int> clientInfo = new Tuple<string, string, int>(progressInfoAndPlayerRoomInfo[0],
-                progressInfoAndPlayerRoomInfo[1], Convert.ToInt32(progressInfoAndPlayerRoomInfo[2]));
-
             string username = dataReceived.Substring(dataReceived.IndexOf('$') + 1);
 
             currentClient = username.Substring(0, username.Length - 1);
@@ -96,11 +92,15 @@ namespace TypeRacers.Server
                 return;
             }
 
-            currentPlayerPlayroomNumber = clientInfo.Item3;
+          
+            currentPlayer = new Player(currentClient);
+            currentPlayer.UpdateInfo(Convert.ToInt32(progressInfoAndPlayerRoomInfo[0]), Convert.ToInt32(progressInfoAndPlayerRoomInfo[1]), Convert.ToInt32(progressInfoAndPlayerRoomInfo[2]));
+
+            currentPlayerPlayroomNumber = currentPlayer.PlayroomNumber;
 
             CheckIfClientLeftGame(currentClient);
 
-            CheckCurrentPlayroom(currentClient, currentPlayerPlayroomNumber, clientInfo);
+            CheckCurrentPlayroom(currentClient, currentPlayerPlayroomNumber);
         }
 
         private bool CheckIfClientLeftGame(string currentClient)
@@ -131,7 +131,7 @@ namespace TypeRacers.Server
             return false;
         }
 
-        private void CheckCurrentPlayroom(string currrentClient, int roomNumber, Tuple<string, string, int> clientInfo)
+        private void CheckCurrentPlayroom(string currrentClient, int roomNumber)
         {
             if (!CheckIfClientLeftGame(currrentClient))
             {
@@ -169,7 +169,8 @@ namespace TypeRacers.Server
                     }
                 }
 
-                newClient = currentPlayroom.AddPlayersToRoom(currrentClient, clientInfo);
+
+                newClient = currentPlayroom.AddPlayersToRoom(currentPlayer);
 
                 CheckNewClient(currentPlayroom.PlayroomNumber);
             }
@@ -204,9 +205,9 @@ namespace TypeRacers.Server
             string rank = "!";
             opponents += playrooms[currentPlayerPlayroomNumber].Players.Aggregate(string.Empty, (localOpp, p) =>
             {
-                if (!p.Key.Equals(currentClient))
+                if (!p.Name.Equals(currentClient))
                 {
-                    localOpp += (p.Key + ":" + p.Value.Item1 + "&" + p.Value.Item2 + "&" + p.Value.Item3 + "/");
+                    localOpp += (p.Name + ":" + p.WPMProgress+ "&" + p.CompletedTextPercentage+ "&" + p.PlayroomNumber + "/");
                 }
 
                 return localOpp;

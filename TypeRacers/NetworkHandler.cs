@@ -37,7 +37,7 @@ namespace TypeRacers
         {
             client.StartTimerForSearchingOpponents();
         }
-        public void SubscribeToSearchingOpponentsTimer(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>>> updateOpponentsList)
+        public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>>> updateOpponentsList)
         {
             timerTickHandler = new TypeRacersClient.TimerTickHandler(updateOpponentsList);
             client.OpponentsChanged += new TypeRacersClient.TimerTickHandler(timerTickHandler);
@@ -72,7 +72,7 @@ namespace TypeRacers
            client.RemovePlayerFromRoom();
         }
 
-        internal void StartReportingGameProgress()
+        public void StartReportingGameProgress()
         {
             client.StartTimerForGameProgressReports();
         }

@@ -13,7 +13,7 @@ namespace Server
         public bool GameHasStarted { get; set; }
         public int PlayroomSize { get; set; }
         public int PlayroomNumber { get; set; }
-        public Dictionary<string, Tuple<string, string, int>> Players { get; set; }
+        public List<Player> Players { get; set; }
         public Dictionary<string, Tuple<bool, int>> Rank { get; set; }
         public string GameStartingTime { get; set; } = string.Empty;
         public string GameEndingTime { get; set; } = string.Empty;
@@ -23,7 +23,7 @@ namespace Server
         DateTime currentTime;
         public Playroom()
         {
-            Players = new Dictionary<string, Tuple<string, string, int>>();
+            Players = new List<Player>();
             Rank = new Dictionary<string, Tuple<bool, int>>();
             currentTime = DateTime.UtcNow;
             TimeToWaitForOpponents = string.Format("{0:MM/dd/yy H:mm:ss tt}", currentTime.AddSeconds(15));
@@ -40,7 +40,7 @@ namespace Server
                 Console.WriteLine(GameEndingTime);
                 Console.WriteLine(GameStartingTime);
                 GameHasStarted = true;
-            }         
+            }
 
             if ((PlayroomSize == 1) && DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow.AddSeconds(2) <= TimeSpan.Zero)
             {
@@ -49,44 +49,50 @@ namespace Server
             return GameStartingTime;
         }
 
-        public bool ExistsInPlayroom(string currentClientKey)
+        public bool ExistsInPlayroom(string playerName)
         {
-            return Players.ContainsKey(currentClientKey);
+            return Players.Any(x => x.Name.Equals(playerName));
         }
-        public void RemovePlayer(string clientKey)
+
+        public Player GetPlayer(string name)
         {
-            if (ExistsInPlayroom(clientKey))
+            return Players.FirstOrDefault(x => x.Name.Equals(name));
+        }
+        public void RemovePlayer(string playerName)
+        {
+            if (ExistsInPlayroom(playerName))
             {
-                Players.Remove(clientKey);
+                Players.Remove(Players.FirstOrDefault(x=>x.Name.Equals(playerName)));
                 PlayroomSize--;
+                Rank.Remove(playerName);
                 Console.WriteLine("Player removed, current size: " + PlayroomSize);
             }
 
-            if(PlayroomSize == 0)
+            if (PlayroomSize == 0)
             {
                 ResetPlayroom();
             }
         }
 
-        public bool AddPlayersToRoom(string currentClientKey, Tuple<string, string, int> clientInfo)
+        public bool AddPlayersToRoom(Player currentPlayer)
         {
-            if (Players.ContainsKey(currentClientKey))
+            if (ExistsInPlayroom(currentPlayer.Name))
             {
-                Players[currentClientKey] = clientInfo;
-                if (Rank[currentClientKey].Item1 == false && clientInfo.Item2.Equals("100"))
+                GetPlayer(currentPlayer.Name).UpdateInfo(currentPlayer.WPMProgress, currentPlayer.CompletedTextPercentage, currentPlayer.PlayroomNumber);
+                if (Rank[currentPlayer.Name].Item1 == false && currentPlayer.CompletedTextPercentage.Equals("100"))
                 {
-                    Rank[currentClientKey] = new Tuple<bool, int>(true, Place);
+                    Rank[currentPlayer.Name] = new Tuple<bool, int>(true, Place);
                     Place += 1;
                 }
                 return false;
             }
 
-            Console.WriteLine("adding: " + currentClientKey);
+            Console.WriteLine("adding: " + currentPlayer.Name);
 
-            Players.Add(currentClientKey, clientInfo);
-            if (!Rank.ContainsKey(currentClientKey))
+            Players.Add(currentPlayer);
+            if (!Rank.ContainsKey(currentPlayer.Name))
             {
-                Rank.Add(currentClientKey, new Tuple<bool, int>(false, 0));
+                Rank.Add(currentPlayer.Name, new Tuple<bool, int>(false, 0));
 
             }
 
