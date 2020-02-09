@@ -198,7 +198,10 @@ namespace TypeRacers.Server
         {
             if (string.IsNullOrEmpty(currentPlayroom.GameStartingTime))
             {
-                currentPlayroomStartingTime = currentPlayroom.CheckIfPlayersCanStart();
+                if (currentPlayroom.CheckIfPlayersCanStart())
+                {
+                    currentPlayroomStartingTime = currentPlayroom.GameStartingTime;
+                }
             }
 
             string opponents = string.Empty;

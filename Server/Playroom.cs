@@ -29,7 +29,7 @@ namespace Server
             TimeToWaitForOpponents = string.Format("{0:MM/dd/yy H:mm:ss tt}", currentTime.AddSeconds(15));
         }
 
-        public string CheckIfPlayersCanStart()
+        public bool CheckIfPlayersCanStart()
         {
             if (PlayroomSize == 3 || (DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow.AddSeconds(2) <= TimeSpan.Zero && PlayroomSize == 2))
             {
@@ -37,16 +37,17 @@ namespace Server
                 currentTime = currentTime.AddSeconds(10);
                 GameStartingTime = string.Format("{0:H:mm:ss tt}", currentTime);
                 GameEndingTime = string.Format("{0:H:mm:ss tt}", currentTime.AddSeconds(90));
-                Console.WriteLine(GameEndingTime);
-                Console.WriteLine(GameStartingTime);
                 GameHasStarted = true;
+
+                return true;
             }
 
             if ((PlayroomSize == 1) && DateTime.Parse(TimeToWaitForOpponents) - DateTime.UtcNow.AddSeconds(2) <= TimeSpan.Zero)
             {
                 ResetPlayroom();
             }
-            return GameStartingTime;
+
+            return false;
         }
 
         public bool ExistsInPlayroom(string playerName)
