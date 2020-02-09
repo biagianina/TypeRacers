@@ -107,11 +107,9 @@ namespace TypeRacers.Server
         {
             if (currentClient.Contains("_removed"))
             {
-                string toRemove = currentClient.Substring(0, currentClient.IndexOf('_'));
-                currentPlayroom.RemovePlayer(toRemove);
-                return true;
+                string toRemove = currentClient.Substring(0, currentClient.IndexOf('_'));               
+                return currentPlayroom.RemovePlayer(toRemove); ;
             }
-
             return false;
         }
 

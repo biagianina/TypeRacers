@@ -38,7 +38,6 @@ namespace Server
                 GameStartingTime = string.Format("{0:H:mm:ss tt}", currentTime);
                 GameEndingTime = string.Format("{0:H:mm:ss tt}", currentTime.AddSeconds(90));
                 GameHasStarted = true;
-
                 return true;
             }
 
@@ -59,7 +58,7 @@ namespace Server
         {
             return Players.FirstOrDefault(x => x.Name.Equals(name));
         }
-        public void RemovePlayer(string playerName)
+        public bool RemovePlayer(string playerName)
         {
             if (ExistsInPlayroom(playerName))
             {
@@ -67,12 +66,14 @@ namespace Server
                 PlayroomSize--;
                 Rank.Remove(playerName);
                 Console.WriteLine("Player removed, current size: " + PlayroomSize);
+                return true;
             }
 
             if (PlayroomSize == 0)
             {
                 ResetPlayroom();
             }
+            return false;
         }
 
         public bool AddPlayersToRoom(Player currentPlayer)
