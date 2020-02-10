@@ -37,129 +37,74 @@ namespace TypeRacers.Client
         public void StartTimerForSearchingOpponents()
         {
             timer = new Timer(interval);
-            timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+            timer.Elapsed += OnTimedEvent;
             timer.Enabled = true;
         }
 
         public void StartTimerForGameProgressReports()
         {
             timer = new Timer(3000);
-            timer.Elapsed += new ElapsedEventHandler(OnTimedReportProgressEvent);
+            timer.Elapsed += OnTimedReportProgressEvent;
             timer.Enabled = true;
         }
 
         public string FirstTimeConnectingToServer()
         {
             //connecting to server
-            client = new TcpClient("localhost", 80);
-            stream = client.GetStream();
+            string dataToSend = LocalPlayerProgress + "&" + PlayroomNumber + "$" + Name + "#";
+            var receivedData = SendDataToServer(dataToSend);
 
-            try
-            {
-                byte[] bytesToSend = Encoding.ASCII.GetBytes(LocalPlayerProgress + "&" + PlayroomNumber + "$" + Name + "#");
+            var dataWithoutHashtag = receivedData.Remove(receivedData.Length - 1);
+            var textToType = dataWithoutHashtag.Substring(0, dataWithoutHashtag.IndexOf('$'));
 
-                stream.Write(bytesToSend, 0, bytesToSend.Length);
+            var times = dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('%') + 1);
+            var gameTimers = times.Split('*');
+            WaitingTime = DateTime.Parse(gameTimers.FirstOrDefault());
+            var startAndEndTimes = gameTimers.LastOrDefault().Split('+');
+            PlayersStartingTime = DateTime.Parse(startAndEndTimes.FirstOrDefault());
+            PlayersEndingTime = DateTime.Parse(startAndEndTimes.LastOrDefault());
+            PlayroomNumber = Convert.ToInt32(dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('$') + 1, (dataWithoutHashtag.Length - textToType.Length - times.Length - 2)));
 
-                byte[] inStream = new byte[client.ReceiveBufferSize];
-                int read = stream.Read(inStream, 0, inStream.Length);
-                string recievedData = Encoding.ASCII.GetString(inStream, 0, read);
+            return textToType;
 
-                while (!recievedData[read - 1].Equals('#'))
-                {
-                    read = stream.Read(inStream, 0, inStream.Length);
-                    recievedData += Encoding.ASCII.GetString(inStream, recievedData.Length, read);
-                }
-
-                var dataWithoutHashtag = recievedData.Remove(recievedData.Length - 1);
-                var textToType = dataWithoutHashtag.Substring(0, dataWithoutHashtag.IndexOf('$'));
-                //getting room number
-
-                var times = dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('%') + 1);
-                var gameTimers = times.Split('*');
-                WaitingTime = DateTime.Parse(gameTimers.FirstOrDefault());
-                var startAndEndTimes = gameTimers.LastOrDefault().Split('+');
-                PlayersStartingTime = DateTime.Parse(startAndEndTimes.FirstOrDefault());
-                PlayersEndingTime = DateTime.Parse(startAndEndTimes.LastOrDefault());
-                PlayroomNumber = Convert.ToInt32(dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('$') + 1, (dataWithoutHashtag.Length - textToType.Length - times.Length - 2)));
-
-                return textToType;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
         }
 
         public List<Tuple<string, Tuple<string, string, int>>> GetOpponentsProgress()
         {
             //connecting to server
-            client = new TcpClient("localhost", 80);
-            stream = client.GetStream();
-            string toSend;
+            string toSend = LocalPlayerProgress + "&" + PlayroomNumber + "$" + Name + "#";
 
-            //writing the progress to stream
+            var dataFromServer = SendDataToServer(toSend);
 
-            toSend = LocalPlayerProgress + "&" + PlayroomNumber + "$" + Name + "#";
+            var currentOpponents = dataFromServer.Split('%').ToList();
+            currentOpponents.Remove("#");
 
-            byte[] bytesToSend = Encoding.ASCII.GetBytes(toSend);
-            stream.Write(bytesToSend, 0, bytesToSend.Length);
+            opponents = new List<Tuple<string, Tuple<string, string, int>>>();
+            SetInfoOrRanking(currentOpponents);
 
-            try
-            {
-                var text = GetDataFromServer();
+            return opponents;
 
-                var currentOpponents = text.Split('%').ToList();
-                currentOpponents.Remove("#");
-
-                opponents = new List<Tuple<string, Tuple<string, string, int>>>();
-                SetInfoOrRanking(currentOpponents);
-
-                return opponents;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
         }
 
         public void RestartSearch()
         {
-            //connecting to server
-            client = new TcpClient("localhost", 80);
-            stream = client.GetStream();
-
-            //writing the progress to stream
 
             string toSend = Name + "_restart" + "#";
 
-            byte[] bytesToSend = Encoding.ASCII.GetBytes(toSend);
-            stream.Write(bytesToSend, 0, bytesToSend.Length);
+            var dataFromServer = SendDataToServer(toSend);
+            var dataWithoutHashtag = dataFromServer.Remove(dataFromServer.Length - 1);
+            WaitingTime = DateTime.Parse(dataWithoutHashtag);
 
-            try
-            {
-                byte[] inStream = new byte[client.ReceiveBufferSize];
-                int read = stream.Read(inStream, 0, inStream.Length);
-                string text = Encoding.ASCII.GetString(inStream, 0, read);
-                var dataWithoutHashtag = text.Remove(text.Length - 1);
-                WaitingTime = DateTime.Parse(dataWithoutHashtag);
-            }
-            catch (Exception)
-            {
-                throw new Exception("Lost connection with server");
-            }
         }
 
         public void SendProgressToServer(string progress)
         {
-            //connecting to server
-            client = new TcpClient("localhost", 80);
-            stream = client.GetStream();
 
             //writing the progress to stream
-            byte[] bytesToSend = Encoding.ASCII.GetBytes(progress + "&" + PlayroomNumber + "$" + Name + "#");
-            stream.Write(bytesToSend, 0, bytesToSend.Length);
+            string toSend = progress + "&" + PlayroomNumber + "$" + Name + "#";
 
-            SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>>(GetOpponentsProgress(), Rank));
+            SendDataToServer(toSend);
+            SetOpponents(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>>(GetOpponentsProgress(), Rank));
 
             stream.Flush();
         }
@@ -192,7 +137,7 @@ namespace TypeRacers.Client
             }
             else
             {
-                SetOpponentsAndElapsedTime(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>>(GetOpponentsProgress(), Rank));
+                SetOpponents(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>>(GetOpponentsProgress(), Rank));
             }
             timer.Enabled = true;
 
@@ -215,18 +160,18 @@ namespace TypeRacers.Client
             timer.Enabled = true;
         }
 
-        private void SetOpponentsAndElapsedTime(Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>> value)
+        private void SetOpponents(Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>> value)
         {
             opponents = value.Item1;
             Rank = value.Item2;
-            OnOpponentsChangedAndTimeChanged(value);
+            OnOpponentsChanged(value);
         }
 
-        protected void OnOpponentsChangedAndTimeChanged(Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>> opponentsAndElapsedTime)
+        protected void OnOpponentsChanged(Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>> opponents)
         {
-            if (opponentsAndElapsedTime != null)
+            if (opponents != null)
             {
-                OpponentsChanged(opponentsAndElapsedTime);
+                OpponentsChanged(opponents);
             }
         }
 
@@ -257,24 +202,9 @@ namespace TypeRacers.Client
             }
         }
 
-        private string GetDataFromServer()
-        {
-            byte[] inStream = new byte[client.ReceiveBufferSize];
-            int read = stream.Read(inStream, 0, inStream.Length);
-            string text = Encoding.ASCII.GetString(inStream, 0, read);
-
-            while (!string.IsNullOrEmpty(text) && !text[read - 1].Equals('#'))
-            {
-                read = stream.Read(inStream, 0, inStream.Length);
-                text += Encoding.ASCII.GetString(inStream, text.Length, read);
-            }
-
-            return text;
-        }
-
         private void SetInfo(string[] nameAndInfos)
         {
-            var progressInfoAndPlayroomInfo = nameAndInfos.LastOrDefault().Split('&');
+            var progressInfoAndPlayroomInfo = nameAndInfos.LastOrDefault()?.Split('&');
 
             if (progressInfoAndPlayroomInfo.Count() == 3)
             {
@@ -296,6 +226,7 @@ namespace TypeRacers.Client
                     var name = nameAndRank[0];
                     var currentRank = nameAndRank[1].Split('&');
                     var rankToAdd = new Tuple<bool, int>(Convert.ToBoolean(currentRank[0]), Convert.ToInt32(currentRank[1]));
+
                     if (!Rank.ContainsKey(name))
                     {
                         Rank.Add(name, rankToAdd);
@@ -307,6 +238,43 @@ namespace TypeRacers.Client
                 }
                 return Rank;
             });
+        }
+
+        private string SendDataToServer(string data)
+        {
+            client = new TcpClient("localhost", 80);
+            stream = client.GetStream();
+
+            try
+            {
+                byte[] bytesToSend = Encoding.ASCII.GetBytes(data);
+
+                stream.Write(bytesToSend, 0, bytesToSend.Length);
+
+
+                return ReceiveDataFromServer(client);
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+
+        private string ReceiveDataFromServer(TcpClient tcpClient)
+        {
+            byte[] inStream = new byte[tcpClient.ReceiveBufferSize];
+            int read = stream.Read(inStream, 0, inStream.Length);
+            string receivedData = Encoding.ASCII.GetString(inStream, 0, read);
+
+            while (!receivedData[read - 1].Equals('#'))
+            {
+                read = stream.Read(inStream, 0, inStream.Length);
+                receivedData += Encoding.ASCII.GetString(inStream, receivedData.Length, read);
+            }
+
+            return receivedData;
         }
     }
 }

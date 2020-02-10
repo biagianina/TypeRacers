@@ -399,7 +399,7 @@ namespace TypeRacers.ViewModel
 
         private void CheckIfWaitingTimeHasPassed()
         {
-            if (TimeToStart.Subtract(DateTime.UtcNow) <= TimeSpan.Zero && model.GetStartingTime() == DateTime.MinValue)
+            if (TimeToStart.Subtract(DateTime.UtcNow) <= TimeSpan.Zero && model.GetStartingTime() == DateTime.MinValue && !EnableGetReadyAlert)
             {
                 if (Opponents.Count() == 1)
                 {
