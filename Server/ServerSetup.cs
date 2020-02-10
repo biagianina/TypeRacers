@@ -57,11 +57,11 @@ namespace TypeRacers.Server
                 string dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
                 //solution to get get complete messages
-                //while (!dataReceived[bytesRead - 1].Equals('#'))
-                //{
-                //    bytesRead = networkStream.Read(buffer, 0, client.ReceiveBufferSize);
-                //    dataReceived += Encoding.ASCII.GetString(buffer, dataReceived.Length, bytesRead);
-                //}
+                while (!dataReceived.Last().Equals('#'))
+                {
+                    bytesRead = networkStream.Read(buffer, 0, client.ReceiveBufferSize);
+                    dataReceived += Encoding.ASCII.GetString(buffer, dataReceived.Length, bytesRead);
+                }
 
                 CheckClientReceievedData(dataReceived);
                 //check if reading from the stream has been done on the other end in order to close client
