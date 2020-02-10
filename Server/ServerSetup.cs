@@ -1,6 +1,5 @@
 ﻿using Server;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,7 +8,7 @@ using System.Text;
 
 namespace TypeRacers.Server
 {
-    class ServerSetup
+    internal class ServerSetup
     {
         private static string CompetitionText { get; set; } = ServerGeneratedText.GetText();
         private bool newClient;
@@ -18,12 +17,13 @@ namespace TypeRacers.Server
         private string currentClient;
         private List<Playroom> playrooms;
         private Playroom currentPlayroom;
-        int playroomCount = 0;
-        int currentPlayerPlayroomNumber;
-        private object currentPlayroomStartingTime;
-        readonly int maxPlayroomSize = 3;
-        TcpClient client;
-        Player currentPlayer;
+        private int playroomCount = 0;
+        private int currentPlayerPlayroomNumber;
+        private DateTime currentPlayroomStartingTime;
+        private readonly int maxPlayroomSize = 3;
+        private TcpClient client;
+        private Player currentPlayer;
+
         public void Setup()
         {
             server = new TcpListener(IPAddress.IPv6Any, 80);
@@ -57,20 +57,20 @@ namespace TypeRacers.Server
                 string dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
                 //solution to get get complete messages
-                while (!dataReceived[bytesRead - 1].Equals('#'))
-                {
-                    bytesRead = networkStream.Read(buffer, 0, client.ReceiveBufferSize);
-                    dataReceived += Encoding.ASCII.GetString(buffer, dataReceived.Length, bytesRead);
-                }
+                //while (!dataReceived[bytesRead - 1].Equals('#'))
+                //{
+                //    bytesRead = networkStream.Read(buffer, 0, client.ReceiveBufferSize);
+                //    dataReceived += Encoding.ASCII.GetString(buffer, dataReceived.Length, bytesRead);
+                //}
 
                 CheckClientReceievedData(dataReceived);
                 //check if reading from the stream has been done on the other end in order to close client
 
                 Console.WriteLine("info: " + dataReceived);
                 Console.WriteLine("Disconnected client");
-
             }
         }
+
         private void CheckClientReceievedData(string dataReceived)
         {
             if (CheckIfGameIsRestarted(dataReceived) || CheckIfClientLeftGame(dataReceived))
@@ -92,7 +92,6 @@ namespace TypeRacers.Server
                 return;
             }
 
-          
             currentPlayer = new Player(currentClient);
             currentPlayer.UpdateInfo(Convert.ToInt32(progressInfoAndPlayerRoomInfo[0]), Convert.ToInt32(progressInfoAndPlayerRoomInfo[1]), Convert.ToInt32(progressInfoAndPlayerRoomInfo[2]));
 
@@ -107,9 +106,11 @@ namespace TypeRacers.Server
         {
             if (currentClient.Contains("_removed"))
             {
-                string toRemove = currentClient.Substring(0, currentClient.IndexOf('_'));               
-                return currentPlayroom.RemovePlayer(toRemove); ;
+                string toRemove = currentClient.Substring(0, currentClient.IndexOf('_'));
+                currentPlayroom.RemovePlayer(toRemove);
+                return true;
             }
+
             return false;
         }
 
@@ -167,20 +168,19 @@ namespace TypeRacers.Server
                     }
                 }
 
-
                 newClient = currentPlayroom.AddPlayersToRoom(currentPlayer);
 
                 CheckNewClient(currentPlayroom.PlayroomNumber);
             }
-
         }
+
         private void CheckNewClient(int roomNumber)
         {
             Console.WriteLine("playroom size: " + currentPlayroom.PlayroomSize);
 
             if (newClient)
             {
-                byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + roomNumber + "%" + currentPlayroom.TimeToWaitForOpponents + "*" + currentPlayroom.GameStartingTime + "+" + currentPlayroom.GameEndingTime + "#"); //generates random text from text document
+                byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + roomNumber + "%" + currentPlayroom.TimeToWaitForOpponents.ToString() + "*" + currentPlayroom.GameStartingTime + "+" + currentPlayroom.GameEndingTime + "#"); //generates random text from text document
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
 
                 networkStream.Close();
@@ -194,12 +194,9 @@ namespace TypeRacers.Server
 
         private void SendOpponents()
         {
-            if (string.IsNullOrEmpty(currentPlayroom.GameStartingTime))
+            if (currentPlayroom.GameStartingTime == DateTime.MinValue)
             {
-                if (currentPlayroom.CheckIfPlayersCanStart())
-                {
-                    currentPlayroomStartingTime = currentPlayroom.GameStartingTime;
-                }
+                currentPlayroomStartingTime = currentPlayroom.TrySetGameStartingTime();
             }
 
             string opponents = string.Empty;
@@ -208,7 +205,7 @@ namespace TypeRacers.Server
             {
                 if (!p.Name.Equals(currentClient))
                 {
-                    localOpp += (p.Name + ":" + p.WPMProgress+ "&" + p.CompletedTextPercentage+ "&" + p.PlayroomNumber + "/");
+                    localOpp += (p.Name + ":" + p.WPMProgress + "&" + p.CompletedTextPercentage + "&" + p.PlayroomNumber + "%");
                 }
 
                 return localOpp;
@@ -216,7 +213,7 @@ namespace TypeRacers.Server
 
             rank += playrooms[currentPlayerPlayroomNumber].Rank.Aggregate(string.Empty, (localRank, r) => localRank += r.Key + ":" + r.Value.Item1 + "&" + r.Value.Item2 + ";");
 
-            opponents += "*" + currentPlayroomStartingTime + "+" + currentPlayroom.GameEndingTime + "/" + rank + "/";
+            opponents += "*" + currentPlayroomStartingTime.ToString() + "+" + currentPlayroom.GameEndingTime.ToString() + "%" + rank + "%";
 
             byte[] broadcastBytes = Encoding.ASCII.GetBytes(opponents + "#");
             networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);

@@ -9,41 +9,45 @@ namespace TypeRacers.Client
 {
     public class TypeRacersClient
     {
-        public string WaitingTime { get; set; }
+        public DateTime WaitingTime { get; set; }
         public Dictionary<string, Tuple<bool, int>> Rank { get; set; } = new Dictionary<string, Tuple<bool, int>>();
         public string LocalPlayerProgress { get; set; } = "0&0";
-        public string PlayersStartingTime { get; set; } = string.Empty;
-        public string PlayersEndingTime { get; private set; }
+        public DateTime PlayersStartingTime { get; set; }
+        public DateTime PlayersEndingTime { get; private set; }
         private int PlayroomNumber { get; set; } = -1;
         public string Name { get; set; }
         public bool GameStarted { get; private set; }
 
-        TcpClient client;
-        NetworkStream stream;
-        Timer timer;
-        readonly int interval = 1000; // 1 second
-        int elapsedTime = 0; // Elapsed time in ms
-        List<Tuple<string, Tuple<string, string, int>>> opponents;
+        private TcpClient client;
+        private NetworkStream stream;
+        private Timer timer;
+        private readonly int interval = 1000; // 1 second
+        private int elapsedTime = 0; // Elapsed time in ms
+        private List<Tuple<string, Tuple<string, string, int>>> opponents;
 
         public delegate void TimerTickHandler(Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>> opponentsAndRanking);
+
         public event TimerTickHandler OpponentsChanged;
 
         public void NameClient(string username)
         {
             Name = username;
         }
+
         public void StartTimerForSearchingOpponents()
         {
             timer = new Timer(interval);
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Enabled = true;
         }
+
         public void StartTimerForGameProgressReports()
         {
             timer = new Timer(3000);
             timer.Elapsed += new ElapsedEventHandler(OnTimedReportProgressEvent);
             timer.Enabled = true;
         }
+
         public string FirstTimeConnectingToServer()
         {
             //connecting to server
@@ -72,10 +76,10 @@ namespace TypeRacers.Client
 
                 var times = dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('%') + 1);
                 var gameTimers = times.Split('*');
-                WaitingTime = gameTimers.FirstOrDefault();
+                WaitingTime = DateTime.Parse(gameTimers.FirstOrDefault());
                 var startAndEndTimes = gameTimers.LastOrDefault().Split('+');
-                PlayersStartingTime = startAndEndTimes.FirstOrDefault();
-                PlayersEndingTime = startAndEndTimes.LastOrDefault();
+                PlayersStartingTime = DateTime.Parse(startAndEndTimes.FirstOrDefault());
+                PlayersEndingTime = DateTime.Parse(startAndEndTimes.LastOrDefault());
                 PlayroomNumber = Convert.ToInt32(dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('$') + 1, (dataWithoutHashtag.Length - textToType.Length - times.Length - 2)));
 
                 return textToType;
@@ -85,6 +89,7 @@ namespace TypeRacers.Client
                 throw e;
             }
         }
+
         public List<Tuple<string, Tuple<string, string, int>>> GetOpponentsProgress()
         {
             //connecting to server
@@ -96,7 +101,6 @@ namespace TypeRacers.Client
 
             toSend = LocalPlayerProgress + "&" + PlayroomNumber + "$" + Name + "#";
 
-
             byte[] bytesToSend = Encoding.ASCII.GetBytes(toSend);
             stream.Write(bytesToSend, 0, bytesToSend.Length);
 
@@ -104,7 +108,7 @@ namespace TypeRacers.Client
             {
                 var text = GetDataFromServer();
 
-                var currentOpponents = text.Split('/').ToList();
+                var currentOpponents = text.Split('%').ToList();
                 currentOpponents.Remove("#");
 
                 opponents = new List<Tuple<string, Tuple<string, string, int>>>();
@@ -117,6 +121,7 @@ namespace TypeRacers.Client
                 throw e;
             }
         }
+
         public void RestartSearch()
         {
             //connecting to server
@@ -136,20 +141,19 @@ namespace TypeRacers.Client
                 int read = stream.Read(inStream, 0, inStream.Length);
                 string text = Encoding.ASCII.GetString(inStream, 0, read);
                 var dataWithoutHashtag = text.Remove(text.Length - 1);
-                WaitingTime = dataWithoutHashtag;
-
+                WaitingTime = DateTime.Parse(dataWithoutHashtag);
             }
             catch (Exception)
             {
                 throw new Exception("Lost connection with server");
             }
         }
+
         public void SendProgressToServer(string progress)
         {
             //connecting to server
             client = new TcpClient("localhost", 80);
             stream = client.GetStream();
-
 
             //writing the progress to stream
             byte[] bytesToSend = Encoding.ASCII.GetBytes(progress + "&" + PlayroomNumber + "$" + Name + "#");
@@ -159,6 +163,7 @@ namespace TypeRacers.Client
 
             stream.Flush();
         }
+
         public void RemovePlayerFromRoom()
         {
             //connecting to server
@@ -174,11 +179,12 @@ namespace TypeRacers.Client
 
             timer.Stop();
         }
-        void OnTimedEvent(object sender, ElapsedEventArgs e)
+
+        private void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
             timer.Stop();
- 
-            if (DateTime.Parse(WaitingTime) - DateTime.UtcNow < TimeSpan.Zero)
+
+            if (WaitingTime - DateTime.UtcNow < TimeSpan.Zero)
             {
                 elapsedTime = 0;
                 //we stop the timer after 30 seconds
@@ -192,11 +198,12 @@ namespace TypeRacers.Client
 
             elapsedTime += interval;
         }
+
         private void OnTimedReportProgressEvent(object sender, ElapsedEventArgs e)
         {
             timer.Stop();
 
-            if(DateTime.Parse(PlayersEndingTime) -  DateTime.UtcNow < TimeSpan.Zero)
+            if (PlayersEndingTime - DateTime.UtcNow < TimeSpan.Zero)
             {
                 return;
             }
@@ -207,12 +214,14 @@ namespace TypeRacers.Client
 
             timer.Enabled = true;
         }
-        private void SetOpponentsAndElapsedTime(Tuple<List<Tuple<string, Tuple<string, string, int>>>,  Dictionary<string, Tuple<bool, int>>> value)
+
+        private void SetOpponentsAndElapsedTime(Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>> value)
         {
             opponents = value.Item1;
             Rank = value.Item2;
             OnOpponentsChangedAndTimeChanged(value);
         }
+
         protected void OnOpponentsChangedAndTimeChanged(Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>> opponentsAndElapsedTime)
         {
             if (opponentsAndElapsedTime != null)
@@ -220,19 +229,17 @@ namespace TypeRacers.Client
                 OpponentsChanged(opponentsAndElapsedTime);
             }
         }
-       
+
         //receiving the opponents and their progress in a List
         private void SetInfoOrRanking(List<string> currentOpponents)
         {
-
             foreach (var v in currentOpponents)
             {
                 if (v.FirstOrDefault().Equals('*'))
                 {
                     var times = v.Substring(1).Split('+');
-                    PlayersStartingTime = times.FirstOrDefault();
-                    PlayersEndingTime = times.LastOrDefault();
-
+                    PlayersStartingTime = DateTime.Parse(times.FirstOrDefault());
+                    PlayersEndingTime = DateTime.Parse(times.LastOrDefault());
                 }
                 else
                 {
@@ -243,13 +250,13 @@ namespace TypeRacers.Client
                     }
                     else
                     {
-
                         var nameAndInfos = v.Split(':');
                         SetInfo(nameAndInfos);
                     }
                 }
             }
         }
+
         private string GetDataFromServer()
         {
             byte[] inStream = new byte[client.ReceiveBufferSize];
@@ -262,9 +269,9 @@ namespace TypeRacers.Client
                 text += Encoding.ASCII.GetString(inStream, text.Length, read);
             }
 
-           
             return text;
         }
+
         private void SetInfo(string[] nameAndInfos)
         {
             var progressInfoAndPlayroomInfo = nameAndInfos.LastOrDefault().Split('&');
@@ -278,6 +285,7 @@ namespace TypeRacers.Client
                 opponents.Add(new Tuple<string, Tuple<string, string, int>>(nameAndInfos.FirstOrDefault(), opponentInfo));
             }
         }
+
         private void SetRanking(string[] rank)
         {
             rank.Aggregate(Rank, (Rank, r) =>

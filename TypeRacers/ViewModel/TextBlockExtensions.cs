@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 
 namespace TypeRacers.ViewModel
 {
-    //extensions for using inlines property of textblock outside xaml/xaml.cs code 
+    //extensions for using inlines property of textblock outside xaml/xaml.cs code
     //binded in the xaml with code (<TextBlock vm:TextBlockExtensions.BindableInlines="{Binding Inlines, UpdateSourceTrigger=PropertyChanged}")
     //vm stands for the local resource, Inlines stands for the property in ViewModel
     //Read more documentation about DependencyPropery and DependencyObjecy !!!!

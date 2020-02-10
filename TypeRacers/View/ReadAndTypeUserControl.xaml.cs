@@ -4,9 +4,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Media.Animation;
 using System.Windows.Threading;
-using TypeRacers.ViewModel;
 
 namespace TypeRacers.View
 {
@@ -15,7 +13,8 @@ namespace TypeRacers.View
     /// </summary>
     public partial class ReadAndTypeUserControl : UserControl, INotifyPropertyChanged
     {
-        DispatcherTimer timer;
+        private DispatcherTimer timer;
+
         public ReadAndTypeUserControl()
         {
             InitializeComponent();
@@ -68,7 +67,6 @@ namespace TypeRacers.View
                 SetValue(RATUCBackgroundColorProperty, value);
             }
         }
-
 
         public readonly static DependencyProperty RATUCTypingAlertProperty = DependencyProperty.Register("RATUCTypingAlert", typeof(string), typeof(ReadAndTypeUserControl));
 
@@ -189,12 +187,12 @@ namespace TypeRacers.View
 
             RATUCStartTime = 3;
 
-            if (RATUCStartingTime != null)
+            if (RATUCStartingTime != DateTime.MinValue)
             {
                 RATUCStartTime = (RATUCStartingTime - DateTime.UtcNow).Seconds;
             }
         }
-       
+
         private void Timer_Tick(object sender, EventArgs e)
         {
             if (RATUCStartingTime - DateTime.UtcNow < TimeSpan.Zero)
@@ -231,7 +229,7 @@ namespace TypeRacers.View
 
             timer.Start();
         }
-        
+
         private void GameTimer_Tick(object sender, EventArgs e)
         {
             RATUCStartReportingProgress = true;
@@ -262,7 +260,7 @@ namespace TypeRacers.View
                 TriggerPropertyChanged(nameof(RATUCSecondsInGame));
             }
         }
-       
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void TriggerPropertyChanged(string propertyName)

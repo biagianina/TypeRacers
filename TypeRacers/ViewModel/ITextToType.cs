@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
-
-namespace TypeRacers.ViewModel
+﻿namespace TypeRacers.ViewModel
 {
-    interface ITextToType
+    internal interface ITextToType
     {
         string TextToType { get; }
-
     }
 }
