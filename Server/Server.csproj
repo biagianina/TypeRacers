@@ -71,6 +71,7 @@
     <Compile Include="InputCharacterValidation.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Playroom.cs" />
+    <Compile Include="Rooms.cs" />
     <Compile Include="ServerGeneratedText.cs" />
     <Compile Include="ServerSetup.cs" />
     <Compile Include="TypeRacersServer.cs" />

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.902
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29509.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeRacers", "TypeRacers\TypeRacers.csproj", "{B47C1AA8-BBD4-44DD-B548-1D335361938F}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -11,6 +11,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{0EA55968-C885-4C88-A344-379F7DDF0754}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{9D2829D4-21FF-4A8F-AA03-23CA97256EB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeRacers.Tests", "TypeRacers.Tests\TypeRacers.Tests.csproj", "{20A9E989-93DA-4877-BE1C-64AD9176C60A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +32,10 @@ Global
 		{9D2829D4-21FF-4A8F-AA03-23CA97256EB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D2829D4-21FF-4A8F-AA03-23CA97256EB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D2829D4-21FF-4A8F-AA03-23CA97256EB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20A9E989-93DA-4877-BE1C-64AD9176C60A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20A9E989-93DA-4877-BE1C-64AD9176C60A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20A9E989-93DA-4877-BE1C-64AD9176C60A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20A9E989-93DA-4877-BE1C-64AD9176C60A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

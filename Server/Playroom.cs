@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TypeRacers.Server;
 
 namespace Server
 {
-    internal class Playroom
+    public class Playroom
     {
-        public bool GameHasStarted { get; set; }
-        public int PlayroomSize { get; set; }
-        public int PlayroomNumber { get; set; }
+        public static string CompetitionText => ServerGeneratedText.GetText();
+        public bool GameHasStarted => GameStartingTime != DateTime.MinValue;
         public List<Player> Players { get; set; }
         public Dictionary<string, Tuple<bool, int>> Rank { get; set; }
         public DateTime GameStartingTime { get; set; }
@@ -16,37 +16,30 @@ namespace Server
         public DateTime TimeToWaitForOpponents { get; set; }
         private int Place { get; set; } = 1;
 
-        private DateTime currentTime;
-
         public Playroom()
         {
             Players = new List<Player>();
             Rank = new Dictionary<string, Tuple<bool, int>>();
-            currentTime = DateTime.UtcNow;
-            TimeToWaitForOpponents = currentTime.AddSeconds(15);
+            TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(15);
         }
 
         public DateTime TrySetGameStartingTime()
         {
-            if (PlayroomSize == 3 || TimeToWaitForOpponents - DateTime.UtcNow.AddSeconds(2) <= TimeSpan.Zero && PlayroomSize == 2)
+            if (Players.Count == 3 || TimeToWaitForOpponents - DateTime.UtcNow.AddSeconds(2) <= TimeSpan.Zero && Players.Count == 2)
             {
-                currentTime = DateTime.UtcNow;
-                currentTime = currentTime.AddSeconds(10);
-                GameStartingTime = currentTime;
-                GameEndingTime = currentTime.AddSeconds(90);
-                Console.WriteLine(GameEndingTime);
-                Console.WriteLine(GameStartingTime);
-                GameHasStarted = true;
+                GameStartingTime = DateTime.UtcNow.AddSeconds(10);
+                GameEndingTime = GameStartingTime.AddSeconds(90);
             }
 
-            if ((PlayroomSize == 1) && TimeToWaitForOpponents - DateTime.UtcNow.AddSeconds(2) <= TimeSpan.Zero)
+            if ((Players.Count == 1) && TimeToWaitForOpponents - DateTime.UtcNow.AddSeconds(2) <= TimeSpan.Zero)
             {
                 ResetPlayroom();
             }
+
             return GameStartingTime;
         }
 
-        public bool ExistsInPlayroom(string playerName)
+        public bool IsInPlayroom(string playerName)
         {
             return Players.Any(x => x.Name.Equals(playerName));
         }
@@ -58,25 +51,24 @@ namespace Server
 
         public void RemovePlayer(string playerName)
         {
-            if (ExistsInPlayroom(playerName))
+            if (IsInPlayroom(playerName))
             {
                 Players.Remove(Players.FirstOrDefault(x => x.Name.Equals(playerName)));
-                PlayroomSize--;
                 Rank.Remove(playerName);
-                Console.WriteLine("Player removed, current size: " + PlayroomSize);
             }
 
-            if (PlayroomSize == 0)
+            if (Players.Count == 0)
             {
                 ResetPlayroom();
             }
         }
 
-        public bool AddPlayersToRoom(Player currentPlayer)
+        public bool Join(Player currentPlayer)
         {
-            if (ExistsInPlayroom(currentPlayer.Name))
+            if (IsInPlayroom(currentPlayer.Name))
             {
                 GetPlayer(currentPlayer.Name).UpdateInfo(currentPlayer.WPMProgress, currentPlayer.CompletedTextPercentage, currentPlayer.PlayroomNumber);
+               
                 if (!Rank[currentPlayer.Name].Item1 && currentPlayer.CompletedTextPercentage.Equals("100"))
                 {
                     Rank[currentPlayer.Name] = new Tuple<bool, int>(true, Place);
@@ -88,20 +80,20 @@ namespace Server
             Console.WriteLine("adding: " + currentPlayer.Name);
 
             Players.Add(currentPlayer);
+
             if (!Rank.ContainsKey(currentPlayer.Name))
             {
                 Rank.Add(currentPlayer.Name, new Tuple<bool, int>(false, 0));
             }
 
-            PlayroomSize++;
-
+            currentPlayer.Playroom = this;
+           
             return true;
         }
 
         private void ResetPlayroom()
         {
-            currentTime = DateTime.UtcNow;
-            TimeToWaitForOpponents = currentTime.AddSeconds(20);
+            TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(20);
         }
     }
 }

@@ -1,6 +1,9 @@
-﻿namespace Server
+﻿using System;
+using System.Collections.Generic;
+
+namespace Server
 {
-    internal class Player
+    public class Player
     {
         public Player(string name)
         {
@@ -11,6 +14,7 @@
         public int PlayroomNumber { get; set; }
         public int WPMProgress { get; set; }
         public int CompletedTextPercentage { get; set; }
+        public Playroom Playroom { get; set; }
 
         public void UpdateInfo(int wpmProgress, int completedText, int roomNumber)
         {
@@ -18,5 +22,20 @@
             CompletedTextPercentage = completedText;
             PlayroomNumber = roomNumber;
         }
+
+        //internal void Read()
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //internal void SetGameInfo()
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //internal void UpdateOpponents()
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

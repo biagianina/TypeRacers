@@ -10,25 +10,22 @@ namespace TypeRacers.Server
 {
     internal class ServerSetup
     {
-        private static string CompetitionText { get; set; } = ServerGeneratedText.GetText();
-        private bool newClient;
+        private static string CompetitionText => ServerGeneratedText.GetText();
+
         private TcpListener server;
         private NetworkStream networkStream;
         private string currentClient;
-        private List<Playroom> playrooms;
-        private Playroom currentPlayroom;
-        private int playroomCount = 0;
-        private int currentPlayerPlayroomNumber;
+        private Rooms playrooms;
         private DateTime currentPlayroomStartingTime;
-        private readonly int maxPlayroomSize = 3;
         private TcpClient client;
         private Player currentPlayer;
+        private bool newClient;
 
         public void Setup()
         {
             server = new TcpListener(IPAddress.IPv6Any, 80);
             server.Server.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
-            playrooms = new List<Playroom>();
+            playrooms = new Rooms();
 
             try
             {
@@ -43,6 +40,7 @@ namespace TypeRacers.Server
             CommunicationSetup();//separated the communication from server starter
         }
 
+        //to implement thread with start func players.Allocate method
         private void CommunicationSetup()
         {
             while (true)
@@ -71,6 +69,7 @@ namespace TypeRacers.Server
             }
         }
 
+        //to be moved to Player (happens each communication)
         private void CheckClientReceievedData(string dataReceived)
         {
             if (CheckIfGameIsRestarted(dataReceived) || CheckIfClientLeftGame(dataReceived))
@@ -93,34 +92,32 @@ namespace TypeRacers.Server
             }
 
             currentPlayer = new Player(currentClient);
+            newClient = true;
             currentPlayer.UpdateInfo(Convert.ToInt32(progressInfoAndPlayerRoomInfo[0]), Convert.ToInt32(progressInfoAndPlayerRoomInfo[1]), Convert.ToInt32(progressInfoAndPlayerRoomInfo[2]));
 
-            currentPlayerPlayroomNumber = currentPlayer.PlayroomNumber;
-
             CheckIfClientLeftGame(currentClient);
-
-            CheckCurrentPlayroom(currentClient, currentPlayerPlayroomNumber);
         }
 
+        //to be moved to player
         private bool CheckIfClientLeftGame(string currentClient)
         {
             if (currentClient.Contains("_removed"))
             {
                 string toRemove = currentClient.Substring(0, currentClient.IndexOf('_'));
-                currentPlayroom.RemovePlayer(toRemove);
+                currentPlayer.Playroom.RemovePlayer(toRemove);
                 return true;
             }
 
             return false;
         }
 
+        //to be moved to player
         private bool CheckIfGameIsRestarted(string dataReceived)
         {
             if (dataReceived.Contains("_restart"))
             {
                 Console.WriteLine("restart");
-                Console.WriteLine("sent new time: " + currentPlayroom.TimeToWaitForOpponents);
-                byte[] broadcastBytes = Encoding.ASCII.GetBytes(currentPlayroom.TimeToWaitForOpponents + "#");
+                byte[] broadcastBytes = Encoding.ASCII.GetBytes(currentPlayer.Playroom.TimeToWaitForOpponents + "#");
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
                 networkStream.Close();
                 client.Close();
@@ -130,57 +127,13 @@ namespace TypeRacers.Server
             return false;
         }
 
-        private void CheckCurrentPlayroom(string currrentClient, int roomNumber)
-        {
-            if (!CheckIfClientLeftGame(currrentClient))
-            {
-                if (!playrooms.Any())
-                {
-                    playrooms.Add(new Playroom());
-                    currentPlayroom = playrooms.Last();
-                }
 
-                if (roomNumber == -1)
-                {
-                    if (playrooms.Last().GameHasStarted || playrooms.Last().PlayroomSize == maxPlayroomSize)
-                    {
-                        currentPlayroom = CreateNewPlayroom();
-                    }
-                    else
-                    {
-                        currentPlayroom = playrooms.Last();
-                    }
-                }
-                else
-                {
-                    currentPlayroom = playrooms[roomNumber];
-
-                    if (currentPlayroom.PlayroomSize == maxPlayroomSize && !currentPlayroom.ExistsInPlayroom(currentClient))
-                    {
-                        if (playrooms.Last().PlayroomSize == maxPlayroomSize)
-                        {
-                            currentPlayroom = CreateNewPlayroom();
-                        }
-                        else
-                        {
-                            currentPlayroom = playrooms.Last();
-                        }
-                    }
-                }
-
-                newClient = currentPlayroom.AddPlayersToRoom(currentPlayer);
-
-                CheckNewClient(currentPlayroom.PlayroomNumber);
-            }
-        }
-
+        //to be moved to player (as first connection -> see playroom method)
         private void CheckNewClient(int roomNumber)
         {
-            Console.WriteLine("playroom size: " + currentPlayroom.PlayroomSize);
-
-            if (newClient)
+            if (newClient) //player.FirstConnection() method
             {
-                byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + roomNumber + "%" + currentPlayroom.TimeToWaitForOpponents.ToString() + "*" + currentPlayroom.GameStartingTime + "+" + currentPlayroom.GameEndingTime + "#"); //generates random text from text document
+                byte[] broadcastBytes = Encoding.ASCII.GetBytes(CompetitionText + "$" + roomNumber + "%" + currentPlayer.Playroom.TimeToWaitForOpponents.ToString() + "*" + currentPlayer.Playroom.GameStartingTime + "+" + currentPlayer.Playroom.GameEndingTime + "#"); //generates random text from text document
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
 
                 networkStream.Close();
@@ -188,20 +141,21 @@ namespace TypeRacers.Server
             }
             else
             {
-                SendOpponents();
+                SendOpponents();//player.UpdateOpponents() method
             }
         }
 
+        //to be moved to player
         private void SendOpponents()
         {
-            if (currentPlayroom.GameStartingTime == DateTime.MinValue)
+            if (currentPlayer.Playroom.GameStartingTime == DateTime.MinValue)
             {
-                currentPlayroomStartingTime = currentPlayroom.TrySetGameStartingTime();
+                currentPlayroomStartingTime = currentPlayer.Playroom.TrySetGameStartingTime();
             }
 
             string opponents = string.Empty;
             string rank = "!";
-            opponents += playrooms[currentPlayerPlayroomNumber].Players.Aggregate(string.Empty, (localOpp, p) =>
+            opponents += currentPlayer.Playroom.Players.Aggregate(string.Empty, (localOpp, p) =>
             {
                 if (!p.Name.Equals(currentClient))
                 {
@@ -211,32 +165,15 @@ namespace TypeRacers.Server
                 return localOpp;
             });
 
-            rank += playrooms[currentPlayerPlayroomNumber].Rank.Aggregate(string.Empty, (localRank, r) => localRank += r.Key + ":" + r.Value.Item1 + "&" + r.Value.Item2 + ";");
+            rank += currentPlayer.Playroom.Rank.Aggregate(string.Empty, (localRank, r) => localRank += r.Key + ":" + r.Value.Item1 + "&" + r.Value.Item2 + ";");
 
-            opponents += "*" + currentPlayroomStartingTime.ToString() + "+" + currentPlayroom.GameEndingTime.ToString() + "%" + rank + "%";
+            opponents += "*" + currentPlayroomStartingTime.ToString() + "+" + currentPlayer.Playroom.GameEndingTime.ToString() + "%" + rank + "%";
 
             byte[] broadcastBytes = Encoding.ASCII.GetBytes(opponents + "#");
             networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
 
             networkStream.Close();
             client.Close();
-        }
-
-        private Playroom CreateNewPlayroom()
-        {
-            GetNewCompetitionText();
-            playroomCount++;
-            var newPlayroom = new Playroom
-            {
-                PlayroomNumber = playroomCount
-            };
-            playrooms.Add(newPlayroom);
-            return playrooms.Last();
-        }
-
-        private void GetNewCompetitionText()
-        {
-            CompetitionText = ServerGeneratedText.GetText();
         }
     }
 }
