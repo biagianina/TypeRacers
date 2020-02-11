@@ -31,7 +31,7 @@ namespace Server
 
         public void AllocatePlayroom(Player player)
         {
-            //player.Read();
+            player.Read();
             if (LastAvailablePlayroom.GameHasStarted || LastAvailablePlayroom.Players.Count == maxPlayroomSize)
             {
                 LastAvailablePlayroom = CreateNewPlayroom();
@@ -44,20 +44,20 @@ namespace Server
             
             player.Playroom = LastAvailablePlayroom;
 
-            //CheckIfIsFirstconnection(firstConnection, player);
+            CheckIfIsFirstconnection(firstConnection, player);
         }
 
-        //private void CheckIfIsFirstconnection(bool newPlayer, Player player)
-        //{
-        //    if (newPlayer)
-        //    {
-        //        player.SetGameInfo(); //first connection
-        //    }
-        //    else
-        //    {
-        //        player.UpdateOpponents();
-        //    }
-        //}
+        private void CheckIfIsFirstconnection(bool newPlayer, Player player)
+        {
+            if (newPlayer)
+            {
+                player.SetGameInfo(); //first connection
+            }
+            else
+            {
+                player.UpdateOpponents();
+            }
+        }
 
         private Playroom CreateNewPlayroom()
         {
