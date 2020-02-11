@@ -29,11 +29,11 @@
             Stroke="#f0efd5"
             StrokeDashArray="2 2"
             StrokeThickness="3"
-            X2="{Binding ActualWidth, Mode=OneWay, 
-               RelativeSource={RelativeSource FindAncestor, 
+            X2="{Binding ActualWidth, Mode=OneWay,
+               RelativeSource={RelativeSource FindAncestor,
                AncestorType={x:Type local:CarAndProgressUserControl}}}" />
         <StackPanel>
-           
+
             <TextBlock
                 Grid.Row="1"
                 Width="auto"
@@ -85,8 +85,8 @@
             Stroke="#f0efd5"
             StrokeDashArray="2 2"
             StrokeThickness="3"
-            X2="{Binding ActualWidth, Mode=OneWay, 
-               RelativeSource={RelativeSource FindAncestor, 
+            X2="{Binding ActualWidth, Mode=OneWay,
+               RelativeSource={RelativeSource FindAncestor,
                AncestorType={x:Type local:CarAndProgressUserControl}}}" />
         <Popup
             x:Name="PopupInfo"
@@ -143,9 +143,7 @@
                         </MultiBinding>
                     </TextBlock.Text>
                 </TextBlock>
-
             </Canvas>
         </Popup>
     </Grid>
-
 </UserControl>

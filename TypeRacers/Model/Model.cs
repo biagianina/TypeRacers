@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using TypeRacers.Client;
 using TypeRacers.ViewModel;
 
 namespace TypeRacers.Model
 {
     public class Model
     {
-        readonly NetworkHandler networkHandler;
+        private readonly NetworkHandler networkHandler;
 
         public Model()
         {
             networkHandler = new NetworkHandler();
             networkHandler.NameClient(MainViewModel.Name);
         }
+
         public List<Tuple<string, Tuple<string, string, int>>> GetOpponents()
         {
             return networkHandler.GetOpponents();
         }
+
         public void StartSearchingOpponents()
         {
             networkHandler.StartSearchingOpponents();
@@ -28,15 +28,17 @@ namespace TypeRacers.Model
         {
             networkHandler.RestartSearch();
         }
-        public string GetStartingTime()
+
+        public DateTime GetStartingTime()
         {
             return networkHandler.GetStartingTime();
         }
 
-        public string GetEndingTime()
+        public DateTime GetEndingTime()
         {
             return networkHandler.GetEndingTime();
         }
+
         public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>>> updateOpponents)
         {
             networkHandler.SubscribeToSearchingOpponents(updateOpponents);
@@ -47,15 +49,17 @@ namespace TypeRacers.Model
             return networkHandler.GetRanking();
         }
 
-        public string GetWaitingTime()
+        public DateTime GetWaitingTime()
         {
             return networkHandler.GetWaitingTime();
         }
+
         public void ReportProgress(int progress, int sliderProgress)
         {
             string message = progress + "&" + sliderProgress;
             networkHandler.SendProgressToServer(message);
         }
+
         public string GetGeneratedTextToTypeLocally()
         {
             return LocalGeneratedText.GetText();
@@ -65,6 +69,7 @@ namespace TypeRacers.Model
         {
             return networkHandler.GetTextFromServer();
         }
+
         public void RemovePlayer()
         {
             networkHandler.RemovePlayer();

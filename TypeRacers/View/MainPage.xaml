@@ -24,7 +24,7 @@
         <StackPanel MinWidth="360"
                     Background="#FF7726B0"
                     Grid.Column="1"
-                    Grid.Row="1"                   >
+                    Grid.Row="1">
             <TextBlock Name="txt_welcomingmessage"
                        Text="Welcome to Type Racers!"
                        Foreground="Black"
@@ -47,7 +47,7 @@
                            HorizontalContentAlignment="Center"
                            FontFamily="Pristina"
                            FontWeight="Bold"></Label>
-                    <TextBox x:Name="username" 
+                    <TextBox x:Name="username"
                              Text="{Binding Username, Mode=OneWayToSource}"
                              Foreground="Black"
                              FontSize="20"
@@ -55,7 +55,7 @@
                              Margin="20"
                              Focusable="True"
                              FontFamily="Sylfaen"
-                             BorderThickness="2"/>
+                             BorderThickness="2" />
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center">
                         <Button x:Name="btnRace"

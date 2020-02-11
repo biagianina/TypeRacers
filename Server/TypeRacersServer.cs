@@ -2,7 +2,7 @@
 {
     public class TypeRacersServer
     {
-        static void Main()
+        private static void Main()
         {
             var server = new ServerSetup();
             server.Setup();

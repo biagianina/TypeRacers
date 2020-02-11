@@ -13,9 +13,8 @@ namespace TypeRacers.View
             InitializeComponent();
         }
 
-
         public static DependencyProperty CAPUCProgressProperty = DependencyProperty.Register("CAPUCProgress", typeof(int), typeof(CarAndProgressUserControl));
-        
+
         public int CAPUCProgress
         {
             get { return (int)GetValue(CAPUCProgressProperty); }
@@ -46,6 +45,7 @@ namespace TypeRacers.View
                 SetValue(CAPUCProgressProperty, value);
             }
         }
+
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
@@ -89,7 +89,7 @@ namespace TypeRacers.View
 
         public static readonly DependencyProperty CAPUCRankingProperty = DependencyProperty.Register("CAPUCRanking", typeof(string), typeof(CarAndProgressUserControl));
 
-        public bool  CAPUCShowFinishResults
+        public bool CAPUCShowFinishResults
         {
             get { return (bool)GetValue(CAPUCShowFinishResultsProperty); }
             set { SetValue(CAPUCShowFinishResultsProperty, value); }
@@ -106,6 +106,5 @@ namespace TypeRacers.View
 
         public static readonly DependencyProperty CAPUCAccuracyProperty =
             DependencyProperty.Register("CAPUCAccuracy", typeof(string), typeof(CarAndProgressUserControl));
-
     }
 }

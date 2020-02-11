@@ -7,24 +7,25 @@ namespace TypeRacers
     //a class that handles the messages to and from the network
     public class NetworkHandler : INetworkHandler
     {
-        readonly TypeRacersClient client;
-        TypeRacersClient.TimerTickHandler timerTickHandler;
+        private readonly TypeRacersClient client;
+        private TypeRacersClient.TimerTickHandler timerTickHandler;
+
         public NetworkHandler()
         {
             client = new TypeRacersClient();
         }
 
-        public string GetStartingTime()
+        public DateTime GetStartingTime()
         {
             return client.PlayersStartingTime;
         }
 
-        public string GetEndingTime()
+        public DateTime GetEndingTime()
         {
             return client.PlayersEndingTime;
         }
 
-        public string GetWaitingTime()
+        public DateTime GetWaitingTime()
         {
             return client.WaitingTime;
         }
@@ -33,15 +34,18 @@ namespace TypeRacers
         {
             client.RestartSearch();
         }
+
         public void StartSearchingOpponents()
         {
             client.StartTimerForSearchingOpponents();
         }
+
         public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>>> updateOpponentsList)
         {
             timerTickHandler = new TypeRacersClient.TimerTickHandler(updateOpponentsList);
             client.OpponentsChanged += new TypeRacersClient.TimerTickHandler(timerTickHandler);
         }
+
         public List<Tuple<string, Tuple<string, string, int>>> GetOpponents()
 
         {
@@ -52,11 +56,12 @@ namespace TypeRacers
         {
             return client.Rank;
         }
+
         public string GetTextFromServer()
         {
             return client.FirstTimeConnectingToServer();
         }
-      
+
         public void SendProgressToServer(string progress)
         {
             client.LocalPlayerProgress = progress;
@@ -69,7 +74,7 @@ namespace TypeRacers
 
         public void RemovePlayer()
         {
-           client.RemovePlayerFromRoom();
+            client.RemovePlayerFromRoom();
         }
 
         public void StartReportingGameProgress()

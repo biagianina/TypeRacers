@@ -5,22 +5,21 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using TypeRacers.Model;
 
 namespace TypeRacers.ViewModel
 {
     public class PracticeViewModel : ITextToType, INotifyPropertyChanged
     {
-        string textToType;
-        InputCharacterValidation userInputValidator;
-        bool isValid;
-        int spaceIndex;
-        int correctChars;
-        int incorrectChars;
-        int currentWordIndex;
+        private string textToType;
+        private InputCharacterValidation userInputValidator;
+        private bool isValid;
+        private int spaceIndex;
+        private int correctChars;
+        private int incorrectChars;
+        private int currentWordIndex;
         private bool alert;
-        readonly Model.Model model;
-        int numberOfCharactersTyped;
+        private readonly Model.Model model;
+        private int numberOfCharactersTyped;
         private int correctTyping;
         private int incorrectTyping;
 
@@ -33,7 +32,7 @@ namespace TypeRacers.ViewModel
             TriggerPropertyChanged(nameof(GetReadyAlert));
             StartTime = DateTime.UtcNow.AddSeconds(5);
             EndTime = StartTime.AddSeconds(90);
-            SecondsToGetReady = (StartTime -DateTime.UtcNow).Seconds.ToString();
+            SecondsToGetReady = (StartTime - DateTime.UtcNow).Seconds.ToString();
         }
 
         public IEnumerable<Inline> TextToTypeStyles
@@ -83,14 +82,17 @@ namespace TypeRacers.ViewModel
                     return 0;
                 }
 
-                return (numberOfCharactersTyped / 5) * 60/ ((int)(DateTime.UtcNow - StartTime).TotalSeconds);
+                return (numberOfCharactersTyped / 5) * 60 / ((int)(DateTime.UtcNow - StartTime).TotalSeconds);
             }
         }
+
         public int CurrentWordLength
         {
             get => TextToType.Split()[currentWordIndex].Length;//length of current word
         }
+
         public bool AllTextTyped { get; set; }
+
         //determines if a popup alert should apear, bindedin open property of popup xaml
         public bool TypingAlert
         {
@@ -107,6 +109,7 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(TypingAlert));
             }
         }
+
         public string InputBackgroundColor
         {
             get
@@ -125,6 +128,7 @@ namespace TypeRacers.ViewModel
         }
 
         public string TextToType { get; }
+
         public string CurrentInputText
         {
             get => textToType;
@@ -161,7 +165,7 @@ namespace TypeRacers.ViewModel
 
         private void CheckUserInput(string value)
         {
-            //checks if current word is typed, clears textbox, reintializes remaining text to the validation, sends progress 
+            //checks if current word is typed, clears textbox, reintializes remaining text to the validation, sends progress
             if (isValid && value.EndsWith(" "))
             {
                 spaceIndex += textToType.Length;
@@ -175,7 +179,7 @@ namespace TypeRacers.ViewModel
                 numberOfCharactersTyped += CurrentInputText.Length;
                 textToType = string.Empty;
                 TriggerPropertyChanged(nameof(SliderProgress));
-                TriggerPropertyChanged(nameof(WPMProgress));//recalculates progress 
+                TriggerPropertyChanged(nameof(WPMProgress));//recalculates progress
             }
             //checks if current word is the last one
             if (ValidateInput && textToType.Length + spaceIndex == TextToType.Length)
@@ -196,6 +200,7 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(SliderProgress));
             }
         }
+
         private void HighlightText()
         {
             if (!Keyboard.IsKeyDown(Key.Back))
@@ -226,7 +231,6 @@ namespace TypeRacers.ViewModel
                 {
                     incorrectChars--;
                 }
-
                 else
                 {
                     TypingAlert = false;
@@ -238,7 +242,7 @@ namespace TypeRacers.ViewModel
             TriggerPropertyChanged(nameof(TextToTypeStyles)); //new Inlines formed at each char in input
         }
 
-        //INotifyPropertyChanged code - basic 
+        //INotifyPropertyChanged code - basic
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void TriggerPropertyChanged(string propertyName)
