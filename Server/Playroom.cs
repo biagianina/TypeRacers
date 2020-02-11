@@ -49,7 +49,7 @@ namespace Server
             return Players.FirstOrDefault(x => x.Name.Equals(name));
         }
 
-        public void RemovePlayer(string playerName)
+        public void Leave(string playerName)
         {
             if (IsInPlayroom(playerName))
             {
