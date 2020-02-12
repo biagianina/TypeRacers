@@ -11,7 +11,7 @@ namespace Server
         readonly List<Playroom> playrooms;
         private readonly int maxPlayroomSize = 3;
         private bool firstConnection;
-
+        private int playroomsCount = 0;
         public Playroom LastAvailablePlayroom { get; set; }
 
         public Rooms()
@@ -31,17 +31,13 @@ namespace Server
 
         public void AllocatePlayroom(Player player)
         {
-            player.Read();
             if (LastAvailablePlayroom.GameHasStarted || LastAvailablePlayroom.Players.Count == maxPlayroomSize)
             {
                 LastAvailablePlayroom = CreateNewPlayroom();
-                firstConnection = LastAvailablePlayroom.Join(player);
             }
-            else
-            {
-                firstConnection = LastAvailablePlayroom.Join(player);
-            }
-            
+
+            firstConnection = LastAvailablePlayroom.Join(player);
+
             player.Playroom = LastAvailablePlayroom;
 
             CheckIfIsFirstconnection(firstConnection, player);
@@ -62,6 +58,7 @@ namespace Server
         private Playroom CreateNewPlayroom()
         {
             var newPlayroom = new Playroom();
+            newPlayroom.PlayroomNumber = playroomsCount++;
             playrooms.Add(newPlayroom);
             return playrooms.Last();
         }

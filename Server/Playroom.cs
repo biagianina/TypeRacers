@@ -10,6 +10,8 @@ namespace Server
         public static string CompetitionText => ServerGeneratedText.GetText();
         public bool GameHasStarted => GameStartingTime != DateTime.MinValue;
         public List<Player> Players { get; set; }
+        public int PlayroomNumber { get; set; }
+
         public Dictionary<string, Tuple<bool, int>> Rank { get; set; }
         public DateTime GameStartingTime { get; set; }
         public DateTime GameEndingTime { get; set; }
@@ -67,17 +69,17 @@ namespace Server
         {
             if (IsInPlayroom(currentPlayer.Name))
             {
-                GetPlayer(currentPlayer.Name).UpdateInfo(currentPlayer.WPMProgress, currentPlayer.CompletedTextPercentage, currentPlayer.PlayroomNumber);
-               
+                GetPlayer(currentPlayer.Name).UpdateInfo(currentPlayer.WPMProgress, currentPlayer.CompletedTextPercentage);
+
                 if (!Rank[currentPlayer.Name].Item1 && currentPlayer.CompletedTextPercentage.Equals("100"))
                 {
                     Rank[currentPlayer.Name] = new Tuple<bool, int>(true, Place);
-                    Place += 1;
+                    Place++;
                 }
                 return false;
             }
 
-            Console.WriteLine("adding: " + currentPlayer.Name);
+            Console.WriteLine("adding: " + currentPlayer.Name + " room number: " + PlayroomNumber);
 
             Players.Add(currentPlayer);
 
@@ -87,7 +89,7 @@ namespace Server
             }
 
             currentPlayer.Playroom = this;
-           
+
             return true;
         }
 

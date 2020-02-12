@@ -12,32 +12,32 @@ namespace Server
         NetworkStream networkStream;
         private bool newClient;
         DateTime currentPlayroomStartingTime;
+
         public Player(TcpClient tcpClient)
         {
             Playroom = new Playroom();
             this.tcpClient = tcpClient;
             networkStream = tcpClient.GetStream();
+            Read();
         }
 
         public string Name { get; set; }
-        public int PlayroomNumber { get; set; }
         public int WPMProgress { get; set; }
         public int CompletedTextPercentage { get; set; }
         public Playroom Playroom { get; set; }
 
-        public void UpdateInfo(int wpmProgress, int completedText, int roomNumber)
+        public void UpdateInfo(int wpmProgress, int completedText)
         {
             WPMProgress = wpmProgress;
             CompletedTextPercentage = completedText;
-            PlayroomNumber = roomNumber;
         }
 
         private void CheckReceivedData(string dataReceived)
         {
-            if (CheckIfGameIsRestarted(dataReceived) || CheckIfClientLeftGame(dataReceived))
-            {
-                return;
-            }
+            //if (CheckIfGameIsRestarted(dataReceived) || CheckIfClientLeftGame(dataReceived))
+            //{
+            //    return;
+            //}
 
             //progress and slider progress
             string progress = dataReceived.Substring(0, dataReceived.IndexOf('$'));
@@ -48,57 +48,51 @@ namespace Server
 
             Name = username.Substring(0, username.Length - 1);
 
-            if (Playroom != null)
-            {
-                newClient = Playroom.Join(this);
-            }
+            //if (Playroom != null)
+            //{
+            //    newClient = Playroom.Join(this);
+            //}
 
-            UpdateInfo(Convert.ToInt32(progressInfoAndPlayerRoomInfo[0]), Convert.ToInt32(progressInfoAndPlayerRoomInfo[1]), Convert.ToInt32(progressInfoAndPlayerRoomInfo[2]));
+            UpdateInfo(Convert.ToInt32(progressInfoAndPlayerRoomInfo[0]), Convert.ToInt32(progressInfoAndPlayerRoomInfo[1]));
 
-            if (Playroom != null)
-            {
-                CheckIfClientLeftGame(Name);
+            //if (Playroom != null)
+            //{
+            //    CheckIfClientLeftGame(Name);
 
-                SetGameInfo();
-            }
+            //    SetGameInfo();
+            //}
 
         }
 
-        private bool CheckIfClientLeftGame(string currentClient)
-        {
-            if (currentClient.Contains("_removed"))
-            {
-                string toRemove = currentClient.Substring(0, currentClient.IndexOf('_'));
-                Playroom.Leave(toRemove);
-                return true;
-            }
+        //private bool CheckIfClientLeftGame(string currentClient)
+        //{
+        //    if (currentClient.Contains("_removed"))
+        //    {
+        //        string toRemove = currentClient.Substring(0, currentClient.IndexOf('_'));
+        //        Playroom.Leave(toRemove);
+        //        return true;
+        //    }
 
-            return false;
-        }
-        private bool CheckIfGameIsRestarted(string dataReceived)
-        {
-            if (dataReceived.Contains("_restart"))
-            {
-                Console.WriteLine("restart");
-                byte[] broadcastBytes = Encoding.ASCII.GetBytes(Playroom.TimeToWaitForOpponents + "#");
-                networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
-                return true;
-            }
+        //    return false;
+        //}
+        //private bool CheckIfGameIsRestarted(string dataReceived)
+        //{
+        //    if (dataReceived.Contains("_restart"))
+        //    {
+        //        Console.WriteLine("restart");
+        //        byte[] broadcastBytes = Encoding.ASCII.GetBytes(Playroom.TimeToWaitForOpponents + "#");
+        //        networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
+        //        return true;
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
         //to be moved to player (as first connection -> see playroom method)
         internal void SetGameInfo()
         {
-            if (newClient) //player.FirstConnection() method
-            {
-                byte[] broadcastBytes = Encoding.ASCII.GetBytes(Playroom.CompetitionText + "$" + "%" + Playroom.TimeToWaitForOpponents.ToString() + "*" + Playroom.GameStartingTime + "+" + Playroom.GameEndingTime + "#"); //generates random text from text document
-                networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
-            }
-            else
-            {
-                UpdateOpponents();//player.UpdateOpponents() method
-            }
+            byte[] broadcastBytes = Encoding.ASCII.GetBytes(Playroom.CompetitionText + "$" + "%" + Playroom.TimeToWaitForOpponents.ToString() + "*" + Playroom.GameStartingTime + "+" + Playroom.GameEndingTime + "#"); //generates random text from text document
+            networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
+
         }
         internal void Read()
         {
@@ -132,7 +126,7 @@ namespace Server
             {
                 if (!p.Name.Equals(this.Name))
                 {
-                    localOpp += (p.Name + ":" + p.WPMProgress + "&" + p.CompletedTextPercentage + "&" + p.PlayroomNumber + "%");
+                    localOpp += (p.Name + ":" + p.WPMProgress + "&" + p.CompletedTextPercentage + "&" + "0" + "%");
                 }
 
                 return localOpp;
@@ -147,8 +141,6 @@ namespace Server
 
             networkStream.Close();
             tcpClient.Close();
-
-
         }
     }
 }
