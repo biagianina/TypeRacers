@@ -63,7 +63,6 @@ namespace TypeRacers.Client
             var startAndEndTimes = gameTimers.LastOrDefault().Split('+');
             PlayersStartingTime = DateTime.Parse(startAndEndTimes.FirstOrDefault());
             PlayersEndingTime = DateTime.Parse(startAndEndTimes.LastOrDefault());
-            PlayroomNumber = Convert.ToInt32(dataWithoutHashtag.Substring(dataWithoutHashtag.IndexOf('$') + 1, (dataWithoutHashtag.Length - textToType.Length - times.Length - 2)));
 
             return textToType;
 

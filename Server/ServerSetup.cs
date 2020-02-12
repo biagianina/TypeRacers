@@ -11,11 +11,7 @@ namespace TypeRacers.Server
 {
     internal class ServerSetup
     {
-        private static string CompetitionText => ServerGeneratedText.GetText();
-
         private TcpListener server;
-        private NetworkStream networkStream;
-
         private Rooms playrooms;
         private TcpClient client;
 
@@ -43,12 +39,10 @@ namespace TypeRacers.Server
         {
             while (true)
             {
-
                 client = server.AcceptTcpClient();
-                networkStream = client.GetStream();
                 Thread thread = new Thread(() =>
                 {
-                    Player newPlayer = new Player(client, networkStream);
+                    Player newPlayer = new Player(client);
                     playrooms.AllocatePlayroom(newPlayer);
                 });
                 thread.Start();

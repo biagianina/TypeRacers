@@ -12,10 +12,11 @@ namespace Server
         NetworkStream networkStream;
         private bool newClient;
         DateTime currentPlayroomStartingTime;
-        public Player(TcpClient tcpClient, NetworkStream networkStream)
+        public Player(TcpClient tcpClient)
         {
+            Playroom = new Playroom();
             this.tcpClient = tcpClient;
-            this.networkStream = networkStream;
+            networkStream = tcpClient.GetStream();
         }
 
         public string Name { get; set; }
@@ -47,12 +48,20 @@ namespace Server
 
             Name = username.Substring(0, username.Length - 1);
 
-            newClient = Playroom.Join(this);
+            if (Playroom != null)
+            {
+                newClient = Playroom.Join(this);
+            }
+
             UpdateInfo(Convert.ToInt32(progressInfoAndPlayerRoomInfo[0]), Convert.ToInt32(progressInfoAndPlayerRoomInfo[1]), Convert.ToInt32(progressInfoAndPlayerRoomInfo[2]));
 
-            CheckIfClientLeftGame(Name);
+            if (Playroom != null)
+            {
+                CheckIfClientLeftGame(Name);
 
-            SetGameInfo();
+                SetGameInfo();
+            }
+
         }
 
         private bool CheckIfClientLeftGame(string currentClient)
@@ -73,8 +82,6 @@ namespace Server
                 Console.WriteLine("restart");
                 byte[] broadcastBytes = Encoding.ASCII.GetBytes(Playroom.TimeToWaitForOpponents + "#");
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
-                networkStream.Close();
-                tcpClient.Close();
                 return true;
             }
 
@@ -85,11 +92,8 @@ namespace Server
         {
             if (newClient) //player.FirstConnection() method
             {
-                byte[] broadcastBytes = Encoding.ASCII.GetBytes(Playroom.CompetitionText + "$" + "" + "%" + Playroom.TimeToWaitForOpponents.ToString() + "*" + Playroom.GameStartingTime + "+" + Playroom.GameEndingTime + "#"); //generates random text from text document
+                byte[] broadcastBytes = Encoding.ASCII.GetBytes(Playroom.CompetitionText + "$" + "%" + Playroom.TimeToWaitForOpponents.ToString() + "*" + Playroom.GameStartingTime + "+" + Playroom.GameEndingTime + "#"); //generates random text from text document
                 networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
-
-                networkStream.Close();
-                tcpClient.Close();
             }
             else
             {
@@ -113,8 +117,10 @@ namespace Server
             CheckReceivedData(dataReceived);
         }
 
+
         internal void UpdateOpponents()
         {
+
             if (Playroom.GameStartingTime == DateTime.MinValue)
             {
                 currentPlayroomStartingTime = Playroom.TrySetGameStartingTime();
@@ -141,6 +147,8 @@ namespace Server
 
             networkStream.Close();
             tcpClient.Close();
+
+
         }
     }
 }
