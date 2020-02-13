@@ -21,14 +21,24 @@ namespace Server
         }
 
         public string Name { get; set; }
+
+        public int Place { get; set; }
+
+        public bool Finnished { get; set; }
         public int WPMProgress { get; set; }
         public int CompletedTextPercentage { get; set; }
         public Playroom Playroom { get; set; }
+        public Dictionary<string, Tuple<bool, int>> Rank { get; private set; }
 
         public void UpdateInfo(int wpmProgress, int completedText)
         {
             WPMProgress = wpmProgress;
             CompletedTextPercentage = completedText;
+            if (wpmProgress == 100)
+            {
+                Finnished = true;
+                Place = Playroom.Place++;
+            }
         }
 
         private void CheckReceivedData(string dataReceived)
@@ -132,7 +142,8 @@ namespace Server
                     return localOpp;
                 });
 
-                rank += Playroom.Rank.Aggregate(string.Empty, (localRank, r) => localRank += r.Key + ":" + r.Value.Item1 + "&" + r.Value.Item2 + ";");
+
+                rank += Playroom.Players.Aggregate(string.Empty, (localRank, r) => localRank += r.Name + ":" + r.Finnished + "&" + r.Place + ";");
 
                 opponents += "*" + currentPlayroomStartingTime.ToString() + "+" + Playroom.GameEndingTime.ToString() + "%" + rank + "%";
 

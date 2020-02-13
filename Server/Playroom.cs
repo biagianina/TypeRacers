@@ -7,21 +7,19 @@ namespace Server
 {
     public class Playroom
     {
-        public static string CompetitionText => ServerGeneratedText.GetText();
+        public string CompetitionText { get; } = ServerGeneratedText.GetText();
         public bool GameHasStarted => GameStartingTime != DateTime.MinValue;
         public List<Player> Players { get; set; }
         public int PlayroomNumber { get; set; }
 
-        public Dictionary<string, Tuple<bool, int>> Rank { get; set; }
         public DateTime GameStartingTime { get; set; }
         public DateTime GameEndingTime { get; set; }
         public DateTime TimeToWaitForOpponents { get; set; }
-        private int Place { get; set; } = 1;
+        public int Place { get; set; } = 1;
 
         public Playroom()
         {
             Players = new List<Player>();
-            Rank = new Dictionary<string, Tuple<bool, int>>();
             TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(15);
         }
 
@@ -56,7 +54,6 @@ namespace Server
             if (IsInPlayroom(playerName))
             {
                 Players.Remove(Players.FirstOrDefault(x => x.Name.Equals(playerName)));
-                Rank.Remove(playerName);
             }
 
             if (Players.Count == 0)
@@ -67,26 +64,14 @@ namespace Server
 
         public bool Join(Player currentPlayer)
         {
-            if (IsInPlayroom(currentPlayer.Name))
+            if (GameHasStarted || Players.Count == 3 )
             {
-                GetPlayer(currentPlayer.Name).UpdateInfo(currentPlayer.WPMProgress, currentPlayer.CompletedTextPercentage);
-
-                if (!Rank[currentPlayer.Name].Item1 && currentPlayer.CompletedTextPercentage.Equals("100"))
-                {
-                    Rank[currentPlayer.Name] = new Tuple<bool, int>(true, Place);
-                    Place++;
-                }
                 return false;
             }
 
             Console.WriteLine("adding: " + currentPlayer.Name + " room number: " + PlayroomNumber);
 
             Players.Add(currentPlayer);
-
-            if (!Rank.ContainsKey(currentPlayer.Name))
-            {
-                Rank.Add(currentPlayer.Name, new Tuple<bool, int>(false, 0));
-            }
 
             currentPlayer.Playroom = this;
 

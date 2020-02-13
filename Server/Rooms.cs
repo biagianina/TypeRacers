@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Server
 {
     public class Rooms
     {
         readonly List<Playroom> playrooms;
-        private readonly int maxPlayroomSize = 3;
-        private bool firstConnection;
         private int playroomsCount = 0;
-        public Playroom LastAvailablePlayroom { get; set; }
 
         public Rooms()
         {
@@ -20,8 +14,6 @@ namespace Server
             {
                 new Playroom()
             };
-
-            LastAvailablePlayroom = playrooms.Last();
         }
 
         public int GetNumberOfPlayrooms()
@@ -29,18 +21,20 @@ namespace Server
             return playrooms.Count();
         }
 
-        public void AllocatePlayroom(Player player)
+        public void Join(Player player)
         {
-            if (LastAvailablePlayroom.GameHasStarted || LastAvailablePlayroom.Players.Count == maxPlayroomSize)
+            foreach (var playroom in playrooms)
             {
-                LastAvailablePlayroom = CreateNewPlayroom();
+                if (!playroom.Join(player))
+                {
+                    CreateNewPlayroom();
+                }
+                else
+                {
+                    player.SetGameInfo();
+                    break;
+                }
             }
-
-            firstConnection = LastAvailablePlayroom.Join(player);
-
-            player.Playroom = LastAvailablePlayroom;
-
-            CheckIfIsFirstconnection(firstConnection, player);
         }
 
         private void CheckIfIsFirstconnection(bool newPlayer, Player player)
