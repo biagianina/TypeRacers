@@ -21,42 +21,42 @@ namespace Server
         [Fact]
         public void FirstPlayerAddedToRoom()
         {
-            rooms.AllocatePlayroom(player1);
+            rooms.Join(player1);
             Assert.Equal(rooms.LastAvailablePlayroom, player1.Playroom);
         }
 
         [Fact]
         public void ThreePlayersAddedToRoom()
         {
-            rooms.AllocatePlayroom(player1);
+            rooms.Join(player1);
             Assert.Equal(rooms.LastAvailablePlayroom, player1.Playroom);
 
-            rooms.AllocatePlayroom(player2);
+            rooms.Join(player2);
             Assert.Equal(rooms.LastAvailablePlayroom, player2.Playroom);
 
-            rooms.AllocatePlayroom(player3);
+            rooms.Join(player3);
             Assert.Equal(rooms.LastAvailablePlayroom, player3.Playroom);
         }
 
         [Fact]
         public void ConstructorCreatesAnotherPlayroomWhenOneIsFull()
         {
-            rooms.AllocatePlayroom(player1);
-            rooms.AllocatePlayroom(player2);
-            rooms.AllocatePlayroom(player3);
-            rooms.AllocatePlayroom(player4);
+            rooms.Join(player1);
+            rooms.Join(player2);
+            rooms.Join(player3);
+            rooms.Join(player4);
             Assert.Equal(2, rooms.GetNumberOfPlayrooms());
         }
 
         [Fact]
         public void ConstructorCreatesAnotherPlayroomWhenOneGameHasStarted()
         {
-            rooms.AllocatePlayroom(player1);
-            rooms.AllocatePlayroom(player2);
+            rooms.Join(player1);
+            rooms.Join(player2);
             Assert.Contains(player1, rooms.LastAvailablePlayroom.Players);
             Assert.Contains(player2, rooms.LastAvailablePlayroom.Players);
             rooms.LastAvailablePlayroom.GameStartingTime = DateTime.UtcNow;
-            rooms.AllocatePlayroom(player3);
+            rooms.Join(player3);
             Assert.Equal(2, rooms.GetNumberOfPlayrooms());
             Assert.Contains(player3, rooms.LastAvailablePlayroom.Players);
         }
