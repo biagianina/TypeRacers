@@ -10,7 +10,6 @@ namespace Server
     {
         TcpClient tcpClient;
         NetworkStream networkStream;
-        private bool newClient;
         DateTime currentPlayroomStartingTime;
 
         public Player(TcpClient tcpClient)
@@ -61,7 +60,7 @@ namespace Server
 
             //    SetGameInfo();
             //}
-
+            Console.WriteLine(dataReceived);
         }
 
         //private bool CheckIfClientLeftGame(string currentClient)
@@ -114,33 +113,33 @@ namespace Server
 
         internal void UpdateOpponents()
         {
-
-            if (Playroom.GameStartingTime == DateTime.MinValue)
+            while (true)
             {
-                currentPlayroomStartingTime = Playroom.TrySetGameStartingTime();
-            }
-
-            string opponents = string.Empty;
-            string rank = "!";
-            opponents += Playroom.Players.Aggregate(string.Empty, (localOpp, p) =>
-            {
-                if (!p.Name.Equals(this.Name))
+                if (Playroom.GameStartingTime == DateTime.MinValue)
                 {
-                    localOpp += (p.Name + ":" + p.WPMProgress + "&" + p.CompletedTextPercentage + "&" + "0" + "%");
+                    currentPlayroomStartingTime = Playroom.TrySetGameStartingTime();
                 }
 
-                return localOpp;
-            });
+                string opponents = string.Empty;
+                string rank = "!";
+                opponents += Playroom.Players.Aggregate(string.Empty, (localOpp, p) =>
+                {
+                    if (!p.Name.Equals(this.Name))
+                    {
+                        localOpp += (p.Name + ":" + p.WPMProgress + "&" + p.CompletedTextPercentage + "&" + "0" + "%");
+                    }
 
-            rank += Playroom.Rank.Aggregate(string.Empty, (localRank, r) => localRank += r.Key + ":" + r.Value.Item1 + "&" + r.Value.Item2 + ";");
+                    return localOpp;
+                });
 
-            opponents += "*" + currentPlayroomStartingTime.ToString() + "+" + Playroom.GameEndingTime.ToString() + "%" + rank + "%";
+                rank += Playroom.Rank.Aggregate(string.Empty, (localRank, r) => localRank += r.Key + ":" + r.Value.Item1 + "&" + r.Value.Item2 + ";");
 
-            byte[] broadcastBytes = Encoding.ASCII.GetBytes(opponents + "#");
-            networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
+                opponents += "*" + currentPlayroomStartingTime.ToString() + "+" + Playroom.GameEndingTime.ToString() + "%" + rank + "%";
 
-            networkStream.Close();
-            tcpClient.Close();
+                byte[] broadcastBytes = Encoding.ASCII.GetBytes(opponents + "#");
+                networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
+            }
+
         }
     }
 }

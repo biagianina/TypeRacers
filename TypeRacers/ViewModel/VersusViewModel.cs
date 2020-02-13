@@ -45,8 +45,8 @@ namespace TypeRacers.ViewModel
             RemovePlayer = new CommandHandler(() => RemovePlayerFromPlayroom(), () => true);
             RestartSearchingOpponentsCommand = new CommandHandler(() => RestartSearchingOpponents(), () => true);
             //start searching for 30 seconds and subscribe to timer
-            model.StartSearchingOpponents();
-            model.SubscribeToSearchingOpponents(UpdateOpponents);
+            //model.StartSearchingOpponents();
+            //model.SubscribeToSearchingOpponents(UpdateOpponents);
             CanUserType = false;
         }
 

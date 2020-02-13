@@ -14,7 +14,6 @@ namespace TypeRacers.Client
         public string LocalPlayerProgress { get; set; } = "0&0";
         public DateTime PlayersStartingTime { get; set; }
         public DateTime PlayersEndingTime { get; private set; }
-        private int PlayroomNumber { get; set; } = -1;
         public string Name { get; set; }
         public bool GameStarted { get; private set; }
 
@@ -51,7 +50,7 @@ namespace TypeRacers.Client
         public string FirstTimeConnectingToServer()
         {
             //connecting to server
-            string dataToSend = LocalPlayerProgress + "&" + PlayroomNumber + "$" + Name + "#";
+            string dataToSend = LocalPlayerProgress + "$" + Name + "#";
             var receivedData = SendDataToServer(dataToSend);
 
             var dataWithoutHashtag = receivedData.Remove(receivedData.Length - 1);
@@ -71,7 +70,7 @@ namespace TypeRacers.Client
         public List<Tuple<string, Tuple<string, string, int>>> GetOpponentsProgress()
         {
             //connecting to server
-            string toSend = LocalPlayerProgress + "&" + PlayroomNumber + "$" + Name + "#";
+            string toSend = LocalPlayerProgress + "$" + Name + "#";
 
             var dataFromServer = SendDataToServer(toSend);
 
@@ -100,7 +99,7 @@ namespace TypeRacers.Client
         {
 
             //writing the progress to stream
-            string toSend = progress + "&" + PlayroomNumber + "$" + Name + "#";
+            string toSend = progress + "$" + Name + "#";
 
             SendDataToServer(toSend);
             SetOpponents(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>>(GetOpponentsProgress(), Rank));
