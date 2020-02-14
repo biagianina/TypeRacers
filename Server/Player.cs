@@ -43,7 +43,7 @@ namespace Server
 
         internal void SetGameInfo()
         {
-            byte[] broadcastBytes = Encoding.ASCII.GetBytes(Playroom.CompetitionText + "$" + Playroom.TimeToWaitForOpponents.ToString() + "*" + Playroom.GameStartingTime + "+" + Playroom.GameEndingTime + "#"); //generates random text from text document
+            byte[] broadcastBytes = Encoding.ASCII.GetBytes(Playroom.CompetitionText + "$" + '%' + Playroom.TimeToWaitForOpponents.ToString() + "*" + Playroom.GameStartingTime + "+" + Playroom.GameEndingTime + "#"); //generates random text from text document
             networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
 
         }
@@ -82,7 +82,7 @@ namespace Server
 
         public void Write()
         {
-            if(WPMProgress == 0)
+            if (!Playroom.IsInPlayroom(Name))
             {
                 SetGameInfo();
             }

@@ -40,7 +40,7 @@ namespace TypeRacers.Server
                 Thread thread = new Thread(() =>
                 {
                     Player newPlayer = new Player(client);
-                    playrooms.Join(newPlayer);
+                    playrooms.AllocatePlayroom(newPlayer);
                 });
                 thread.Start();
             }

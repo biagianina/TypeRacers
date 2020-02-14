@@ -70,8 +70,13 @@ namespace Server
                 return false;
             }
 
-            Players.Add(currentPlayer);
+            if (!IsInPlayroom(currentPlayer.Name))
+            {
+                Players.Add(currentPlayer);
 
+            }
+
+            Console.WriteLine("adding player:" + currentPlayer.Name);
             currentPlayer.Playroom = this;
 
             return true;

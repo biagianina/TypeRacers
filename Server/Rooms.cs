@@ -6,7 +6,6 @@ namespace Server
     public class Rooms
     {
         readonly List<Playroom> playrooms;
-        private int playroomsCount = 0;
 
         public Rooms()
         {
@@ -21,18 +20,13 @@ namespace Server
             return playrooms.Count();
         }
 
-        public void Join(Player player)
+        public void AllocatePlayroom(Player player)
         {
             foreach (var playroom in playrooms)
             {
                 if (!playroom.Join(player))
                 {
                     CreateNewPlayroom();
-                }
-                else
-                {
-                    player.SetGameInfo();
-                    break;
                 }
             }
         }
