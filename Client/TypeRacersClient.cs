@@ -9,6 +9,7 @@ namespace TypeRacers.Client
 {
     public class TypeRacersClient
     {
+
         public DateTime WaitingTime { get; set; }
         public Dictionary<string, Tuple<bool, int>> Rank { get; set; } = new Dictionary<string, Tuple<bool, int>>();
         public string LocalPlayerProgress { get; set; } = "0&0";

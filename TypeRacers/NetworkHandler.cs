@@ -5,7 +5,7 @@ using TypeRacers.Client;
 namespace TypeRacers
 {
     //a class that handles the messages to and from the network
-    public class NetworkHandler : INetworkHandler
+    public class NetworkHandler
     {
         private readonly TypeRacersClient client;
         private TypeRacersClient.TimerTickHandler timerTickHandler;

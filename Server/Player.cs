@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using Common;
 
 namespace Server
 {
-    public class Player
+    public class Player : IPlayer
     {
         TcpClient tcpClient;
         NetworkStream networkStream;
@@ -23,7 +24,6 @@ namespace Server
         public string Name { get; set; }
 
         public int Place { get; set; }
-
         public bool Finnished { get; set; }
         public int WPMProgress { get; set; }
         public int CompletedTextPercentage { get; set; }
@@ -41,13 +41,15 @@ namespace Server
             }
         }
 
-        private void CheckReceivedData(string dataReceived)
+        internal void SetGameInfo()
         {
-            //if (CheckIfGameIsRestarted(dataReceived) || CheckIfClientLeftGame(dataReceived))
-            //{
-            //    return;
-            //}
+            byte[] broadcastBytes = Encoding.ASCII.GetBytes(Playroom.CompetitionText + "$" + Playroom.TimeToWaitForOpponents.ToString() + "*" + Playroom.GameStartingTime + "+" + Playroom.GameEndingTime + "#"); //generates random text from text document
+            networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
 
+        }
+
+        public void CheckReceivedData(string dataReceived)
+        {
             //progress and slider progress
             string progress = dataReceived.Substring(0, dataReceived.IndexOf('$'));
 
@@ -56,22 +58,101 @@ namespace Server
             string username = dataReceived.Substring(dataReceived.IndexOf('$') + 1);
 
             Name = username.Substring(0, username.Length - 1);
-
-            //if (Playroom != null)
-            //{
-            //    newClient = Playroom.Join(this);
-            //}
-
             UpdateInfo(Convert.ToInt32(progressInfoAndPlayerRoomInfo[0]), Convert.ToInt32(progressInfoAndPlayerRoomInfo[1]));
-
-            //if (Playroom != null)
-            //{
-            //    CheckIfClientLeftGame(Name);
-
-            //    SetGameInfo();
-            //}
             Console.WriteLine(dataReceived);
         }
+
+        public void Read()
+        {
+            byte[] buffer = new byte[tcpClient.ReceiveBufferSize];
+            int bytesRead = networkStream.Read(buffer, 0, buffer.Length);
+
+            string dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+
+            //solution to get get complete messages
+            while (!dataReceived.Last().Equals('#'))
+            {
+                bytesRead = networkStream.Read(buffer, 0, tcpClient.ReceiveBufferSize);
+                dataReceived += Encoding.ASCII.GetString(buffer, dataReceived.Length, bytesRead);
+            }
+
+            CheckReceivedData(dataReceived);
+            Write();
+        }
+
+        public void Write()
+        {
+            if(WPMProgress == 0)
+            {
+                SetGameInfo();
+            }
+            else
+            {
+                UpdateOpponents();
+            }
+
+        }
+
+        public void UpdateOpponents()
+        {
+            if (Playroom.GameStartingTime == DateTime.MinValue)
+            {
+                currentPlayroomStartingTime = Playroom.TrySetGameStartingTime();
+            }
+
+            string opponents = string.Empty;
+            string rank = "!";
+            opponents += Playroom.Players.Aggregate(string.Empty, (localOpp, p) =>
+            {
+                if (!p.Name.Equals(this.Name))
+                {
+                    localOpp += (p.Name + ":" + p.WPMProgress + "&" + p.CompletedTextPercentage + "&" + "0" + "%");
+                }
+
+                return localOpp;
+            });
+
+
+            rank += Playroom.Players.Aggregate(string.Empty, (localRank, r) => localRank += r.Name + ":" + r.Finnished + "&" + r.Place + ";");
+
+            opponents += "*" + currentPlayroomStartingTime.ToString() + "+" + Playroom.GameEndingTime.ToString() + "%" + rank + "%";
+
+            byte[] broadcastBytes = Encoding.ASCII.GetBytes(opponents + "#");
+            networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
+        }
+
+
+        //private void CheckReceivedData(string dataReceived)
+        //{
+        //if (CheckIfGameIsRestarted(dataReceived) || CheckIfClientLeftGame(dataReceived))
+        //{
+        //    return;
+        //}
+
+        //progress and slider progress
+        //string progress = dataReceived.Substring(0, dataReceived.IndexOf('$'));
+
+        //var progressInfoAndPlayerRoomInfo = progress.Split('&');
+
+        //string username = dataReceived.Substring(dataReceived.IndexOf('$') + 1);
+
+        //Name = username.Substring(0, username.Length - 1);
+
+        //if (Playroom != null)
+        //{
+        //    newClient = Playroom.Join(this);
+        //}
+
+        //UpdateInfo(Convert.ToInt32(progressInfoAndPlayerRoomInfo[0]), Convert.ToInt32(progressInfoAndPlayerRoomInfo[1]));
+
+        //if (Playroom != null)
+        //{
+        //    CheckIfClientLeftGame(Name);
+
+        //    SetGameInfo();
+        //}
+        //Console.WriteLine(dataReceived);
+        //}
 
         //private bool CheckIfClientLeftGame(string currentClient)
         //{
@@ -97,60 +178,6 @@ namespace Server
         //    return false;
         //}
         //to be moved to player (as first connection -> see playroom method)
-        internal void SetGameInfo()
-        {
-            byte[] broadcastBytes = Encoding.ASCII.GetBytes(Playroom.CompetitionText + "$" + "%" + Playroom.TimeToWaitForOpponents.ToString() + "*" + Playroom.GameStartingTime + "+" + Playroom.GameEndingTime + "#"); //generates random text from text document
-            networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
 
-        }
-        internal void Read()
-        {
-            byte[] buffer = new byte[tcpClient.ReceiveBufferSize];
-            int bytesRead = networkStream.Read(buffer, 0, buffer.Length);
-
-            string dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-
-            //solution to get get complete messages
-            while (!dataReceived.Last().Equals('#'))
-            {
-                bytesRead = networkStream.Read(buffer, 0, tcpClient.ReceiveBufferSize);
-                dataReceived += Encoding.ASCII.GetString(buffer, dataReceived.Length, bytesRead);
-            }
-
-            CheckReceivedData(dataReceived);
-        }
-
-
-        internal void UpdateOpponents()
-        {
-            while (true)
-            {
-                if (Playroom.GameStartingTime == DateTime.MinValue)
-                {
-                    currentPlayroomStartingTime = Playroom.TrySetGameStartingTime();
-                }
-
-                string opponents = string.Empty;
-                string rank = "!";
-                opponents += Playroom.Players.Aggregate(string.Empty, (localOpp, p) =>
-                {
-                    if (!p.Name.Equals(this.Name))
-                    {
-                        localOpp += (p.Name + ":" + p.WPMProgress + "&" + p.CompletedTextPercentage + "&" + "0" + "%");
-                    }
-
-                    return localOpp;
-                });
-
-
-                rank += Playroom.Players.Aggregate(string.Empty, (localRank, r) => localRank += r.Name + ":" + r.Finnished + "&" + r.Place + ";");
-
-                opponents += "*" + currentPlayroomStartingTime.ToString() + "+" + Playroom.GameEndingTime.ToString() + "%" + rank + "%";
-
-                byte[] broadcastBytes = Encoding.ASCII.GetBytes(opponents + "#");
-                networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
-            }
-
-        }
     }
 }

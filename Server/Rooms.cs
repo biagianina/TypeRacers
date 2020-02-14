@@ -37,22 +37,9 @@ namespace Server
             }
         }
 
-        private void CheckIfIsFirstconnection(bool newPlayer, Player player)
-        {
-            if (newPlayer)
-            {
-                player.SetGameInfo(); //first connection
-            }
-            else
-            {
-                player.UpdateOpponents();
-            }
-        }
-
         private Playroom CreateNewPlayroom()
         {
             var newPlayroom = new Playroom();
-            newPlayroom.PlayroomNumber = playroomsCount++;
             playrooms.Add(newPlayroom);
             return playrooms.Last();
         }

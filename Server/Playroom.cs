@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using TypeRacers.Server;
-
+using TypeRacers;
+using Common;
 namespace Server
 {
-    public class Playroom
+    public class Playroom : IPlayroom<Player>
     {
         public string CompetitionText { get; } = ServerGeneratedText.GetText();
         public bool GameHasStarted => GameStartingTime != DateTime.MinValue;
         public List<Player> Players { get; set; }
-        public int PlayroomNumber { get; set; }
+
 
         public DateTime GameStartingTime { get; set; }
         public DateTime GameEndingTime { get; set; }
@@ -68,8 +69,6 @@ namespace Server
             {
                 return false;
             }
-
-            Console.WriteLine("adding: " + currentPlayer.Name + " room number: " + PlayroomNumber);
 
             Players.Add(currentPlayer);
 
