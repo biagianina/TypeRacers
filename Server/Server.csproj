@@ -69,7 +69,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InputCharacterValidation.cs" />
-    <Compile Include="Player.cs" />
     <Compile Include="Playroom.cs" />
     <Compile Include="Rooms.cs" />
     <Compile Include="ServerGeneratedText.cs" />
