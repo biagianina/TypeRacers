@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 
 namespace Server
 {
@@ -21,7 +22,8 @@ namespace Server
             Read();
         }
 
-        public bool PlayroomHasBeenAlocated { get; set; }
+        bool FirstTimeConnecting = true;
+        private string DataReceived { get; set; }
         public string Name { get; set; }
         public int Place { get; set; }
         public bool Finnished { get; set; }
@@ -30,10 +32,29 @@ namespace Server
         public Playroom Playroom { get; set; }
         public Dictionary<string, Tuple<bool, int>> Rank { get; }
 
-        public void SetPlayroom(Playroom playroom, bool isNewPlayer)
+        public void StartListening()
+        {
+
+            while (true)
+            {
+                Thread thread = new Thread(() =>
+                {
+                    Read();
+                    if (!string.IsNullOrEmpty(DataReceived))
+                    {
+                        Write();
+                        DataReceived = string.Empty;
+                    }
+                });
+                thread.Start();
+            }
+        }
+        public void SetPlayroom(Playroom playroom)
         {
             Playroom = playroom;
-            Write(isNewPlayer);
+            Write();
+            FirstTimeConnecting = false;
+            StartListening();
         }
 
         public void UpdateInfo(int wpmProgress, int completedText)
@@ -72,21 +93,21 @@ namespace Server
             byte[] buffer = new byte[tcpClient.ReceiveBufferSize];
             int bytesRead = networkStream.Read(buffer, 0, buffer.Length);
 
-            string dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+            DataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
             //solution to get get complete messages
-            while (!dataReceived.Last().Equals('#'))
+            while (!DataReceived.Last().Equals('#'))
             {
                 bytesRead = networkStream.Read(buffer, 0, tcpClient.ReceiveBufferSize);
-                dataReceived += Encoding.ASCII.GetString(buffer, dataReceived.Length, bytesRead);
+                DataReceived += Encoding.ASCII.GetString(buffer, DataReceived.Length, bytesRead);
             }
 
-            CheckReceivedData(dataReceived);
+            CheckReceivedData(DataReceived);
         }
 
-        public void Write(bool playerIsNew)
+        public void Write()
         {
-            if (playerIsNew)
+            if (FirstTimeConnecting)
             {
                 SendGameInfo();
             }

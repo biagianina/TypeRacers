@@ -30,6 +30,9 @@ namespace TypeRacers.Client
 
         public TypeRacersClient()
         {
+            client = new TcpClient("localhost", 80);
+            stream = client.GetStream();
+
             opponents = new List<Tuple<string, Tuple<string, string, int>>>();
             Rank = new Dictionary<string, Tuple<bool, int>>();
         }
@@ -40,7 +43,7 @@ namespace TypeRacers.Client
             {
                 while (true)
                 {
-                    Thread.Sleep(5000);
+                    Thread.Sleep(2000);
                     SetOpponents(new Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>>(GetOpponentsProgress(), Rank));
                 }
             });
@@ -74,7 +77,6 @@ namespace TypeRacers.Client
 
         public List<Tuple<string, Tuple<string, string, int>>> GetOpponentsProgress()
         {
-            //connecting to server
             var dataFromServer = SendDataToServer(ClientInfo);
 
             var currentOpponents = dataFromServer.Split('%').ToList();
@@ -136,6 +138,7 @@ namespace TypeRacers.Client
         {
             foreach (var v in currentOpponents)
             {
+                
                 if (v.FirstOrDefault().Equals('*'))
                 {
                     var times = v.Substring(1).Split('+');
@@ -162,13 +165,18 @@ namespace TypeRacers.Client
         {
             var progressInfoAndPlayroomInfo = nameAndInfos.LastOrDefault()?.Split('&');
 
-            if (progressInfoAndPlayroomInfo.Count() == 3)
+            if (progressInfoAndPlayroomInfo.Length == 3)
             {
                 var wpmProgress = progressInfoAndPlayroomInfo[0];
                 var carProgress = progressInfoAndPlayroomInfo[1];
                 var playroomNumber = Convert.ToInt32(progressInfoAndPlayroomInfo[2]);
                 var opponentInfo = new Tuple<string, string, int>(wpmProgress, carProgress, playroomNumber);
-                opponents.Add(new Tuple<string, Tuple<string, string, int>>(nameAndInfos.FirstOrDefault(), opponentInfo));
+                var opponent = new Tuple<string, Tuple<string, string, int>>(nameAndInfos.FirstOrDefault(), opponentInfo);
+                if (opponents.Contains(opponent))
+                {
+                    return;
+                }
+                opponents.Add(opponent);
             }
         }
 
@@ -198,8 +206,6 @@ namespace TypeRacers.Client
 
         private string SendDataToServer(string data)
         {
-            client = new TcpClient("localhost", 80);
-            stream = client.GetStream();
 
             try
             {

@@ -11,7 +11,7 @@ namespace Server
         public Playroom()
         {
             Players = new List<Player>();
-            TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(15);
+            TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(50);
         }
 
         public string CompetitionText { get; } = ServerGeneratedText.GetText();

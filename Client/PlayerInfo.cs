@@ -7,7 +7,7 @@ namespace Client
 {
     public class PlayerInfo : IPlayer, IMessage
     {
-        private TcpClient client;
+        private readonly TcpClient client;
         private NetworkStream stream;
         public string Name { get; set; }
         public int Place { get; set; }
@@ -72,7 +72,7 @@ namespace Client
             throw new NotImplementedException();
         }
 
-        public void Write(bool playerIsNew)
+        public void Write()
         {
             stream = client.GetStream();
             byte[] toSend = Encoding.ASCII.GetBytes(Message());

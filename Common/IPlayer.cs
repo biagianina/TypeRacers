@@ -14,7 +14,7 @@
 
         void Read();
 
-        void Write(bool playerIsNew);
+        void Write();
 
         void SendOpponents();
     }

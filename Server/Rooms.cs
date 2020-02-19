@@ -29,13 +29,12 @@ namespace Server
 
         public void AllocatePlayroom(Player player)
         {
-            bool playerIsNew = PlayerIsNew(player);
             if (!LastAvailablePlayroom.Join(player))
             {
                 LastAvailablePlayroom = CreateNewPlayroom();
             }
 
-            player.SetPlayroom(LastAvailablePlayroom, playerIsNew);
+            player.SetPlayroom(LastAvailablePlayroom);
         }
 
         public bool PlayerIsNew(Player player)
