@@ -5,20 +5,21 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-
-namespace Server
+namespace Common
 {
-    public class Player : IPlayer
+    public class Player
     {
+
         private readonly TcpClient tcpClient;
         private readonly NetworkStream networkStream;
         private DateTime currentPlayroomStartingTime;
+        private Message message;
 
         public Player(TcpClient tcpClient)
         {
-            Playroom = new Playroom();
             this.tcpClient = tcpClient;
             networkStream = tcpClient.GetStream();
+            message = new Message();
             Read();
         }
 
@@ -29,7 +30,7 @@ namespace Server
         public bool Finnished { get; set; }
         public int WPMProgress { get; set; }
         public int CompletedTextPercentage { get; set; }
-        public Playroom Playroom { get; set; }
+        private IPlayroom<Player> Playroom { get; set; }
         public Dictionary<string, Tuple<bool, int>> Rank { get; }
 
         public void StartListening()
@@ -49,7 +50,7 @@ namespace Server
                 thread.Start();
             }
         }
-        public void SetPlayroom(Playroom playroom)
+        public void SetPlayroom(IPlayroom<Player> playroom)
         {
             Playroom = playroom;
             Write();
@@ -70,7 +71,7 @@ namespace Server
 
         internal void SendGameInfo()
         {
-            byte[] broadcastBytes = Encoding.ASCII.GetBytes(Playroom.CompetitionText + "$" + '%' + Playroom.TimeToWaitForOpponents.ToString() + "*" + Playroom.GameStartingTime + "+" + Playroom.GameEndingTime + "#"); //generates random text from text document
+            byte[] broadcastBytes = Encoding.ASCII.GetBytes(message.GenerateGameInfo(Playroom.CompetitionText, Playroom.TimeToWaitForOpponents, Playroom.GameStartingTime, Playroom.GameEndingTime)); //generates random text from text document
             networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
         }
 
@@ -119,10 +120,10 @@ namespace Server
 
         public void SendOpponents()
         {
-            if (Playroom.GameStartingTime == DateTime.MinValue)
-            {
-                currentPlayroomStartingTime = Playroom.TrySetGameStartingTime();
-            }
+            //if (Playroom.GameStartingTime == DateTime.MinValue)
+            //{
+            //    currentPlayroomStartingTime = Playroom.TrySetGameStartingTime();
+            //}
 
             string opponents = string.Empty;
             string rank = "!";

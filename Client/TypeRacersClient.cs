@@ -6,12 +6,13 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Timers;
-
+using Common;
 namespace TypeRacers.Client
 {
     public class TypeRacersClient
     {
 
+        private Message message;
         private TcpClient client;
         private NetworkStream stream;
         private List<Tuple<string, Tuple<string, string, int>>> opponents;
@@ -28,11 +29,15 @@ namespace TypeRacers.Client
         public string Name { get; set; }
         private string ClientInfo { get; set; }
 
+        private Player player;
+
         public TypeRacersClient()
         {
+            message = new Message();
             client = new TcpClient("localhost", 80);
             stream = client.GetStream();
-
+            player = new Player(client);
+            player.SetPlayroom(new GameInfo());
             opponents = new List<Tuple<string, Tuple<string, string, int>>>();
             Rank = new Dictionary<string, Tuple<bool, int>>();
         }
@@ -52,7 +57,7 @@ namespace TypeRacers.Client
 
         public void NameClient(string username)
         {
-            Name = username;
+            player.Name = username;
         }
 
 
