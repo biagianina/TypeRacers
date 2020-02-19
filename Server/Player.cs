@@ -1,17 +1,17 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using Common;
 
 namespace Server
 {
     public class Player : IPlayer
     {
-        TcpClient tcpClient;
-        NetworkStream networkStream;
-        DateTime currentPlayroomStartingTime;
+        private readonly TcpClient tcpClient;
+        private readonly NetworkStream networkStream;
+        private DateTime currentPlayroomStartingTime;
 
         public Player(TcpClient tcpClient)
         {
@@ -21,14 +21,20 @@ namespace Server
             Read();
         }
 
+        public bool PlayroomHasBeenAlocated { get; set; }
         public string Name { get; set; }
-
         public int Place { get; set; }
         public bool Finnished { get; set; }
         public int WPMProgress { get; set; }
         public int CompletedTextPercentage { get; set; }
         public Playroom Playroom { get; set; }
-        public Dictionary<string, Tuple<bool, int>> Rank { get; private set; }
+        public Dictionary<string, Tuple<bool, int>> Rank { get; }
+
+        public void SetPlayroom(Playroom playroom, bool isNewPlayer)
+        {
+            Playroom = playroom;
+            Write(isNewPlayer);
+        }
 
         public void UpdateInfo(int wpmProgress, int completedText)
         {
@@ -41,11 +47,10 @@ namespace Server
             }
         }
 
-        internal void SetGameInfo()
+        internal void SendGameInfo()
         {
             byte[] broadcastBytes = Encoding.ASCII.GetBytes(Playroom.CompetitionText + "$" + '%' + Playroom.TimeToWaitForOpponents.ToString() + "*" + Playroom.GameStartingTime + "+" + Playroom.GameEndingTime + "#"); //generates random text from text document
             networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
-
         }
 
         public void CheckReceivedData(string dataReceived)
@@ -77,23 +82,21 @@ namespace Server
             }
 
             CheckReceivedData(dataReceived);
-            Write();
         }
 
-        public void Write()
+        public void Write(bool playerIsNew)
         {
-            if (!Playroom.IsInPlayroom(Name))
+            if (playerIsNew)
             {
-                SetGameInfo();
+                SendGameInfo();
             }
             else
             {
-                UpdateOpponents();
+                SendOpponents();
             }
-
         }
 
-        public void UpdateOpponents()
+        public void SendOpponents()
         {
             if (Playroom.GameStartingTime == DateTime.MinValue)
             {
@@ -104,14 +107,13 @@ namespace Server
             string rank = "!";
             opponents += Playroom.Players.Aggregate(string.Empty, (localOpp, p) =>
             {
-                if (!p.Name.Equals(this.Name))
+                if (!p.Name.Equals(Name))
                 {
-                    localOpp += (p.Name + ":" + p.WPMProgress + "&" + p.CompletedTextPercentage + "&" + "0" + "%");
+                    localOpp += (p.Name + ":" + p.WPMProgress + "&" + p.CompletedTextPercentage + "&0%");
                 }
 
                 return localOpp;
             });
-
 
             rank += Playroom.Players.Aggregate(string.Empty, (localRank, r) => localRank += r.Name + ":" + r.Finnished + "&" + r.Place + ";");
 
@@ -120,7 +122,6 @@ namespace Server
             byte[] broadcastBytes = Encoding.ASCII.GetBytes(opponents + "#");
             networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);
         }
-
 
         //private void CheckReceivedData(string dataReceived)
         //{
@@ -178,6 +179,5 @@ namespace Server
         //    return false;
         //}
         //to be moved to player (as first connection -> see playroom method)
-
     }
 }

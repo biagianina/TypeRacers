@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Common;
+using System;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
-using Common;
+
 namespace Client
 {
     public class PlayerInfo : IPlayer, IMessage
     {
-        TcpClient client;
-        NetworkStream stream;
-        public string Name { get  ; set ; }
-        public int Place { get; set; } 
-        public bool Finnished { get ; set ; }
-        public int WPMProgress { get; set; } 
-        public int CompletedTextPercentage { get ; set ; }
+        private TcpClient client;
+        private NetworkStream stream;
+        public string Name { get; set; }
+        public int Place { get; set; }
+        public bool Finnished { get; set; }
+        public int WPMProgress { get; set; }
+        public int CompletedTextPercentage { get; set; }
 
         public PlayroomInfo PlayroomInfo { get; set; }
 
@@ -69,19 +67,16 @@ namespace Client
             }
         }
 
-        public void UpdateOpponents()
+        public void SendOpponents()
         {
             throw new NotImplementedException();
         }
 
-        public void Write()
+        public void Write(bool playerIsNew)
         {
             stream = client.GetStream();
-            while (true)
-            {
-                byte[] toSend = Encoding.ASCII.GetBytes(Message());
-                stream.Write(toSend, 0, toSend.Length);
-            }
+            byte[] toSend = Encoding.ASCII.GetBytes(Message());
+            stream.Write(toSend, 0, toSend.Length);
         }
     }
 }

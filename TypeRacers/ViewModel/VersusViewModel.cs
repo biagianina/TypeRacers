@@ -25,6 +25,8 @@ namespace TypeRacers.ViewModel
         private int correctTyping;
         private bool startReporting;
 
+
+
         public VersusViewModel()
         {
             model = new Model.Model();
@@ -45,8 +47,8 @@ namespace TypeRacers.ViewModel
             RemovePlayer = new CommandHandler(() => RemovePlayerFromPlayroom(), () => true);
             RestartSearchingOpponentsCommand = new CommandHandler(() => RestartSearchingOpponents(), () => true);
             //start searching for 30 seconds and subscribe to timer
-            model.StartSearchingOpponents();
             model.SubscribeToSearchingOpponents(UpdateOpponents);
+            model.StartServerCommunication();
             CanUserType = false;
         }
 
@@ -313,7 +315,7 @@ namespace TypeRacers.ViewModel
             model.RestartSearch();
             WaitingTime = model.GetWaitingTime();
             TimeToStart = DateTime.UtcNow.AddSeconds((WaitingTime - DateTime.UtcNow).Seconds);
-            model.StartSearchingOpponents();
+            //model.StartSearchingOpponents();
 
             EnableSearchingAnimation = true;
             TriggerPropertyChanged(nameof(EnableSearchingAnimation));
@@ -339,7 +341,7 @@ namespace TypeRacers.ViewModel
 
             SetOpponentsAndRanking();
 
-            OpponentsCount = Opponents.Count() + 1;
+            OpponentsCount = Opponents.Count();
             TriggerPropertyChanged(nameof(OpponentsCount));
 
             UpdateShownPlayers();
@@ -374,8 +376,6 @@ namespace TypeRacers.ViewModel
 
         private void CheckIfStartTimeWasSet()
         {
-            var m = model.GetStartingTime();
-            var n = DateTime.MinValue;
             if (model.GetStartingTime() != DateTime.MinValue)
             {
                 EnableSearchingAnimation = false;

@@ -1,11 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Server;
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
 
 namespace Server
 {
     public class Rooms
     {
-        readonly List<Playroom> playrooms;
+        private readonly List<Playroom> playrooms;
+        public Playroom LastAvailablePlayroom { get; set; }
 
         public Rooms()
         {
@@ -13,22 +19,28 @@ namespace Server
             {
                 new Playroom()
             };
+            LastAvailablePlayroom = playrooms.Last();
         }
 
         public int GetNumberOfPlayrooms()
         {
-            return playrooms.Count();
+            return playrooms.Count;
         }
 
         public void AllocatePlayroom(Player player)
         {
-            foreach (var playroom in playrooms)
+            bool playerIsNew = PlayerIsNew(player);
+            if (!LastAvailablePlayroom.Join(player))
             {
-                if (!playroom.Join(player))
-                {
-                    CreateNewPlayroom();
-                }
+                LastAvailablePlayroom = CreateNewPlayroom();
             }
+
+            player.SetPlayroom(LastAvailablePlayroom, playerIsNew);
+        }
+
+        public bool PlayerIsNew(Player player)
+        {
+            return !playrooms.Any(x => x.IsInPlayroom(player.Name));
         }
 
         private Playroom CreateNewPlayroom()

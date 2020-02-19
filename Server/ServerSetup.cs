@@ -34,13 +34,14 @@ namespace TypeRacers.Server
         //to implement thread with start func players.Allocate method
         private void CommunicationSetup()
         {
+
             while (true)
             {
                 client = server.AcceptTcpClient();
                 Thread thread = new Thread(() =>
                 {
-                    Player newPlayer = new Player(client);
-                    playrooms.AllocatePlayroom(newPlayer);
+                    Player newConnectedClient = new Player(client);
+                    playrooms.AllocatePlayroom(newConnectedClient);
                 });
                 thread.Start();
             }
