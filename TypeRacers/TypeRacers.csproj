@@ -83,7 +83,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="INetworkHandler.cs" />
     <Compile Include="Model\LocalGeneratedText.cs" />
     <Compile Include="NetworkHandler.cs" />
     <Compile Include="ViewModel\Commander.cs" />

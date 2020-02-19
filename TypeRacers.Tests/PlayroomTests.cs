@@ -1,15 +1,12 @@
-﻿using System;
-using Xunit;
-
-namespace Server
+﻿namespace Server
 {
     public class PlayroomTests
     {
-        Playroom playroom = new Playroom();
-        readonly Player player1 = new Player("Bianca");
-        readonly Player player2 = new Player("Alin");
-        readonly Player player3 = new Player("Gianina");
-        readonly Player player4 = new Player("Ionut");
+        private Playroom playroom = new Playroom();
+        private readonly Player player1 = new Player("Bianca");
+        private readonly Player player2 = new Player("Alin");
+        private readonly Player player3 = new Player("Gianina");
+        private readonly Player player4 = new Player("Ionut");
 
         [Fact]
         public void ConstructorGeneratesTimeToWaitForOpponents()
@@ -75,4 +72,3 @@ namespace Server
         }
     }
 }
-

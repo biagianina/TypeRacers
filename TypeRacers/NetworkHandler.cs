@@ -5,11 +5,10 @@ using TypeRacers.Client;
 namespace TypeRacers
 {
     //a class that handles the messages to and from the network
-    public class NetworkHandler : INetworkHandler
+    public class NetworkHandler
     {
         private readonly TypeRacersClient client;
-        private TypeRacersClient.TimerTickHandler timerTickHandler;
-
+        private TypeRacersClient.OpponentsChangedEventHandler oponentsChangedEventHandler;
         public NetworkHandler()
         {
             client = new TypeRacersClient();
@@ -34,22 +33,25 @@ namespace TypeRacers
         {
             client.RestartSearch();
         }
-
-        public void StartSearchingOpponents()
-        {
-            client.StartTimerForSearchingOpponents();
-        }
-
         public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>>> updateOpponentsList)
         {
-            timerTickHandler = new TypeRacersClient.TimerTickHandler(updateOpponentsList);
-            client.OpponentsChanged += new TypeRacersClient.TimerTickHandler(timerTickHandler);
+            oponentsChangedEventHandler = new TypeRacersClient.OpponentsChangedEventHandler(updateOpponentsList);
+            client.OpponentsChanged += new TypeRacersClient.OpponentsChangedEventHandler(oponentsChangedEventHandler);
         }
 
         public List<Tuple<string, Tuple<string, string, int>>> GetOpponents()
-
         {
             return client.GetOpponentsProgress();
+        }
+
+        public void StartServerCommunication()
+        {
+            client.StartServerCommunication();
+        }
+
+        public void GetTextToType()
+        {
+            client.GetTextToType();
         }
 
         public Dictionary<string, Tuple<bool, int>> GetRanking()
@@ -59,7 +61,7 @@ namespace TypeRacers
 
         public string GetTextFromServer()
         {
-            return client.FirstTimeConnectingToServer();
+            return client.GetTextToType();
         }
 
         public void SendProgressToServer(string progress)
@@ -79,7 +81,7 @@ namespace TypeRacers
 
         public void StartReportingGameProgress()
         {
-            client.StartTimerForGameProgressReports();
+            throw new NotImplementedException();
         }
     }
 }

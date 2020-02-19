@@ -19,11 +19,6 @@ namespace TypeRacers.Model
             return networkHandler.GetOpponents();
         }
 
-        public void StartSearchingOpponents()
-        {
-            networkHandler.StartSearchingOpponents();
-        }
-
         public void RestartSearch()
         {
             networkHandler.RestartSearch();
@@ -39,9 +34,13 @@ namespace TypeRacers.Model
             return networkHandler.GetEndingTime();
         }
 
-        public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>>> updateOpponents)
+        public void StartServerCommunication()
         {
-            networkHandler.SubscribeToSearchingOpponents(updateOpponents);
+            networkHandler.StartServerCommunication();
+        }
+        public void GetTextToType()
+        {
+            networkHandler.GetTextToType();
         }
 
         public Dictionary<string, Tuple<bool, int>> GetRanking()
@@ -52,6 +51,10 @@ namespace TypeRacers.Model
         public DateTime GetWaitingTime()
         {
             return networkHandler.GetWaitingTime();
+        }
+        public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>>> updateOpponents)
+        {
+            networkHandler.SubscribeToSearchingOpponents(updateOpponents);
         }
 
         public void ReportProgress(int progress, int sliderProgress)
