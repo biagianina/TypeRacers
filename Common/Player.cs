@@ -19,7 +19,7 @@ namespace Common
         {
             this.tcpClient = tcpClient;
             networkStream = tcpClient.GetStream();
-            message = new Message();
+            //message = new Message();
             Read();
         }
 
@@ -71,7 +71,7 @@ namespace Common
 
         internal void SendGameInfo()
         {
-            byte[] broadcastBytes = Encoding.ASCII.GetBytes(message.GenerateGameInfo(Playroom.CompetitionText, Playroom.TimeToWaitForOpponents, Playroom.GameStartingTime, Playroom.GameEndingTime)); //generates random text from text document
+            byte[] broadcastBytes = Encoding.ASCII.GetBytes(""); //generates random text from text document
             networkStream.Write(broadcastBytes, 0, broadcastBytes.Length);//send the text to connected client
         }
 

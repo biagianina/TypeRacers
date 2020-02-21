@@ -7,17 +7,52 @@ namespace Common
 {
     public class Message
     {
-        public string GenerateClientInfo(int wpmProgress, int completedTextPercentage, string name)
+        public Message(string messageType, params object[] messageInfo)
         {
-            return wpmProgress.ToString() + "&" + completedTextPercentage + "$" + name + "#";
+            GenerateMessage(messageType, messageInfo);
+        }
+        public string GetMessage { get; private set; } = string.Empty;
+
+        private void GenerateMessage(string messageType, params object[] messageInfo)
+        {
+            switch (messageType)
+            {
+                case "clientinfo":
+
+                    if(messageInfo.Length == 3)
+                    {
+                        GenerateClientInfo((string)messageInfo[0], (string)messageInfo[1], (string)messageInfo[2]);
+                    }
+                    break;
+
+                case "gameinfo":
+
+                    if (messageInfo.Length == 4)
+                    {
+                        GenerateGameInfo((string)messageInfo[0], (DateTime)messageInfo[1], (DateTime)messageInfo[2], (DateTime)messageInfo[3]);
+                    }
+                    break;
+
+                case "opponents":
+
+                    if (messageInfo.Length == 4)
+                    {
+                        GenerateOpponentsString((List<Player>)messageInfo[0], (DateTime)messageInfo[1], (DateTime)messageInfo[2], (string)messageInfo[3]);
+                    }
+                    break;
+            }
+        }
+        public void GenerateClientInfo(string wpmProgress, string completedTextPercentage, string name)
+        {
+            GetMessage = wpmProgress + "&" + completedTextPercentage + "$" + name + "#";
         }
 
-        public string GenerateGameInfo(string competitionText, DateTime timeToWaitForOpponents, DateTime gameStartingTime, DateTime gameEndingTime)
+        public void GenerateGameInfo(string competitionText, DateTime timeToWaitForOpponents, DateTime gameStartingTime, DateTime gameEndingTime)
         {
-            return competitionText + "$" + '%' + timeToWaitForOpponents.ToString() + "*" + gameStartingTime + "+" + gameEndingTime + "#";
+            GetMessage = competitionText + "$" + '%' + timeToWaitForOpponents.ToString() + "*" + gameStartingTime.ToString() + "+" + gameEndingTime.ToString() + "#";
         }
 
-        public string GenerateOpponentsString(List<Player> players, DateTime startingTime, DateTime endingTime, string name)
+        public void GenerateOpponentsString(List<Player> players, DateTime startingTime, DateTime endingTime, string name)
         {
             string opponents = string.Empty;
             string rank = "!";
@@ -35,7 +70,7 @@ namespace Common
 
             opponents += "*" + startingTime.ToString() + "+" + endingTime.ToString() + "%" + rank + "%";
 
-            return opponents;
+            GetMessage = opponents;
         }
     }
 }

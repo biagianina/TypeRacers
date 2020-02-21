@@ -12,7 +12,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{9D2829D4-21FF-4A8F-AA03-23CA97256EB1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TypeRacers.Tests", "TypeRacers.Tests\TypeRacers.Tests.csproj", "{20A9E989-93DA-4877-BE1C-64AD9176C60A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TypeRacersFacts", "TypeRacers.Tests\TypeRacersFacts.csproj", "{20A9E989-93DA-4877-BE1C-64AD9176C60A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{FB5F627C-5481-4F30-84D6-022FE66B9AFB}"
 EndProject
