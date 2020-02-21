@@ -206,6 +206,7 @@ namespace TypeRacers.Client
 
         private string SendDataToServer(string data)
         {
+
             try
             {
                 byte[] bytesToSend = Encoding.ASCII.GetBytes(data);
