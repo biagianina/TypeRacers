@@ -22,6 +22,7 @@ namespace Server
         public DateTime GameEndingTime { get; set; }
         public DateTime TimeToWaitForOpponents { get; set; }
         public int Place { get; set; } = 1;
+        string IPlayroom<Player>.CompetitionText { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public DateTime TrySetGameStartingTime()
         {
@@ -81,6 +82,16 @@ namespace Server
         private void ResetPlayroom()
         {
             TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(20);
+        }
+
+        public void SetGameInfo(string v)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetOpponentsAndTimers(string v)
+        {
+            throw new NotImplementedException();
         }
     }
 }

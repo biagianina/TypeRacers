@@ -1,9 +1,10 @@
-﻿using Server;
+﻿using Common;
+using Server;
 using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using Common;
+
 
 namespace TypeRacers.Server
 {
@@ -35,7 +36,6 @@ namespace TypeRacers.Server
         //to implement thread with start func players.Allocate method
         private void CommunicationSetup()
         {
-
             while (true)
             {
                 client = server.AcceptTcpClient();

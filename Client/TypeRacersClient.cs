@@ -13,13 +13,11 @@ namespace TypeRacers.Client
     public class TypeRacersClient
     {
         private TcpClient client;
-        private NetworkStream stream;
         private Player player;
 
         public TypeRacersClient()
         { 
             client = new TcpClient("localhost", 80);
-            stream = client.GetStream();
             player = new Player(client);
             player.SetPlayroom(new GameInfo());
         }
@@ -33,7 +31,7 @@ namespace TypeRacers.Client
                     Thread writeThread = new Thread(() =>
                     {
                         Thread.Sleep(2000);
-                        player.Write();
+                        player.Write(new Common.Message("clientinfo", new object[] { player.WPMProgress, player.CompletedTextPercentage, player.Name}));
 
                     });
                     writeThread.Start();

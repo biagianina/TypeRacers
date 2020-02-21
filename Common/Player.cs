@@ -9,13 +9,11 @@ namespace Common
 
         private readonly TcpClient tcpClient;
         private readonly NetworkStream networkStream;
-        private Message message;
 
         public Player(TcpClient tcpClient)
         {
             this.tcpClient = tcpClient;
             networkStream = tcpClient.GetStream();
-            message = new Message();
         }
 
         public bool FirstTimeConnecting = true;
@@ -56,11 +54,9 @@ namespace Common
             return dataRecieved.Remove(dataRecieved.Length - 1);
         }
 
-        public void Write()
+        public void Write(Message message)
         {
-            var message = "";
-
-            byte[] toSend = Encoding.ASCII.GetBytes(message);
+            byte[] toSend = Encoding.ASCII.GetBytes(message.GetMessage);
             networkStream.Write(toSend, 0, toSend.Length);
         }
     }

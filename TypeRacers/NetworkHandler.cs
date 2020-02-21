@@ -8,7 +8,6 @@ namespace TypeRacers
     public class NetworkHandler
     {
         private readonly TypeRacersClient client;
-        private TypeRacersClient.OpponentsChangedEventHandler oponentsChangedEventHandler;
         public NetworkHandler()
         {
             client = new TypeRacersClient();
