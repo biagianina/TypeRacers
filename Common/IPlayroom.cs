@@ -5,7 +5,7 @@ namespace Common
 {
     public interface IPlayroom<Player>
     {
-        string CompetitionText { get; }
+        string CompetitionText { get; set; }
         List<Player> Players { get; set; }
         Player GetPlayer(string name);
 
@@ -13,5 +13,8 @@ namespace Common
         DateTime GameEndingTime { get; set; }
         DateTime TimeToWaitForOpponents { get; set; }
         int Place { get; set; }
+
+        void SetGameInfo(string v);
+        void SetOpponentsAndTimers(string v);
     }
 }
