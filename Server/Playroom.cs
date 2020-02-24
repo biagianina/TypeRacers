@@ -11,10 +11,10 @@ namespace Server
         public Playroom()
         {
             Players = new List<Player>();
-            TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(50);
+            CompetitionText = ServerGeneratedText.GetText();
+            TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(30);
         }
 
-        public string CompetitionText { get; } = ServerGeneratedText.GetText();
         public bool GameHasStarted => GameStartingTime != DateTime.MinValue;
         public List<Player> Players { get; set; }
         private int PlayroomSize { get; set; }
@@ -22,7 +22,7 @@ namespace Server
         public DateTime GameEndingTime { get; set; }
         public DateTime TimeToWaitForOpponents { get; set; }
         public int Place { get; set; } = 1;
-        string IPlayroom<Player>.CompetitionText { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string CompetitionText { get;}
 
         public DateTime TrySetGameStartingTime()
         {

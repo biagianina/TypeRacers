@@ -8,11 +8,6 @@ namespace TypeRacers
 
         public InputCharacterValidation(string input)
         {
-            if (input is null)
-            {
-                throw new ArgumentNullException("Input is null.");
-            }
-
             originalText = input;
         }
 

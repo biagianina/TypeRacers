@@ -1,86 +1,90 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using TypeRacers.Client;
+
 
 namespace TypeRacers
 {
     //a class that handles the messages to and from the network
     public class NetworkHandler
     {
-        private readonly TypeRacersClient client;
-        public NetworkHandler()
+        private TypeRacersClient.OpponentsChangedEventHandler oponentsChangedEventHandler;
+        private Player player;
+        private readonly TcpClient client;
+        private TypeRacersClient typeRacersClient;
+        public NetworkHandler(string userName)
         {
-            client = new TypeRacersClient();
+            client = new TcpClient("localhost", 80);
+            player = new Player(client)
+            {
+                Name = userName
+            };
+            typeRacersClient = new TypeRacersClient(player);
         }
 
         public DateTime GetStartingTime()
         {
-            return client.PlayersStartingTime;
+            return typeRacersClient.Player.Playroom.GameStartingTime;
         }
 
         public DateTime GetEndingTime()
         {
-            return client.PlayersEndingTime;
+            return typeRacersClient.Player.Playroom.GameEndingTime;
         }
 
         public DateTime GetWaitingTime()
         {
-            return client.WaitingTime;
+            return typeRacersClient.Player.Playroom.TimeToWaitForOpponents;
         }
 
-        public void RestartSearch()
+        public List<Common.Player> GetOpponents()
         {
-            client.RestartSearch();
-        }
-        public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>>> updateOpponentsList)
-        {
-            oponentsChangedEventHandler = new TypeRacersClient.OpponentsChangedEventHandler(updateOpponentsList);
-            client.OpponentsChanged += new TypeRacersClient.OpponentsChangedEventHandler(oponentsChangedEventHandler);
+            return typeRacersClient.Player.Playroom.Players;
         }
 
-        public List<Tuple<string, Tuple<string, string, int>>> GetOpponents()
-        {
-            return client.GetOpponentsProgress();
-        }
-
-        public void StartServerCommunication()
-        {
-            client.StartServerCommunication();
-        }
-
-        public void GetTextToType()
-        {
-            client.GetTextToType();
-        }
-
-        public Dictionary<string, Tuple<bool, int>> GetRanking()
-        {
-            return client.Rank;
-        }
+        //public Dictionary<string, Tuple<bool, int>> GetRanking()
+        //{
+        //    return client.Rank;
+        //}
 
         public string GetTextFromServer()
         {
-            return client.GetTextToType();
+            return typeRacersClient.Player.Playroom.CompetitionText;
         }
 
-        public void SendProgressToServer(string progress)
+        public void SendProgressToServer(int wpmProgress, int completedTextPercentage)
         {
-            client.LocalPlayerProgress = progress;
+            //to implement finished and place
+            typeRacersClient.Player.UpdateInfo(wpmProgress, completedTextPercentage, default, default);
         }
 
         public void NameClient(string username)
         {
-            client.NameClient(username);
+            typeRacersClient.NameClient(username);
         }
 
         public void RemovePlayer()
         {
-            client.RemovePlayerFromRoom();
+            throw new NotImplementedException();
         }
 
         public void StartReportingGameProgress()
         {
             throw new NotImplementedException();
         }
+
+
+        public void RestartSearch()
+        {
+            //client.RestartSearch();
+        }
+        public void SubscribeToSearchingOpponents(Action<List<Common.Player>> updateOpponentsList)
+        {
+            oponentsChangedEventHandler = new TypeRacersClient.OpponentsChangedEventHandler(updateOpponentsList);
+            typeRacersClient.OpponentsChanged += new TypeRacersClient.OpponentsChangedEventHandler(oponentsChangedEventHandler);
+        }
+
     }
 }

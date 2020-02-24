@@ -184,6 +184,10 @@
       <Project>{0ea55968-c885-4c88-a344-379f7ddf0754}</Project>
       <Name>Client</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{fb5f627c-5481-4f30-84d6-022fe66b9afb}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Server\Server.csproj">
       <Project>{9d2829d4-21ff-4a8f-aa03-23ca97256eb1}</Project>
       <Name>Server</Name>

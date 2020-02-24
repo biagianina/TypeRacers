@@ -68,7 +68,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameMessage.cs" />
     <Compile Include="InputCharacterValidation.cs" />
+    <Compile Include="OpponentsMessage.cs" />
     <Compile Include="Playroom.cs" />
     <Compile Include="Rooms.cs" />
     <Compile Include="ServerGeneratedText.cs" />
