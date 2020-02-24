@@ -17,7 +17,6 @@ namespace Server
 
         public bool GameHasStarted => GameStartingTime != DateTime.MinValue;
         public List<Player> Players { get; set; }
-        private int PlayroomSize { get; set; }
         public DateTime GameStartingTime { get; set; }
         public DateTime GameEndingTime { get; set; }
         public DateTime TimeToWaitForOpponents { get; set; }
@@ -38,6 +37,11 @@ namespace Server
             }
 
             return GameStartingTime;
+        }
+
+        internal void ManagePlayerRecievedData(Player player, string[] infos)
+        {
+            throw new NotImplementedException();
         }
 
         public bool IsInPlayroom(string playerName)
@@ -72,9 +76,8 @@ namespace Server
 
             if (!IsInPlayroom(currentPlayer.Name))
             {
-                PlayroomSize++;
                 Players.Add(currentPlayer);
-                Console.WriteLine("adding player:" + currentPlayer.Name + ", playroom size: " + PlayroomSize);
+                Console.WriteLine("adding player:" + currentPlayer.Name + ", playroom size: " + Players.Count);
             }
             return true;
         }

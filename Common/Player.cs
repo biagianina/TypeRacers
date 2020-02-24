@@ -6,7 +6,6 @@ namespace Common
 {
     public class Player
     {
-
         private readonly TcpClient tcpClient;
         private NetworkStream networkStream;
 

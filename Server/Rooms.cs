@@ -32,31 +32,39 @@ namespace Server
         {
             while (true)
             {
-
                 var dataRead = player.Read();
                 dataRead.Remove(dataRead.Length - 1);
+
                 var nameAndInfo = dataRead.Split('$');
                 var infos = nameAndInfo.FirstOrDefault()?.Split('&');
                 player.Name = nameAndInfo.LastOrDefault();
                 Console.WriteLine(dataRead);
-                if (PlayerIsNew(player))
+
+                ManagePlayerReceivedData(player, infos);
+            }
+        }
+
+        private void ManagePlayerReceivedData(Player player, string[] infos)
+        {
+            if (PlayerIsNew(player))
+            {
+                if (!LastAvailablePlayroom.Join(player))
                 {
-                    if (!LastAvailablePlayroom.Join(player))
-                    {
-                        LastAvailablePlayroom = CreateNewPlayroom();
-                    }
-                    player.SetPlayroom(LastAvailablePlayroom);
-                    player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]), false, 0);
-                    player.Write(new GameMessage(LastAvailablePlayroom.CompetitionText, LastAvailablePlayroom.TimeToWaitForOpponents, LastAvailablePlayroom.GameStartingTime, LastAvailablePlayroom.GameEndingTime));
-                    Console.WriteLine("sending game info");
+                    LastAvailablePlayroom = CreateNewPlayroom();
                 }
-                else
-                {
-                    player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]), false, 0);
-                    var toSend = new OpponentsMessage(LastAvailablePlayroom.Players, LastAvailablePlayroom.GameStartingTime, LastAvailablePlayroom.GameEndingTime, player.Name);
-                    player.Write(toSend);
-                    Console.WriteLine("sending opponents");
-                }
+                player.SetPlayroom(LastAvailablePlayroom);
+                player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]), false, 0);
+                LastAvailablePlayroom.TrySetGameStartingTime();
+                player.Write(new GameMessage(LastAvailablePlayroom.CompetitionText, LastAvailablePlayroom.TimeToWaitForOpponents, LastAvailablePlayroom.GameStartingTime, LastAvailablePlayroom.GameEndingTime));
+                Console.WriteLine("sending game info");
+            }
+            else
+            {
+                player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]), false, 0);
+                LastAvailablePlayroom.TrySetGameStartingTime();
+                var toSend = new OpponentsMessage(LastAvailablePlayroom.Players, LastAvailablePlayroom.GameStartingTime, LastAvailablePlayroom.GameEndingTime, player.Name);
+                player.Write(toSend);
+                Console.WriteLine("sending opponents");
             }
         }
 

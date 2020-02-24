@@ -6,13 +6,11 @@ namespace Common
     public interface IPlayroom<Player>
     {
         string CompetitionText { get; }
-        List<Player> Players { get; set; }
-        Player GetPlayer(string name);
 
+        List<Player> Players { get; set; }
         DateTime GameStartingTime { get; set; }
         DateTime GameEndingTime { get; set; }
         DateTime TimeToWaitForOpponents { get; set; }
-        int Place { get; set; }
 
         void SetGameInfo(string v);
         void SetOpponentsAndTimers(string v);

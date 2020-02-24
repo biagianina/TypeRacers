@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -67,8 +66,6 @@ namespace TypeRacers.ViewModel
         }
 
         public IEnumerable<Common.Player> Opponents { get; private set; }
-
-        public IEnumerable<Tuple<string, Tuple<string, string, bool, string>>> OpponentsAndRanking { get; }
 
         public Visibility ShowFirstOpponent { get; set; }
 
@@ -344,30 +341,7 @@ namespace TypeRacers.ViewModel
 
             CheckIfWaitingTimeHasPassed();
         }
-
-        //private void SetOpponentsAndRanking()
-        //{
-        //    List<Tuple<string, Tuple<string, string, bool, string>>> opponentsAndRanking = new List<Tuple<string, Tuple<string, string, bool, string>>>();
-        //    foreach (var rank in Rank)
-        //    {
-        //        var player = Opponents.FirstOrDefault(op => op.Item1.Equals(rank.Key));
-        //        if (player != default)
-        //        {
-        //            opponentsAndRanking.Add(new Tuple<string, Tuple<string, string, bool, string>>(rank.Key, new Tuple<string, string, bool, string>(player.Item2.Item1, player.Item2.Item2, rank.Value.Item1, Convert.ToString(rank.Value.Item2))));
-        //        }
-        //        else
-        //        {
-        //            ShowRanking = rank.Value.Item1;
-        //            TriggerPropertyChanged(nameof(ShowRanking));
-        //            RankingPlace = rank.Value.Item2.ToString();
-        //            TriggerPropertyChanged(nameof(RankingPlace));
-        //        }
-        //    }
-
-        //    OpponentsAndRanking = opponentsAndRanking.AsEnumerable();
-        //    TriggerPropertyChanged(nameof(OpponentsAndRanking));
-        //}
-
+      
         private void CheckIfStartTimeWasSet()
         {
             if (model.GetStartingTime() != DateTime.MinValue)
@@ -380,8 +354,6 @@ namespace TypeRacers.ViewModel
 
                 EndTime = model.GetEndingTime();
                 TriggerPropertyChanged(nameof(EndTime));
-
-                model.StartGameProgressReporting();
 
                 SecondsToGetReady = (StartTime - DateTime.UtcNow).Seconds.ToString();
                 TriggerPropertyChanged(nameof(SecondsToGetReady));
