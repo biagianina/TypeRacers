@@ -11,6 +11,7 @@ namespace TypeRacers.View
         public MainWindow()
         {
             InitializeComponent();
+
             Loaded += MainWindow_Loaded;
         }
 

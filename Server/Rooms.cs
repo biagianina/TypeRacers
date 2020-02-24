@@ -30,33 +30,34 @@ namespace Server
 
         public void AllocatePlayroom(Player player)
         {
-            var dataRead = player.Read();
-            dataRead.Remove(dataRead.Length - 1);
-            var nameAndInfo = dataRead.Split('$');
-            var infos = nameAndInfo.FirstOrDefault().Split('&');
-            var name = nameAndInfo.LastOrDefault();
-
-            player.Name = name;
-            Console.WriteLine(dataRead);
-
-            if (PlayerIsNew(player))
+            while (true)
             {
-                if (!LastAvailablePlayroom.Join(player))
+
+                var dataRead = player.Read();
+                dataRead.Remove(dataRead.Length - 1);
+                var nameAndInfo = dataRead.Split('$');
+                var infos = nameAndInfo.FirstOrDefault()?.Split('&');
+                player.Name = nameAndInfo.LastOrDefault();
+                Console.WriteLine(dataRead);
+                if (PlayerIsNew(player))
                 {
-                    LastAvailablePlayroom = CreateNewPlayroom();
+                    if (!LastAvailablePlayroom.Join(player))
+                    {
+                        LastAvailablePlayroom = CreateNewPlayroom();
+                    }
+                    player.SetPlayroom(LastAvailablePlayroom);
+                    player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]), false, 0);
+                    player.Write(new GameMessage(LastAvailablePlayroom.CompetitionText, LastAvailablePlayroom.TimeToWaitForOpponents, LastAvailablePlayroom.GameStartingTime, LastAvailablePlayroom.GameEndingTime));
+                    Console.WriteLine("sending game info");
                 }
-
-                player.SetPlayroom(LastAvailablePlayroom);
-                player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]), false, 0);
-                player.Write(new Message("gameinfo", new object[] { LastAvailablePlayroom.CompetitionText, LastAvailablePlayroom.TimeToWaitForOpponents, LastAvailablePlayroom.GameStartingTime, LastAvailablePlayroom.GameEndingTime }));
-                player.FirstTimeConnecting = false;
+                else
+                {
+                    player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]), false, 0);
+                    var toSend = new OpponentsMessage(LastAvailablePlayroom.Players, LastAvailablePlayroom.GameStartingTime, LastAvailablePlayroom.GameEndingTime, player.Name);
+                    player.Write(toSend);
+                    Console.WriteLine("sending opponents");
+                }
             }
-            else
-            {
-                player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]), false, 0);
-                player.Write(new Message("opponents", new object[] { LastAvailablePlayroom.Players, LastAvailablePlayroom.GameStartingTime, LastAvailablePlayroom.GameEndingTime }));
-            }
-           
         }
 
         public bool PlayerIsNew(Player player)

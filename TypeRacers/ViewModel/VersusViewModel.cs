@@ -1,7 +1,9 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -25,15 +27,13 @@ namespace TypeRacers.ViewModel
         private int correctTyping;
         private bool startReporting;
 
-
-
         public VersusViewModel()
         {
             model = new Model.Model();
+            Thread.Sleep(1000);
             TextToType = model.GetGeneratedTextToTypeFromServer();
             userInputValidator = new InputCharacterValidation(TextToType);
 
-            Rank = model.GetRanking();
             // first time getting opponents
             Opponents = model.GetOpponents();
             WaitingTime = model.GetWaitingTime();
@@ -48,11 +48,10 @@ namespace TypeRacers.ViewModel
             RestartSearchingOpponentsCommand = new CommandHandler(() => RestartSearchingOpponents(), () => true);
             //start searching for 30 seconds and subscribe to timer
             model.SubscribeToSearchingOpponents(UpdateOpponents);
-            model.StartServerCommunication();
             CanUserType = false;
+
         }
 
-        public Dictionary<string, Tuple<bool, int>> Rank { get; set; }
         public CommandHandler RemovePlayer { get; }
         public CommandHandler RestartSearchingOpponentsCommand { get; }
         public CommandHandler ExitProgramCommand { get; }
@@ -67,9 +66,9 @@ namespace TypeRacers.ViewModel
                 };
         }
 
-        public IEnumerable<Tuple<string, Tuple<string, string, int>>> Opponents { get; private set; }
+        public IEnumerable<Common.Player> Opponents { get; private set; }
 
-        public IEnumerable<Tuple<string, Tuple<string, string, bool, string>>> OpponentsAndRanking { get; private set; }
+        public IEnumerable<Tuple<string, Tuple<string, string, bool, string>>> OpponentsAndRanking { get; }
 
         public Visibility ShowFirstOpponent { get; set; }
 
@@ -210,8 +209,8 @@ namespace TypeRacers.ViewModel
         public string SecondsToGetReady { get; set; }
         public bool EnableSearchingAnimation { get; private set; }
         public DateTime StartTime { get; set; }
-        public bool ShowRanking { get; private set; }
-        public string RankingPlace { get; private set; }
+        public bool ShowRanking { get; }
+        public string RankingPlace { get; }
         public int Accuracy { get; private set; }
         public bool OpenFinishPopup { get; private set; }
         public DateTime EndTime { get; private set; }
@@ -331,15 +330,10 @@ namespace TypeRacers.ViewModel
             model.RemovePlayer();
         }
 
-        private void UpdateOpponents(Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>> updatedOpponentsAndRanking)
+        private void UpdateOpponents(List<Common.Player> uppdateOpponents)
         {
-            Opponents = updatedOpponentsAndRanking.Item1;
+            Opponents = uppdateOpponents;
             TriggerPropertyChanged(nameof(Opponents));
-
-            Rank = updatedOpponentsAndRanking.Item2;
-            TriggerPropertyChanged(nameof(Rank));
-
-            SetOpponentsAndRanking();
 
             OpponentsCount = Opponents.Count();
             TriggerPropertyChanged(nameof(OpponentsCount));
@@ -351,28 +345,28 @@ namespace TypeRacers.ViewModel
             CheckIfWaitingTimeHasPassed();
         }
 
-        private void SetOpponentsAndRanking()
-        {
-            List<Tuple<string, Tuple<string, string, bool, string>>> opponentsAndRanking = new List<Tuple<string, Tuple<string, string, bool, string>>>();
-            foreach (var rank in Rank)
-            {
-                var player = Opponents.FirstOrDefault(op => op.Item1.Equals(rank.Key));
-                if (player != default)
-                {
-                    opponentsAndRanking.Add(new Tuple<string, Tuple<string, string, bool, string>>(rank.Key, new Tuple<string, string, bool, string>(player.Item2.Item1, player.Item2.Item2, rank.Value.Item1, Convert.ToString(rank.Value.Item2))));
-                }
-                else
-                {
-                    ShowRanking = rank.Value.Item1;
-                    TriggerPropertyChanged(nameof(ShowRanking));
-                    RankingPlace = rank.Value.Item2.ToString();
-                    TriggerPropertyChanged(nameof(RankingPlace));
-                }
-            }
+        //private void SetOpponentsAndRanking()
+        //{
+        //    List<Tuple<string, Tuple<string, string, bool, string>>> opponentsAndRanking = new List<Tuple<string, Tuple<string, string, bool, string>>>();
+        //    foreach (var rank in Rank)
+        //    {
+        //        var player = Opponents.FirstOrDefault(op => op.Item1.Equals(rank.Key));
+        //        if (player != default)
+        //        {
+        //            opponentsAndRanking.Add(new Tuple<string, Tuple<string, string, bool, string>>(rank.Key, new Tuple<string, string, bool, string>(player.Item2.Item1, player.Item2.Item2, rank.Value.Item1, Convert.ToString(rank.Value.Item2))));
+        //        }
+        //        else
+        //        {
+        //            ShowRanking = rank.Value.Item1;
+        //            TriggerPropertyChanged(nameof(ShowRanking));
+        //            RankingPlace = rank.Value.Item2.ToString();
+        //            TriggerPropertyChanged(nameof(RankingPlace));
+        //        }
+        //    }
 
-            OpponentsAndRanking = opponentsAndRanking.AsEnumerable();
-            TriggerPropertyChanged(nameof(OpponentsAndRanking));
-        }
+        //    OpponentsAndRanking = opponentsAndRanking.AsEnumerable();
+        //    TriggerPropertyChanged(nameof(OpponentsAndRanking));
+        //}
 
         private void CheckIfStartTimeWasSet()
         {
@@ -418,10 +412,11 @@ namespace TypeRacers.ViewModel
 
         private void UpdateShownPlayers()
         {
-            if (Opponents.Count() == 0)
+            if (Opponents == null || Opponents.Count() == 0)
             {
                 ShowFirstOpponent = Visibility.Hidden;
                 ShowSecondOpponent = Visibility.Hidden;
+                return;
             }
             if (Opponents.Count() == 1)
             {

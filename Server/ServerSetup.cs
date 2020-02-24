@@ -24,12 +24,13 @@ namespace TypeRacers.Server
             {
                 server.Start();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
             Console.WriteLine("Server started");
+
             CommunicationSetup();//separated the communication from server starter
         }
 
@@ -38,9 +39,9 @@ namespace TypeRacers.Server
         {
             while (true)
             {
-                client = server.AcceptTcpClient();
                 Thread thread = new Thread(() =>
                 {
+                    client = server.AcceptTcpClient();
                     Player newConnectedClient = new Player(client);
                     playrooms.AllocatePlayroom(newConnectedClient);
                 });

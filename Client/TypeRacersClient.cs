@@ -12,58 +12,67 @@ namespace TypeRacers.Client
 {
     public class TypeRacersClient
     {
-        private TcpClient client;
-        private Player player;
+        public delegate void OpponentsChangedEventHandler(List<Player> updatedOpponents);
 
-        public TypeRacersClient()
-        { 
-            client = new TcpClient("localhost", 80);
-            player = new Player(client);
-            player.SetPlayroom(new GameInfo());
+        public event OpponentsChangedEventHandler OpponentsChanged;
+
+        public TypeRacersClient(Player player)
+        {
+            Player = player;
+            Player.SetPlayroom(new GameInfo());
+            StartServerCommunication();
+
         }
+
+        public Player Player { get; set; }
 
         public void StartServerCommunication()
         {
+
+            Thread writeThread = new Thread(Write);
+            Thread readThread = new Thread(Read);
+            writeThread.Start();
+            readThread.Start();
+
+        }
+
+        private void Read()
+        {
             while (true)
             {
-                try
+                if (Player.FirstTimeConnecting)
                 {
-                    Thread writeThread = new Thread(() =>
-                    {
-                        Thread.Sleep(2000);
-                        player.Write(new Common.Message("clientinfo", new object[] { player.WPMProgress, player.CompletedTextPercentage, player.Name}));
-
-                    });
-                    writeThread.Start();
-                    Thread readThread = new Thread(() =>
-                    {
-                        Thread.Sleep(2000);
-                        if (player.FirstTimeConnecting)
-                        {
-                            player.Playroom.SetGameInfo(player.Read());
-                        }
-                        else
-                        {
-                            player.Playroom.SetOpponentsAndTimers(player.Read());
-                        }
-
-                    });
-                    readThread.Start();
+                    Player.Playroom.SetGameInfo(Player.Read());
+                    Player.FirstTimeConnecting = false;
                 }
-                catch(Exception e)
-                {
-                    throw e;
-                }
+                
+                Player.Playroom.SetOpponentsAndTimers(Player.Read());
+                
+
+                Thread.Sleep(3000);
             }
-            
+        }
+        private void Write()
+        {
+            while (true)
+            {
+                Player.Write(new PlayerMessage(Player.WPMProgress, Player.CompletedTextPercentage, Player.Name));
+                OnOpponentsChanged(Player.Playroom.Players);
+                Thread.Sleep(3000);
+            }
         }
 
         public void NameClient(string username)
         {
-            player.Name = username;
+            Player.Name = username;
         }
-
-     
+        protected void OnOpponentsChanged(List<Player> opponents)
+        {
+            if (opponents != null && OpponentsChanged != null)
+            {
+                OpponentsChanged(opponents);
+            }
+        }
         //public void RestartSearch()
         //{
         //    string toSend = Name + "_restart" + "#";
@@ -73,7 +82,7 @@ namespace TypeRacers.Client
         //    WaitingTime = DateTime.Parse(dataWithoutHashtag);
         //}
 
-      
+
         //public void RemovePlayerFromRoom()
         //{
         //    //connecting to server

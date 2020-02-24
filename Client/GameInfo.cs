@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,8 +8,7 @@ namespace TypeRacers.Client
     public class GameInfo : IPlayroom<Player>
     {
         public string CompetitionText { get; set; }
-
-        public List<Player> Players { get; set ; }
+        public List<Player> Players { get; set; } = new List<Player>();
         public DateTime GameStartingTime { get; set; }
         public DateTime GameEndingTime { get ; set; }
         public DateTime TimeToWaitForOpponents { get ; set ; }
@@ -57,18 +57,21 @@ namespace TypeRacers.Client
         private void SetOpponents(string[] nameAndInfos)
         {
             var name = nameAndInfos.FirstOrDefault();
-            var info = nameAndInfos.LastOrDefault().Split('&');
+            var info = nameAndInfos.LastOrDefault()?.Split('&');
             var player = GetPlayer(name);
 
             if (player == default)
             {
-                player.Name = name;
-                player.UpdateInfo(int.Parse(info[0]), int.Parse(info[1]), false, 0);
+                player = new Player(new System.Net.Sockets.TcpClient())
+                {
+                    Name = name
+                };
+                player.UpdateInfo(int.Parse(info[0]), int.Parse(info[1]), Convert.ToBoolean(info[2]), int.Parse(info[3]));
                 Players.Add(player);
             }
             else
             {
-                player.UpdateInfo(int.Parse(info[0]), int.Parse(info[1]), false, 0);
+                player.UpdateInfo(int.Parse(info[0]), int.Parse(info[1]), Convert.ToBoolean(info[2]), int.Parse(info[3]));
             }
         }
     }

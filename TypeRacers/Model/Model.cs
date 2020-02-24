@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using TypeRacers.ViewModel;
+using System.Windows.Threading; // For Dispatcher.
+using System.Windows;
 
 namespace TypeRacers.Model
 {
@@ -10,11 +12,10 @@ namespace TypeRacers.Model
 
         public Model()
         {
-            networkHandler = new NetworkHandler();
-            networkHandler.NameClient(MainViewModel.Name);
+            networkHandler = new NetworkHandler(MainViewModel.Name);
         }
 
-        public List<Tuple<string, Tuple<string, string, int>>> GetOpponents()
+        public List<Common.Player> GetOpponents()
         {
             return networkHandler.GetOpponents();
         }
@@ -34,33 +35,24 @@ namespace TypeRacers.Model
             return networkHandler.GetEndingTime();
         }
 
-        public void StartServerCommunication()
-        {
-            networkHandler.StartServerCommunication();
-        }
-        public void GetTextToType()
-        {
-            networkHandler.GetTextToType();
-        }
-
-        public Dictionary<string, Tuple<bool, int>> GetRanking()
-        {
-            return networkHandler.GetRanking();
-        }
+        //public Dictionary<string, Tuple<bool, int>> GetRanking()
+        //{
+        //    return networkHandler.GetRanking();
+        //}
 
         public DateTime GetWaitingTime()
         {
             return networkHandler.GetWaitingTime();
         }
-        public void SubscribeToSearchingOpponents(Action<Tuple<List<Tuple<string, Tuple<string, string, int>>>, Dictionary<string, Tuple<bool, int>>>> updateOpponents)
+
+        public void SubscribeToSearchingOpponents(Action<List<Common.Player>> updateOpponents)
         {
             networkHandler.SubscribeToSearchingOpponents(updateOpponents);
         }
 
-        public void ReportProgress(int progress, int sliderProgress)
+        public void ReportProgress(int wpmProgress, int completedTextPercentageProgress)
         {
-            string message = progress + "&" + sliderProgress;
-            networkHandler.SendProgressToServer(message);
+            networkHandler.SendProgressToServer(wpmProgress, completedTextPercentageProgress);
         }
 
         public string GetGeneratedTextToTypeLocally()

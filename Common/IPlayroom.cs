@@ -5,7 +5,7 @@ namespace Common
 {
     public interface IPlayroom<Player>
     {
-        string CompetitionText { get; set; }
+        string CompetitionText { get; }
         List<Player> Players { get; set; }
         Player GetPlayer(string name);
 
