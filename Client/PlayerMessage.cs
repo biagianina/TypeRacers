@@ -12,15 +12,32 @@ namespace TypeRacers.Client
         int wpmProgress;
         int completedTextPercentage;
         string name;
-        public PlayerMessage(int wpmProgress, int completedTextPercentage, string name)
+        bool restart;
+        bool removed;
+
+        public PlayerMessage(int wpmProgress, int completedTextPercentage, string name, bool restart, bool removed)
         {
             this.wpmProgress = wpmProgress;
             this.completedTextPercentage = completedTextPercentage;
             this.name = name;
+            this.restart = restart;
+            this.removed = removed;
         }
         public byte[] ToByteArray()
         {
-            return Encoding.ASCII.GetBytes(wpmProgress + "&" + completedTextPercentage + "$" + name + "#");
+            if (restart)
+            {
+                return Encoding.ASCII.GetBytes(wpmProgress + "&" + completedTextPercentage + "$" + name + "_restart" + "#");
+            }
+            else if (removed)
+            {
+                return Encoding.ASCII.GetBytes(wpmProgress + "&" + completedTextPercentage + "$" + name + "_removed" + "#");
+            }
+            else
+            {
+                return Encoding.ASCII.GetBytes(wpmProgress + "&" + completedTextPercentage + "$" + name + "#");
+            }
+
         }
     }
 }

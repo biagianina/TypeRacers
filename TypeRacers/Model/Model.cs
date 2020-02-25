@@ -69,10 +69,5 @@ namespace TypeRacers.Model
         {
             networkHandler.RemovePlayer();
         }
-
-        internal void StartGameProgressReporting()
-        {
-            networkHandler.StartReportingGameProgress();
-        }
     }
 }

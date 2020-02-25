@@ -38,42 +38,42 @@ namespace TypeRacers.Client
 
         private void Read()
         {
-            while (true)
+            do
             {
                 if (Player.FirstTimeConnecting || Player.Restarting)
                 {
                     Player.Playroom.SetGameInfo(Player.Read());
                     Player.FirstTimeConnecting = false;
-                    if (Player.Restarting)
-                    {
-                        Player.Restarting = false;
-                    }
+                    Player.Restarting = false;
                 }
 
                 Player.Playroom.SetOpponentsAndTimers(Player.Read());
+
+            }
+            while (!Player.Removed);
+        }
+
+
+        private void Write()
+        {
+            do
+            {
+                Player.Write(new PlayerMessage(Player.WPMProgress, Player.CompletedTextPercentage, Player.Name, Player.Restarting, Player.Removed));
+                OnOpponentsChanged(Player.Playroom.Players);
                 Thread.Sleep(1000);
             }
+            while (!Player.Removed);
+        }
+
+        public void RemovePlayer()
+        {
+            Player.Removed = true;
+            Player.Write(new PlayerMessage(Player.WPMProgress, Player.CompletedTextPercentage, Player.Name, Player.Restarting, Player.Removed));
         }
 
         public void RestartSearch()
         {
             Player.Restarting = true;
-        }
-        private void Write()
-        {
-            while (true)
-            {
-                if (Player.Restarting)
-                {
-                    Player.Write(new PlayerMessage(Player.WPMProgress, Player.CompletedTextPercentage, Player.Name + "_restart"));
-                }
-                else
-                {
-                    Player.Write(new PlayerMessage(Player.WPMProgress, Player.CompletedTextPercentage, Player.Name));
-                }
-                OnOpponentsChanged(Player.Playroom.Players);
-                Thread.Sleep(1000);
-            }
         }
 
         protected void OnOpponentsChanged(List<Player> opponents)
@@ -89,15 +89,6 @@ namespace TypeRacers.Client
         {
             Player.Name = username;
         }
-
-        //public void RestartSearch()
-        //{
-        //    string toSend = Name + "_restart" + "#";
-
-        //    var dataFromServer = SendDataToServer(toSend);
-        //    var dataWithoutHashtag = dataFromServer.Remove(dataFromServer.Length - 1);
-        //    WaitingTime = DateTime.Parse(dataWithoutHashtag);
-        //}
 
 
         //public void RemovePlayerFromRoom()

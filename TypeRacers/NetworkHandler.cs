@@ -67,14 +67,8 @@ namespace TypeRacers
 
         public void RemovePlayer()
         {
-            throw new NotImplementedException();
+            typeRacersClient.RemovePlayer();
         }
-
-        public void StartReportingGameProgress()
-        {
-            throw new NotImplementedException();
-        }
-
 
         public void RestartSearch()
         {

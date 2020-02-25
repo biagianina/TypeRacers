@@ -41,10 +41,7 @@ namespace Server
                 var infos = nameAndInfo.FirstOrDefault()?.Split('&');
                 player.Name = nameAndInfo.LastOrDefault();
 
-                if (player.Name.Contains("_restart"))
-                {
-                    resendPlayroomInfo = true;
-                }
+
                 Console.WriteLine(dataRead);
 
                 ManagePlayerReceivedData(player, infos);
@@ -53,6 +50,23 @@ namespace Server
 
         private void ManagePlayerReceivedData(Player player, string[] infos)
         {
+            if (player.Name.Contains("_restart"))
+            {
+                resendPlayroomInfo = true;
+            }
+            else if (player.Name.Contains("_removed"))
+            {
+                foreach (var current in playrooms)
+                {
+                    if (current.GetPlayer(player.Name) != null)
+                    {
+                        current.Players.Remove(current.GetPlayer(player.Name));
+                        Console.WriteLine("REMOVED: " + player.Name);
+                        Console.WriteLine("Playroom size: " + current.Players.Count());
+                    }
+                }
+                return;
+            }
 
             if (PlayerIsNew(player) || resendPlayroomInfo)
             {

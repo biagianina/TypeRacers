@@ -16,9 +16,11 @@ namespace Common
 
 
         public bool FirstTimeConnecting = true;
-        public bool Restarting { get; set; }
+
         public string Name { get; set; }
         public int Place { get; set; }
+        public bool Restarting { get; set; }
+        public bool Removed { get; set; }
         public bool Finnished { get; set; }
         public int WPMProgress { get; set; }
         public int CompletedTextPercentage { get; set; }
@@ -58,6 +60,7 @@ namespace Common
 
         public void Write(IMessage message)
         {
+
             networkStream = tcpClient.GetStream();
             var toSend = message.ToByteArray();
             networkStream.Write(toSend, 0, toSend.Length);
