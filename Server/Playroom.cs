@@ -23,20 +23,21 @@ namespace Server
         public int Place { get; set; } = 1;
         public string CompetitionText { get;}
 
-        public DateTime TrySetGameStartingTime()
+        public void TrySetGameStartingTime()
         {
-            if (Players.Count == 3 || TimeToWaitForOpponents - DateTime.UtcNow.AddSeconds(2) <= TimeSpan.Zero && Players.Count == 2)
+            if (!GameHasStarted)
             {
-                GameStartingTime = DateTime.UtcNow.AddSeconds(10);
-                GameEndingTime = GameStartingTime.AddSeconds(90);
-            }
+                if (Players.Count == 3 || TimeToWaitForOpponents - DateTime.UtcNow.AddSeconds(2) <= TimeSpan.Zero && Players.Count == 2)
+                {
+                    GameStartingTime = DateTime.UtcNow.AddSeconds(10);
+                    GameEndingTime = GameStartingTime.AddSeconds(90);
+                }
 
-            if ((Players.Count == 1) && TimeToWaitForOpponents - DateTime.UtcNow.AddSeconds(2) <= TimeSpan.Zero)
-            {
-                ResetPlayroom();
+                if ((Players.Count == 1) && TimeToWaitForOpponents - DateTime.UtcNow.AddSeconds(2) <= TimeSpan.Zero)
+                {
+                    ResetPlayroom();
+                }
             }
-
-            return GameStartingTime;
         }
 
         internal void ManagePlayerRecievedData(Player player, string[] infos)
