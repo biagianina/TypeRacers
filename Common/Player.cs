@@ -27,12 +27,10 @@ namespace Common
             Playroom = playroom;
         }
 
-        public void UpdateInfo(int wpmProgress, int completedText, bool finished, int place)
+        public void UpdateInfo(int wpmProgress, int completedText)
         {
             WPMProgress = wpmProgress;
             CompletedTextPercentage = completedText;
-            Finnished = finished;
-            Place = place;
         }
 
         public string Read()

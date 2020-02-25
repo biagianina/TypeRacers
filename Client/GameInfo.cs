@@ -66,12 +66,12 @@ namespace TypeRacers.Client
                 {
                     Name = name
                 };
-                player.UpdateInfo(int.Parse(info[0]), int.Parse(info[1]), Convert.ToBoolean(info[2]), int.Parse(info[3]));
+                player.UpdateInfo(int.Parse(info[0]), int.Parse(info[1]));
                 Players.Add(player);
             }
             else
             {
-                player.UpdateInfo(int.Parse(info[0]), int.Parse(info[1]), Convert.ToBoolean(info[2]), int.Parse(info[3]));
+                player.UpdateInfo(int.Parse(info[0]), int.Parse(info[1]));
             }
         }
     }

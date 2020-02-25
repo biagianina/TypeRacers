@@ -26,22 +26,22 @@ namespace TypeRacers
 
         public DateTime GetStartingTime()
         {
-            return typeRacersClient.Player.Playroom.GameStartingTime;
+            return typeRacersClient.gameInfo.GameStartingTime;
         }
 
         public DateTime GetEndingTime()
         {
-            return typeRacersClient.Player.Playroom.GameEndingTime;
+            return typeRacersClient.gameInfo.GameEndingTime;
         }
 
         public DateTime GetWaitingTime()
         {
-            return typeRacersClient.Player.Playroom.TimeToWaitForOpponents;
+            return typeRacersClient.gameInfo.TimeToWaitForOpponents;
         }
 
         public List<Common.Player> GetOpponents()
         {
-            return typeRacersClient.Player.Playroom.Players;
+            return typeRacersClient.gameInfo.Players;
         }
 
         //public Dictionary<string, Tuple<bool, int>> GetRanking()
@@ -51,13 +51,13 @@ namespace TypeRacers
 
         public string GetTextFromServer()
         {
-            return typeRacersClient.Player.Playroom.CompetitionText;
+            return typeRacersClient.gameInfo.CompetitionText;
         }
 
         public void SendProgressToServer(int wpmProgress, int completedTextPercentage)
         {
             //to implement finished and place
-            typeRacersClient.Player.UpdateInfo(wpmProgress, completedTextPercentage, default, default);
+            typeRacersClient.Player.UpdateInfo(wpmProgress, completedTextPercentage);
         }
 
         public void NameClient(string username)

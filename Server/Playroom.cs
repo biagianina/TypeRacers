@@ -83,6 +83,16 @@ namespace Server
             return true;
         }
 
+        internal void CheckRanking(Player player, string completedTextPerecentage)
+        {
+            var currentPlayer = GetPlayer(player.Name);
+            if (completedTextPerecentage.Equals(100))
+            {
+                currentPlayer.Finnished = true;
+                currentPlayer.Place = Place++;
+            }
+        }
+
         private void ResetPlayroom()
         {
             TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(20);

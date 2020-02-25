@@ -16,24 +16,24 @@ namespace TypeRacers.Client
 
         public event OpponentsChangedEventHandler OpponentsChanged;
 
+        public GameInfo gameInfo;
+
         public TypeRacersClient(Player player)
         {
             Player = player;
-            Player.SetPlayroom(new GameInfo());
+            gameInfo = new GameInfo();
+            Player.SetPlayroom(gameInfo);
             StartServerCommunication();
-
         }
 
         public Player Player { get; set; }
 
         public void StartServerCommunication()
         {
-
             Thread writeThread = new Thread(Write);
             Thread readThread = new Thread(Read);
             writeThread.Start();
             readThread.Start();
-
         }
 
         private void Read()
@@ -47,7 +47,6 @@ namespace TypeRacers.Client
                 }
                 
                 Player.Playroom.SetOpponentsAndTimers(Player.Read());
-                
 
                 Thread.Sleep(3000);
             }
