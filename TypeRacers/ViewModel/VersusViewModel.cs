@@ -309,10 +309,10 @@ namespace TypeRacers.ViewModel
             TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
 
             model.RestartSearch();
+            Thread.Sleep(1000);
+            //getting the waiting time again
             WaitingTime = model.GetWaitingTime();
             TimeToStart = DateTime.UtcNow.AddSeconds((WaitingTime - DateTime.UtcNow).Seconds);
-            //model.StartSearchingOpponents();
-
             EnableSearchingAnimation = true;
             TriggerPropertyChanged(nameof(EnableSearchingAnimation));
         }
@@ -340,8 +340,9 @@ namespace TypeRacers.ViewModel
             CheckIfStartTimeWasSet();
 
             CheckIfWaitingTimeHasPassed();
+
         }
-      
+
         private void CheckIfStartTimeWasSet()
         {
             if (model.GetStartingTime() != DateTime.MinValue)
@@ -376,8 +377,10 @@ namespace TypeRacers.ViewModel
                     EnableSearchingAnimation = false;
                     TriggerPropertyChanged(nameof(EnableSearchingAnimation));
 
+
                     EnableRestartOrExitAlert = true;
                     TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
+
                 }
             }
         }

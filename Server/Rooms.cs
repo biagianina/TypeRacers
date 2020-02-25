@@ -11,6 +11,8 @@ namespace Server
 {
     public class Rooms
     {
+        private bool resendPlayroomInfo;
+
         private readonly List<Playroom> playrooms;
         public Playroom LastAvailablePlayroom { get; set; }
 
@@ -38,6 +40,11 @@ namespace Server
                 var nameAndInfo = dataRead.Split('$');
                 var infos = nameAndInfo.FirstOrDefault()?.Split('&');
                 player.Name = nameAndInfo.LastOrDefault();
+
+                if (player.Name.Contains("_restart"))
+                {
+                    resendPlayroomInfo = true;
+                }
                 Console.WriteLine(dataRead);
 
                 ManagePlayerReceivedData(player, infos);
@@ -46,7 +53,8 @@ namespace Server
 
         private void ManagePlayerReceivedData(Player player, string[] infos)
         {
-            if (PlayerIsNew(player))
+
+            if (PlayerIsNew(player) || resendPlayroomInfo)
             {
                 if (!LastAvailablePlayroom.Join(player))
                 {
@@ -57,6 +65,11 @@ namespace Server
                 LastAvailablePlayroom.TrySetGameStartingTime();
                 player.Write(new GameMessage(LastAvailablePlayroom.CompetitionText, LastAvailablePlayroom.TimeToWaitForOpponents, LastAvailablePlayroom.GameStartingTime, LastAvailablePlayroom.GameEndingTime));
                 Console.WriteLine("sending game info");
+
+                if (resendPlayroomInfo)
+                {
+                    resendPlayroomInfo = false;
+                }
             }
             else
             {

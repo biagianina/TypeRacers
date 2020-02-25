@@ -40,39 +40,56 @@ namespace TypeRacers.Client
         {
             while (true)
             {
-                if (Player.FirstTimeConnecting)
+                if (Player.FirstTimeConnecting || Player.Restarting)
                 {
                     Player.Playroom.SetGameInfo(Player.Read());
                     Player.FirstTimeConnecting = false;
+                    if (Player.Restarting)
+                    {
+                        Player.Restarting = false;
+                    }
                 }
-                
-                Player.Playroom.SetOpponentsAndTimers(Player.Read());
-                
 
-                Thread.Sleep(3000);
+                Player.Playroom.SetOpponentsAndTimers(Player.Read());
+                Thread.Sleep(1000);
             }
+        }
+
+        public void RestartSearch()
+        {
+            Player.Restarting = true;
         }
         private void Write()
         {
             while (true)
             {
-                Player.Write(new PlayerMessage(Player.WPMProgress, Player.CompletedTextPercentage, Player.Name));
+                if (Player.Restarting)
+                {
+                    Player.Write(new PlayerMessage(Player.WPMProgress, Player.CompletedTextPercentage, Player.Name + "_restart"));
+                }
+                else
+                {
+                    Player.Write(new PlayerMessage(Player.WPMProgress, Player.CompletedTextPercentage, Player.Name));
+                }
                 OnOpponentsChanged(Player.Playroom.Players);
-                Thread.Sleep(3000);
+                Thread.Sleep(1000);
             }
         }
+
+        protected void OnOpponentsChanged(List<Player> opponents)
+        {
+            if (opponents != null && OpponentsChanged != null && !Player.Restarting)
+            {
+                OpponentsChanged(opponents);
+            }
+        }
+
 
         public void NameClient(string username)
         {
             Player.Name = username;
         }
-        protected void OnOpponentsChanged(List<Player> opponents)
-        {
-            if (opponents != null && OpponentsChanged != null)
-            {
-                OpponentsChanged(opponents);
-            }
-        }
+
         //public void RestartSearch()
         //{
         //    string toSend = Name + "_restart" + "#";

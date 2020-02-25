@@ -14,7 +14,9 @@ namespace Common
             this.tcpClient = tcpClient;
         }
 
+
         public bool FirstTimeConnecting = true;
+        public bool Restarting { get; set; }
         public string Name { get; set; }
         public int Place { get; set; }
         public bool Finnished { get; set; }

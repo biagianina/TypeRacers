@@ -78,7 +78,7 @@ namespace TypeRacers
 
         public void RestartSearch()
         {
-            //client.RestartSearch();
+            typeRacersClient.RestartSearch();
         }
         public void SubscribeToSearchingOpponents(Action<List<Common.Player>> updateOpponentsList)
         {
