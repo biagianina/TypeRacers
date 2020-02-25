@@ -12,12 +12,16 @@ namespace Server
         DateTime startingTime;
         DateTime endingTime;
         string name;
-        public OpponentsMessage(List<Player> players, DateTime startingTime, DateTime endingTime, string name)
+        bool finnished;
+        int place;
+        public OpponentsMessage(List<Player> players, DateTime startingTime, DateTime endingTime, string name, bool finnished, int place)
         {
             this.players = players;
             this.startingTime = startingTime;
             this.endingTime = endingTime;
             this.name = name;
+            this.place = place;
+            this.finnished = finnished;
         }
 
         public byte[] ToByteArray()
@@ -39,7 +43,7 @@ namespace Server
             });
             ;
 
-            opponents += "*" + startingTime.ToString() + "+" + endingTime.ToString() + "#";
+            opponents += "*" + startingTime.ToString() + "+" + endingTime.ToString()+ "%" + "!"+ finnished +"/" + place + "#";
 
             return opponents;
         }

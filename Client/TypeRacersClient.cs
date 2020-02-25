@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using System.Timers;
-using System.Windows.Forms;
 using Common;
+
 namespace TypeRacers.Client
 {
     public class TypeRacersClient
@@ -40,17 +36,39 @@ namespace TypeRacers.Client
         {
             while (true)
             {
+                var data = Player.Read();
                 if (Player.FirstTimeConnecting)
                 {
-                    Player.Playroom.SetGameInfo(Player.Read());
+                    gameInfo.SetGameInfo(data);
                     Player.FirstTimeConnecting = false;
                 }
-                
-                Player.Playroom.SetOpponentsAndTimers(Player.Read());
+                else
+                {
+                    SetGameStatus(data);
+                }
 
                 Thread.Sleep(3000);
             }
         }
+
+        private void SetGameStatus(string data)
+        {
+            var infos = data.Split('%').ToList();
+            infos.Remove("#");
+            foreach (var i in infos)
+            {
+                if (i.StartsWith("!"))
+                {
+                    var rank = i.Split('/');
+                    Player.Finnished = Convert.ToBoolean(rank.FirstOrDefault().Substring(1));
+                    Player.Place = int.Parse(rank.LastOrDefault());
+                    infos.Remove(i);
+                    break;
+                }
+            }
+            gameInfo.SetOpponentsAndTimers(infos);
+        }
+
         private void Write()
         {
             while (true)
@@ -72,28 +90,5 @@ namespace TypeRacers.Client
                 OpponentsChanged(opponents);
             }
         }
-        //public void RestartSearch()
-        //{
-        //    string toSend = Name + "_restart" + "#";
-
-        //    var dataFromServer = SendDataToServer(toSend);
-        //    var dataWithoutHashtag = dataFromServer.Remove(dataFromServer.Length - 1);
-        //    WaitingTime = DateTime.Parse(dataWithoutHashtag);
-        //}
-
-
-        //public void RemovePlayerFromRoom()
-        //{
-        //    //connecting to server
-        //    client = new TcpClient("localhost", 80);
-        //    stream = client.GetStream();
-
-        //    //writing the progress to stream
-
-        //    string toSend = Name + "_removed" + "#";
-
-        //    byte[] bytesToSend = Encoding.ASCII.GetBytes(toSend);
-        //    stream.Write(bytesToSend, 0, bytesToSend.Length);
-        //}
     }
 }

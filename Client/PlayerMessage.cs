@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Common;
 
 namespace TypeRacers.Client
 {
     public class PlayerMessage : IMessage
     {
-        int wpmProgress;
-        int completedTextPercentage;
-        string name;
+        readonly int wpmProgress;
+        readonly int completedTextPercentage;
+        readonly string name;
         public PlayerMessage(int wpmProgress, int completedTextPercentage, string name)
         {
             this.wpmProgress = wpmProgress;

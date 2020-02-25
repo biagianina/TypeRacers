@@ -74,5 +74,15 @@ namespace TypeRacers.Model
         {
             networkHandler.StartReportingGameProgress();
         }
+
+        internal bool PlayerFinnished()
+        {
+            return networkHandler.PlayerFinnished();
+        }
+
+        internal string PlayerPlace()
+        {
+            return networkHandler.PlayerPlace();
+        }
     }
 }

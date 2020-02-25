@@ -58,13 +58,18 @@ namespace Server
                 player.Write(new GameMessage(LastAvailablePlayroom.CompetitionText, LastAvailablePlayroom.TimeToWaitForOpponents, LastAvailablePlayroom.GameStartingTime, LastAvailablePlayroom.GameEndingTime));
                 Console.WriteLine("sending game info");
             }
+
             else
             {
                 LastAvailablePlayroom = (Playroom)player.Playroom;
                 player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]));
                 LastAvailablePlayroom.TrySetGameStartingTime();
-                LastAvailablePlayroom.CheckRanking(player, infos[1]);
-                var toSend = new OpponentsMessage(LastAvailablePlayroom.Players, LastAvailablePlayroom.GameStartingTime, LastAvailablePlayroom.GameEndingTime, player.Name);
+                if (int.Parse(infos[1]) == 100 && !player.Finnished)
+                {
+                    player.Finnished = true;
+                    player.Place = LastAvailablePlayroom.Place++;
+                }
+                var toSend = new OpponentsMessage(LastAvailablePlayroom.Players, LastAvailablePlayroom.GameStartingTime, LastAvailablePlayroom.GameEndingTime, player.Name, player.Finnished, player.Place);
                 player.Write(toSend);
                 Console.WriteLine("sending opponents");
             }

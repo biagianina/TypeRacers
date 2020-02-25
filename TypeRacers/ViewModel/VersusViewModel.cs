@@ -206,8 +206,8 @@ namespace TypeRacers.ViewModel
         public string SecondsToGetReady { get; set; }
         public bool EnableSearchingAnimation { get; private set; }
         public DateTime StartTime { get; set; }
-        public bool ShowRanking { get; }
-        public string RankingPlace { get; }
+        public bool ShowRanking => model.PlayerFinnished();
+        public string RankingPlace => model.PlayerPlace();
         public int Accuracy { get; private set; }
         public bool OpenFinishPopup { get; private set; }
         public DateTime EndTime { get; private set; }
@@ -334,6 +334,9 @@ namespace TypeRacers.ViewModel
 
             OpponentsCount = Opponents.Count();
             TriggerPropertyChanged(nameof(OpponentsCount));
+
+            TriggerPropertyChanged(nameof(RankingPlace));
+            TriggerPropertyChanged(nameof(ShowRanking));
 
             UpdateShownPlayers();
 

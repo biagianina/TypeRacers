@@ -31,12 +31,9 @@ namespace TypeRacers.Client
             GameEndingTime = DateTime.Parse(startAndEndTimes.LastOrDefault());
         }
 
-        public void SetOpponentsAndTimers(string data)
+        public void SetOpponentsAndTimers(List<string> data)
         {
-            var currentOpponents = data.Split('%').ToList();
-            currentOpponents.Remove("#");
-
-            foreach (var v in currentOpponents)
+            foreach (var v in data)
             {
 
                 if (v.FirstOrDefault().Equals('*'))
@@ -45,6 +42,7 @@ namespace TypeRacers.Client
                     GameStartingTime = DateTime.Parse(times.FirstOrDefault());
                     GameEndingTime = DateTime.Parse(times.LastOrDefault());
                 }
+                
                 else
                 {
                     var nameAndInfos = v.Split(':');
@@ -66,13 +64,12 @@ namespace TypeRacers.Client
                 {
                     Name = name
                 };
-                player.UpdateInfo(int.Parse(info[0]), int.Parse(info[1]));
                 Players.Add(player);
             }
-            else
-            {
-                player.UpdateInfo(int.Parse(info[0]), int.Parse(info[1]));
-            }
+
+            player.UpdateInfo(int.Parse(info[0]), int.Parse(info[1]));
+            player.Finnished = Convert.ToBoolean(info[2]);
+            player.Place = int.Parse(info[3]);
         }
     }
 }

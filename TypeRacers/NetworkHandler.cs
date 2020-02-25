@@ -75,6 +75,15 @@ namespace TypeRacers
             throw new NotImplementedException();
         }
 
+        internal bool PlayerFinnished()
+        {
+            return player.Finnished;
+        }
+
+        internal string PlayerPlace()
+        {
+            return player.Place.ToString();
+        }
 
         public void RestartSearch()
         {
