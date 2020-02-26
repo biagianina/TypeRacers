@@ -11,8 +11,10 @@ namespace Common
         DateTime GameStartingTime { get; set; }
         DateTime GameEndingTime { get; set; }
         DateTime TimeToWaitForOpponents { get; set; }
+        int Place { get; set; }
 
-        void SetGameInfo(string v);
-        void SetOpponentsAndTimers(string v);
+        bool Join(Common.Player player);
+        void TrySetGameStartingTime();
+        bool IsInPlayroom(string name);
     }
 }

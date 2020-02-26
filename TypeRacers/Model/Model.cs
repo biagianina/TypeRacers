@@ -69,5 +69,15 @@ namespace TypeRacers.Model
         {
             networkHandler.RemovePlayer();
         }
+
+        internal bool PlayerFinnished()
+        {
+            return networkHandler.PlayerFinnished();
+        }
+
+        internal string PlayerPlace()
+        {
+            return networkHandler.PlayerPlace();
+        }
     }
 }

@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using System.Timers;
-using System.Windows.Forms;
 using Common;
+
 namespace TypeRacers.Client
 {
     public class TypeRacersClient
@@ -16,50 +12,70 @@ namespace TypeRacers.Client
 
         public event OpponentsChangedEventHandler OpponentsChanged;
 
+        public GameInfo gameInfo;
+
         public TypeRacersClient(Player player)
         {
             Player = player;
-            Player.SetPlayroom(new GameInfo());
+            gameInfo = new GameInfo();
+            Player.SetPlayroom(gameInfo);
             StartServerCommunication();
-
         }
 
         public Player Player { get; set; }
 
         public void StartServerCommunication()
         {
-
             Thread writeThread = new Thread(Write);
             Thread readThread = new Thread(Read);
             writeThread.Start();
             readThread.Start();
-
         }
 
         private void Read()
         {
             do
             {
-                if (Player.FirstTimeConnecting || Player.Restarting)
+                  var data = Player.Read();
+                if (Player.FirstTimeConnecting || Player.Restarting) 
                 {
-                    Player.Playroom.SetGameInfo(Player.Read());
+                    gameInfo.SetGameInfo(data);
                     Player.FirstTimeConnecting = false;
                     Player.Restarting = false;
                 }
 
-                Player.Playroom.SetOpponentsAndTimers(Player.Read());
-                OnOpponentsChanged(Player.Playroom.Players);
+                else
+                {
+                    SetGameStatus(data);
+                }
 
             }
             while (!Player.Removed);
         }
 
-
+        private void SetGameStatus(string data)
+        {
+            var infos = data.Split('%').ToList();
+            infos.Remove("#");
+            foreach (var i in infos)
+            {
+                if (i.StartsWith("!"))
+                {
+                    var rank = i.Split('/');
+                    Player.Finnished = Convert.ToBoolean(rank.FirstOrDefault().Substring(1));
+                    Player.Place = int.Parse(rank.LastOrDefault());
+                    infos.Remove(i);
+                    break;
+                }
+            }
+            gameInfo.SetOpponentsAndTimers(infos);
+        }
         private void Write()
         {
             do
             {
-                Player.Write(new PlayerMessage(Player.WPMProgress, Player.CompletedTextPercentage, Player.Name, Player.Restarting, Player.Removed));
+
+                Player.Write(new PlayerMessage(Player.WPMProgress, Player.CompletedTextPercentage, Player.Name, Player.FirstTimeConnecting, Player.Restarting, Player.Removed));
                 OnOpponentsChanged(Player.Playroom.Players);
                 Thread.Sleep(1000);
             }
@@ -86,25 +102,11 @@ namespace TypeRacers.Client
             }
         }
 
-
         public void NameClient(string username)
         {
             Player.Name = username;
         }
 
 
-        //public void RemovePlayerFromRoom()
-        //{
-        //    //connecting to server
-        //    client = new TcpClient("localhost", 80);
-        //    stream = client.GetStream();
-
-        //    //writing the progress to stream
-
-        //    string toSend = Name + "_removed" + "#";
-
-        //    byte[] bytesToSend = Encoding.ASCII.GetBytes(toSend);
-        //    stream.Write(bytesToSend, 0, bytesToSend.Length);
-        //}
     }
 }

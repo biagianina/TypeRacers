@@ -19,6 +19,17 @@ namespace TypeRacers.Client
             return Players.Find(p => p.Name.Equals(name));
         }
 
+        public bool IsInPlayroom(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Join(Player player)
+        {
+            Players.Add(player);
+            return true;
+        }
+
         public void SetGameInfo(string data)
         {
             CompetitionText = data.Substring(0, data.IndexOf('$'));
@@ -31,14 +42,10 @@ namespace TypeRacers.Client
             GameEndingTime = DateTime.Parse(startAndEndTimes.LastOrDefault());
         }
 
-        public void SetOpponentsAndTimers(string data)
+        public void SetOpponentsAndTimers(List<string> data)
         {
-            var currentOpponents = data.Split('%').ToList();
-            currentOpponents.Remove("#");
-
-            foreach (var v in currentOpponents)
+            foreach (var v in data)
             {
-
                 if (v.FirstOrDefault().Equals('*'))
                 {
                     var times = v.Substring(1).Split('+');
@@ -51,7 +58,11 @@ namespace TypeRacers.Client
                     SetOpponents(nameAndInfos);
                 }
             }
+        }
 
+        public void TrySetGameStartingTime()
+        {
+            throw new NotImplementedException();
         }
 
         private void SetOpponents(string[] nameAndInfos)
@@ -66,13 +77,12 @@ namespace TypeRacers.Client
                 {
                     Name = name
                 };
-                player.UpdateInfo(int.Parse(info[0]), int.Parse(info[1]), Convert.ToBoolean(info[2]), int.Parse(info[3]));
-                Players.Add(player);
+                Join(player);
             }
-            else
-            {
-                player.UpdateInfo(int.Parse(info[0]), int.Parse(info[1]), Convert.ToBoolean(info[2]), int.Parse(info[3]));
-            }
+
+            player.UpdateInfo(int.Parse(info[0]), int.Parse(info[1]));
+            player.Finnished = Convert.ToBoolean(info[2]);
+            player.Place = int.Parse(info[3]);
         }
     }
 }

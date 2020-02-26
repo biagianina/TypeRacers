@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 
@@ -31,12 +32,10 @@ namespace Common
             Playroom = playroom;
         }
 
-        public void UpdateInfo(int wpmProgress, int completedText, bool finished, int place)
+        public void UpdateInfo(int wpmProgress, int completedText)
         {
             WPMProgress = wpmProgress;
             CompletedTextPercentage = completedText;
-            Finnished = finished;
-            Place = place;
         }
 
         public string Read()
@@ -49,13 +48,22 @@ namespace Common
             var dataRecieved = Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
             //solution to get complete messages
-            while (!dataRecieved.Last().Equals('#'))
-            {
-                bytesRead = networkStream.Read(buffer, 0, tcpClient.ReceiveBufferSize);
-                dataRecieved += Encoding.ASCII.GetString(buffer, dataRecieved.Length, bytesRead);
-            }
+            //while (!dataRecieved.Last().Equals('#'))
+            //{
+            //    bytesRead = networkStream.Read(buffer, 0, tcpClient.ReceiveBufferSize);
+            //    dataRecieved += Encoding.ASCII.GetString(buffer, dataRecieved.Length, bytesRead);
+            //}
 
             return dataRecieved.Remove(dataRecieved.Length - 1);
+        }
+
+        public void TrySetRank()
+        {
+            if (CompletedTextPercentage == 100 && !Finnished)
+            {
+                Finnished = true;
+                Place = Playroom.Place++;
+            }
         }
 
         public void Write(IMessage message)

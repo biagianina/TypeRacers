@@ -12,12 +12,14 @@ namespace Server
         DateTime timeToWaitForOpponents;
         DateTime gameStartingTime;
         DateTime gameEndingTime;
+
         public GameMessage(string competitionText, DateTime timeToWaitForOpponents, DateTime gameStartingTime, DateTime gameEndingTime)
         {
             this.competitionText = competitionText;
             this.timeToWaitForOpponents = timeToWaitForOpponents;
             this.gameStartingTime = gameStartingTime;
             this.gameEndingTime = gameEndingTime;
+          
         }
 
         public byte[] ToByteArray()

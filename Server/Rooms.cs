@@ -1,10 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Server;
 using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading;
 using Common;
 
 namespace Server
@@ -12,17 +8,14 @@ namespace Server
     public class Rooms
     {
         private bool resendPlayroomInfo;
-
-        private readonly List<Playroom> playrooms;
-        public Playroom LastAvailablePlayroom { get; set; }
+        private readonly List<IPlayroom<Player>> playrooms;
 
         public Rooms()
         {
-            playrooms = new List<Playroom>
+            playrooms = new List<IPlayroom<Player>>
             {
                 new Playroom()
             };
-            LastAvailablePlayroom = playrooms.Last();
         }
 
         public int GetNumberOfPlayrooms()
@@ -68,16 +61,12 @@ namespace Server
                 return;
             }
 
-            if (PlayerIsNew(player) || resendPlayroomInfo)
+            player.FirstTimeConnecting = Convert.ToBoolean(infos[2]);
+            player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]));
+            if (player.FirstTimeConnecting || resendPlayroomInfo)
             {
-                if (!LastAvailablePlayroom.Join(player))
-                {
-                    LastAvailablePlayroom = CreateNewPlayroom();
-                }
-                player.SetPlayroom(LastAvailablePlayroom);
-                player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]), false, 0);
-                LastAvailablePlayroom.TrySetGameStartingTime();
-                player.Write(new GameMessage(LastAvailablePlayroom.CompetitionText, LastAvailablePlayroom.TimeToWaitForOpponents, LastAvailablePlayroom.GameStartingTime, LastAvailablePlayroom.GameEndingTime));
+                SetPlayroom(player);
+                player.Write(new GameMessage(player.Playroom.CompetitionText, player.Playroom.TimeToWaitForOpponents, player.Playroom.GameStartingTime, player.Playroom.GameEndingTime));
                 Console.WriteLine("sending game info");
 
                 if (resendPlayroomInfo)
@@ -87,12 +76,21 @@ namespace Server
             }
             else
             {
-                player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]), false, 0);
-                LastAvailablePlayroom.TrySetGameStartingTime();
-                var toSend = new OpponentsMessage(LastAvailablePlayroom.Players, LastAvailablePlayroom.GameStartingTime, LastAvailablePlayroom.GameEndingTime, player.Name);
-                player.Write(toSend);
+                player.Playroom.TrySetGameStartingTime();
+                player.TrySetRank();
+                player.Write(new OpponentsMessage(player.Playroom.Players, player.Playroom.GameStartingTime, player.Playroom.GameEndingTime, player.Name, player.Finnished, player.Place));
                 Console.WriteLine("sending opponents");
             }
+        }
+
+        private void SetPlayroom(Player player)
+        {
+            if(!playrooms.Any(p => p.Join(player)))
+            {
+                CreateNewPlayroom();
+                playrooms.Last().Join(player);
+            }
+            player.Playroom.TrySetGameStartingTime();
         }
 
         public bool PlayerIsNew(Player player)
@@ -100,11 +98,10 @@ namespace Server
             return !playrooms.Any(x => x.IsInPlayroom(player.Name));
         }
 
-        private Playroom CreateNewPlayroom()
+        private void CreateNewPlayroom()
         {
             var newPlayroom = new Playroom();
             playrooms.Add(newPlayroom);
-            return playrooms.Last();
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Server
         public DateTime GameEndingTime { get; set; }
         public DateTime TimeToWaitForOpponents { get; set; }
         public int Place { get; set; } = 1;
-        public string CompetitionText { get;}
+        public string CompetitionText { get; }
 
         public void TrySetGameStartingTime()
         {
@@ -38,11 +38,6 @@ namespace Server
                     ResetPlayroom();
                 }
             }
-        }
-
-        internal void ManagePlayerRecievedData(Player player, string[] infos)
-        {
-            throw new NotImplementedException();
         }
 
         public bool IsInPlayroom(string playerName)
@@ -78,24 +73,25 @@ namespace Server
             if (!IsInPlayroom(currentPlayer.Name))
             {
                 Players.Add(currentPlayer);
+                currentPlayer.Playroom = this;
                 Console.WriteLine("adding player:" + currentPlayer.Name + ", playroom size: " + Players.Count);
             }
             return true;
         }
 
+        internal void CheckRanking(Player player, string completedTextPerecentage)
+        {
+            var currentPlayer = GetPlayer(player.Name);
+            if (completedTextPerecentage.Equals(100))
+            {
+                currentPlayer.Finnished = true;
+                currentPlayer.Place = Place++;
+            }
+        }
+
         private void ResetPlayroom()
         {
             TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(20);
-        }
-
-        public void SetGameInfo(string v)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetOpponentsAndTimers(string v)
-        {
-            throw new NotImplementedException();
         }
     }
 }

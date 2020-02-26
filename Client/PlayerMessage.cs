@@ -1,25 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Common;
 
 namespace TypeRacers.Client
 {
     public class PlayerMessage : IMessage
     {
-        int wpmProgress;
-        int completedTextPercentage;
-        string name;
-        bool restart;
+
+        readonly int wpmProgress;
+        readonly int completedTextPercentage;
+        readonly string name;
+        readonly bool firstConection;
+                bool restart;
         bool removed;
 
-        public PlayerMessage(int wpmProgress, int completedTextPercentage, string name, bool restart, bool removed)
+
+        public PlayerMessage(int wpmProgress, int completedTextPercentage, string name, bool firstConection, bool restart, bool removed)
         {
             this.wpmProgress = wpmProgress;
             this.completedTextPercentage = completedTextPercentage;
             this.name = name;
+            
+            this.firstConection = firstConection;   
             this.restart = restart;
             this.removed = removed;
         }
@@ -27,17 +28,15 @@ namespace TypeRacers.Client
         {
             if (restart)
             {
-                return Encoding.ASCII.GetBytes(wpmProgress + "&" + completedTextPercentage + "$" + name + "_restart" + "#");
+                return Encoding.ASCII.GetBytes(wpmProgress + "&" + completedTextPercentage +  "&" + firstConection + "$" + name + "_restart" + "#");
             }
             else if (removed)
             {
-                return Encoding.ASCII.GetBytes(wpmProgress + "&" + completedTextPercentage + "$" + name + "_removed" + "#");
+                return Encoding.ASCII.GetBytes(wpmProgress + "&" + completedTextPercentage + "&" + firstConection + "$" + name + "_removed" + "#");
             }
             else
             {
-                return Encoding.ASCII.GetBytes(wpmProgress + "&" + completedTextPercentage + "$" + name + "#");
+                return Encoding.ASCII.GetBytes(wpmProgress + "&" + completedTextPercentage + "&" + firstConection + "$" + name + "#");
             }
-
-        }
     }
 }
