@@ -26,10 +26,10 @@ namespace Server
 
         public byte[] ToByteArray()
         {
-            return Encoding.ASCII.GetBytes(GenerateOpponents());
+            return Encoding.ASCII.GetBytes(GeneratePlayersString());
         }
 
-        private string GenerateOpponents()
+        private string GeneratePlayersString()
         {
             string opponents = string.Empty;
             opponents += players.Aggregate(string.Empty, (localOpp, p) =>
@@ -41,7 +41,7 @@ namespace Server
 
                 return localOpp;
             });
-            ;
+
 
             opponents += "*" + startingTime.ToString() + "+" + endingTime.ToString()+ "%" + "!"+ finnished +"/" + place + "#";
 

@@ -67,13 +67,9 @@ namespace TypeRacers
 
         public void RemovePlayer()
         {
-            throw new NotImplementedException();
+            typeRacersClient.RemovePlayer();
         }
 
-        public void StartReportingGameProgress()
-        {
-            throw new NotImplementedException();
-        }
 
         internal bool PlayerFinnished()
         {
@@ -87,7 +83,7 @@ namespace TypeRacers
 
         public void RestartSearch()
         {
-            //client.RestartSearch();
+            typeRacersClient.RestartSearch();
         }
         public void SubscribeToSearchingOpponents(Action<List<Common.Player>> updateOpponentsList)
         {

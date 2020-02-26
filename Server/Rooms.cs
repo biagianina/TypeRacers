@@ -7,6 +7,7 @@ namespace Server
 {
     public class Rooms
     {
+        private bool resendPlayroomInfo;
         private readonly List<IPlayroom<Player>> playrooms;
 
         public Rooms()
@@ -32,6 +33,8 @@ namespace Server
                 var nameAndInfo = dataRead.Split('$');
                 var infos = nameAndInfo.FirstOrDefault()?.Split('&');
                 player.Name = nameAndInfo.LastOrDefault();
+
+
                 Console.WriteLine(dataRead);
 
                 ManagePlayerReceivedData(player, infos);
@@ -40,13 +43,36 @@ namespace Server
 
         private void ManagePlayerReceivedData(Player player, string[] infos)
         {
+            if (player.Name.Contains("_restart"))
+            {
+                resendPlayroomInfo = true;
+            }
+            else if (player.Name.Contains("_removed"))
+            {
+                foreach (var current in playrooms)
+                {
+                    if (current.GetPlayer(player.Name) != null)
+                    {
+                        current.Players.Remove(current.GetPlayer(player.Name));
+                        Console.WriteLine("REMOVED: " + player.Name);
+                        Console.WriteLine("Playroom size: " + current.Players.Count());
+                    }
+                }
+                return;
+            }
+
             player.FirstTimeConnecting = Convert.ToBoolean(infos[2]);
             player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]));
-            if (player.FirstTimeConnecting)
+            if (player.FirstTimeConnecting || resendPlayroomInfo)
             {
                 SetPlayroom(player);
                 player.Write(new GameMessage(player.Playroom.CompetitionText, player.Playroom.TimeToWaitForOpponents, player.Playroom.GameStartingTime, player.Playroom.GameEndingTime));
                 Console.WriteLine("sending game info");
+
+                if (resendPlayroomInfo)
+                {
+                    resendPlayroomInfo = false;
+                }
             }
             else
             {
