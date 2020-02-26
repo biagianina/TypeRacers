@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace TypeRacers.Client
 {
-    public class GameInfo : IPlayroom<Player>
+    public class GameInfo : IPlayroom
     {
         public string CompetitionText { get; set; }
         public List<Player> Players { get; set; } = new List<Player>();
@@ -14,20 +14,40 @@ namespace TypeRacers.Client
         public DateTime TimeToWaitForOpponents { get ; set ; }
         public int Place { get ; set ; }
 
+        public void CheckIfPlayerLeft(Player player)
+        {
+            player.Name.Contains("_removed");
+        }
+
+        public bool CheckIfPlayerTriesToRestart(Player player)
+        {
+            return player.Name.Contains("_restart");
+        }
+
+        public IMessage GameMessage()
+        {
+            return null;
+        }
+
+        public IMessage GetGameStatus(Player player)
+        {
+            return null;
+        }
+
         public Player GetPlayer(string name)
         {
             return Players.Find(p => p.Name.Equals(name));
-        }
-
-        public bool IsInPlayroom(string name)
-        {
-            throw new NotImplementedException();
         }
 
         public bool Join(Player player)
         {
             Players.Add(player);
             return true;
+        }
+
+        public void Remove(Player player)
+        {
+            throw new NotImplementedException();
         }
 
         public void SetGameInfo(string data)
@@ -62,7 +82,6 @@ namespace TypeRacers.Client
 
         public void TrySetGameStartingTime()
         {
-            throw new NotImplementedException();
         }
 
         private void SetOpponents(string[] nameAndInfos)

@@ -8,14 +8,16 @@ namespace Server
     public class Rooms
     {
         private bool resendPlayroomInfo;
-        private readonly List<IPlayroom<Player>> playrooms;
+        private readonly List<IPlayroom> playrooms;
+        private IPlayroom currentPlayroom;
 
         public Rooms()
         {
-            playrooms = new List<IPlayroom<Player>>
+            playrooms = new List<IPlayroom>
             {
                 new Playroom()
             };
+            currentPlayroom = playrooms.Last();
         }
 
         public int GetNumberOfPlayrooms()
@@ -34,7 +36,6 @@ namespace Server
                 var infos = nameAndInfo.FirstOrDefault()?.Split('&');
                 player.Name = nameAndInfo.LastOrDefault();
 
-
                 Console.WriteLine(dataRead);
 
                 ManagePlayerReceivedData(player, infos);
@@ -43,44 +44,46 @@ namespace Server
 
         private void ManagePlayerReceivedData(Player player, string[] infos)
         {
-            if (player.Name.Contains("_restart"))
-            {
-                resendPlayroomInfo = true;
-            }
-            else if (player.Name.Contains("_removed"))
-            {
-                foreach (var current in playrooms)
-                {
-                    if (current.GetPlayer(player.Name) != null)
-                    {
-                        current.Players.Remove(current.GetPlayer(player.Name));
-                        Console.WriteLine("REMOVED: " + player.Name);
-                        Console.WriteLine("Playroom size: " + current.Players.Count());
-                    }
-                }
-                return;
-            }
-
             player.FirstTimeConnecting = Convert.ToBoolean(infos[2]);
             player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]));
-            if (player.FirstTimeConnecting || resendPlayroomInfo)
+           
+           
+            lock (currentPlayroom)
             {
-                SetPlayroom(player);
-                player.Write(new GameMessage(player.Playroom.CompetitionText, player.Playroom.TimeToWaitForOpponents, player.Playroom.GameStartingTime, player.Playroom.GameEndingTime));
-                Console.WriteLine("sending game info");
-
-                if (resendPlayroomInfo)
+                if (player.FirstTimeConnecting || resendPlayroomInfo)
                 {
-                    resendPlayroomInfo = false;
+                    SendGameInfo(player);
                 }
+                else
+                {
+                    SendGamestatus(player);
+                }
+
             }
-            else
-            {
-                player.Playroom.TrySetGameStartingTime();
-                player.TrySetRank();
-                player.Write(new OpponentsMessage(player.Playroom.Players, player.Playroom.GameStartingTime, player.Playroom.GameEndingTime, player.Name, player.Finnished, player.Place));
-                Console.WriteLine("sending opponents");
-            }
+        }
+
+        private void SendGamestatus(Player player)
+        {
+            currentPlayroom = player.Playroom;
+            currentPlayroom.CheckIfPlayerLeft(player);
+            resendPlayroomInfo = currentPlayroom.CheckIfPlayerTriesToRestart(player);
+            currentPlayroom.TrySetGameStartingTime();
+            player.TrySetRank();
+            player.Write(currentPlayroom.GetGameStatus(player));
+            Console.WriteLine("sending opponents");
+        }
+
+        private void SendGameInfo(Player player)
+        {
+            SetPlayroom(player);
+
+            currentPlayroom = player.Playroom;
+            currentPlayroom.TrySetGameStartingTime();
+            player.Write(currentPlayroom.GameMessage());
+
+            Console.WriteLine("sending game info");
+
+            resendPlayroomInfo = false;
         }
 
         private void SetPlayroom(Player player)
@@ -91,11 +94,6 @@ namespace Server
                 playrooms.Last().Join(player);
             }
             player.Playroom.TrySetGameStartingTime();
-        }
-
-        public bool PlayerIsNew(Player player)
-        {
-            return !playrooms.Any(x => x.IsInPlayroom(player.Name));
         }
 
         private void CreateNewPlayroom()

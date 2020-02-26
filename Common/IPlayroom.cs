@@ -3,18 +3,22 @@ using System.Collections.Generic;
 
 namespace Common
 {
-    public interface IPlayroom<Player>
+    public interface IPlayroom
     {
         string CompetitionText { get; }
-
-        List<Player> Players { get; set; }
         DateTime GameStartingTime { get; set; }
         DateTime GameEndingTime { get; set; }
         DateTime TimeToWaitForOpponents { get; set; }
         int Place { get; set; }
 
-        bool Join(Common.Player player);
+        bool Join(Player player);
+        Player GetPlayer(string name);
+        List<Player> Players { get; set; }
         void TrySetGameStartingTime();
-        bool IsInPlayroom(string name);
+        IMessage GameMessage();
+        IMessage GetGameStatus(Player player);
+        void Remove(Player player);
+        void CheckIfPlayerLeft(Player player);
+        bool CheckIfPlayerTriesToRestart(Player player);
     }
 }

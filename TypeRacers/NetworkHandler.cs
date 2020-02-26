@@ -39,7 +39,7 @@ namespace TypeRacers
             return typeRacersClient.gameInfo.TimeToWaitForOpponents;
         }
 
-        public List<Common.Player> GetOpponents()
+        public List<Player> GetOpponents()
         {
             return typeRacersClient.gameInfo.Players;
         }
@@ -85,7 +85,7 @@ namespace TypeRacers
         {
             typeRacersClient.RestartSearch();
         }
-        public void SubscribeToSearchingOpponents(Action<List<Common.Player>> updateOpponentsList)
+        public void SubscribeToSearchingOpponents(Action<List<Player>> updateOpponentsList)
         {
             oponentsChangedEventHandler = new TypeRacersClient.OpponentsChangedEventHandler(updateOpponentsList);
             typeRacersClient.OpponentsChanged += new TypeRacersClient.OpponentsChangedEventHandler(oponentsChangedEventHandler);

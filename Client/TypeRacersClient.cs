@@ -36,7 +36,7 @@ namespace TypeRacers.Client
         {
             do
             {
-                  var data = Player.Read();
+                var data = Player.Read();
                 if (Player.FirstTimeConnecting || Player.Restarting) 
                 {
                     gameInfo.SetGameInfo(data);
@@ -85,7 +85,7 @@ namespace TypeRacers.Client
         public void RemovePlayer()
         {
             Player.Removed = true;
-            Player.Write(new PlayerMessage(Player.WPMProgress, Player.CompletedTextPercentage, Player.Name, Player.Restarting, Player.Removed));
+            Player.Write(new PlayerMessage(Player.WPMProgress, Player.CompletedTextPercentage, Player.Name, Player.FirstTimeConnecting, Player.Restarting, Player.Removed));
             OnOpponentsChanged(Player.Playroom.Players);
         }
 

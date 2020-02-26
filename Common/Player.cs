@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Text;
 
 namespace Common
@@ -15,9 +13,7 @@ namespace Common
             this.tcpClient = tcpClient;
         }
 
-
         public bool FirstTimeConnecting = true;
-
         public string Name { get; set; }
         public int Place { get; set; }
         public bool Restarting { get; set; }
@@ -25,9 +21,9 @@ namespace Common
         public bool Finnished { get; set; }
         public int WPMProgress { get; set; }
         public int CompletedTextPercentage { get; set; }
-        public IPlayroom<Player> Playroom { get; set; }
+        public IPlayroom Playroom { get; set; }
 
-        public void SetPlayroom(IPlayroom<Player> playroom)
+        public void SetPlayroom(IPlayroom playroom)
         {
             Playroom = playroom;
         }
