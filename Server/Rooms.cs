@@ -2,6 +2,7 @@
 using System.Linq;
 using System;
 using Common;
+using System.Threading;
 
 namespace Server
 {
@@ -30,6 +31,10 @@ namespace Server
             while (true)
             {
                 var dataRead = player.Read();
+                if (string.IsNullOrEmpty(dataRead))
+                {
+                    return;
+                }
                 dataRead.Remove(dataRead.Length - 1);
 
                 var nameAndInfo = dataRead.Split('$');
@@ -46,8 +51,12 @@ namespace Server
         {
             player.FirstTimeConnecting = Convert.ToBoolean(infos[2]);
             player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]));
-           
-           
+
+            if (currentPlayroom.CheckIfPlayerLeft(player))
+            {
+                return;
+            }
+            resendPlayroomInfo = currentPlayroom.CheckIfPlayerTriesToRestart(player);
             lock (currentPlayroom)
             {
                 if (player.FirstTimeConnecting || resendPlayroomInfo)
@@ -65,8 +74,6 @@ namespace Server
         private void SendGamestatus(Player player)
         {
             currentPlayroom = player.Playroom;
-            currentPlayroom.CheckIfPlayerLeft(player);
-            resendPlayroomInfo = currentPlayroom.CheckIfPlayerTriesToRestart(player);
             currentPlayroom.TrySetGameStartingTime();
             player.TrySetRank();
             player.Write(currentPlayroom.GetGameStatus(player));
@@ -88,7 +95,7 @@ namespace Server
 
         private void SetPlayroom(Player player)
         {
-            if(!playrooms.Any(p => p.Join(player)))
+            if (!playrooms.Any(p => p.Join(player)))
             {
                 CreateNewPlayroom();
                 playrooms.Last().Join(player);
