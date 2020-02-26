@@ -16,5 +16,7 @@ namespace Common
         bool Join(Common.Player player);
         void TrySetGameStartingTime();
         bool IsInPlayroom(string name);
+
+        Player GetPlayer(string name);
     }
 }

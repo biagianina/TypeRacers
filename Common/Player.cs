@@ -7,12 +7,12 @@ namespace Common
 {
     public class Player
     {
-        private readonly TcpClient tcpClient;
+        private TcpClient tcpClient;
         private NetworkStream networkStream;
 
         public Player(TcpClient tcpClient)
         {
-            this.tcpClient = tcpClient;
+            this.TcpClient = tcpClient;
         }
 
 
@@ -26,6 +26,7 @@ namespace Common
         public int WPMProgress { get; set; }
         public int CompletedTextPercentage { get; set; }
         public IPlayroom<Player> Playroom { get; set; }
+        public TcpClient TcpClient { get => tcpClient; set => tcpClient = value; }
 
         public void SetPlayroom(IPlayroom<Player> playroom)
         {
@@ -40,9 +41,9 @@ namespace Common
 
         public string Read()
         {
-            networkStream = tcpClient.GetStream();
+            networkStream = TcpClient.GetStream();
 
-            byte[] buffer = new byte[tcpClient.ReceiveBufferSize];
+            byte[] buffer = new byte[TcpClient.ReceiveBufferSize];
             int bytesRead = networkStream.Read(buffer, 0, buffer.Length);
 
             var dataRecieved = Encoding.ASCII.GetString(buffer, 0, bytesRead);
@@ -69,7 +70,7 @@ namespace Common
         public void Write(IMessage message)
         {
 
-            networkStream = tcpClient.GetStream();
+            networkStream = TcpClient.GetStream();
             var toSend = message.ToByteArray();
             networkStream.Write(toSend, 0, toSend.Length);
         }

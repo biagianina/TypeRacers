@@ -58,6 +58,7 @@ namespace Server
                         Console.WriteLine("Playroom size: " + current.Players.Count());
                     }
                 }
+                player.TcpClient.Close();
                 return;
             }
 

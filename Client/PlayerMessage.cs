@@ -10,7 +10,7 @@ namespace TypeRacers.Client
         readonly int completedTextPercentage;
         readonly string name;
         readonly bool firstConection;
-                bool restart;
+        bool restart;
         bool removed;
 
 
@@ -19,8 +19,8 @@ namespace TypeRacers.Client
             this.wpmProgress = wpmProgress;
             this.completedTextPercentage = completedTextPercentage;
             this.name = name;
-            
-            this.firstConection = firstConection;   
+
+            this.firstConection = firstConection;
             this.restart = restart;
             this.removed = removed;
         }
@@ -28,7 +28,7 @@ namespace TypeRacers.Client
         {
             if (restart)
             {
-                return Encoding.ASCII.GetBytes(wpmProgress + "&" + completedTextPercentage +  "&" + firstConection + "$" + name + "_restart" + "#");
+                return Encoding.ASCII.GetBytes(wpmProgress + "&" + completedTextPercentage + "&" + firstConection + "$" + name + "_restart" + "#");
             }
             else if (removed)
             {
@@ -38,5 +38,6 @@ namespace TypeRacers.Client
             {
                 return Encoding.ASCII.GetBytes(wpmProgress + "&" + completedTextPercentage + "&" + firstConection + "$" + name + "#");
             }
+        }
     }
 }
