@@ -6,7 +6,7 @@ using TypeRacers.Server;
 
 namespace Server
 {
-    public class Playroom : IPlayroom<Player>
+    public class Playroom : IPlayroom
     {
         public Playroom()
         {
@@ -92,6 +92,42 @@ namespace Server
         private void ResetPlayroom()
         {
             TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(20);
+        }
+
+        public IMessage GameMessage()
+        {
+            return new GameMessage(CompetitionText, TimeToWaitForOpponents, GameStartingTime, GameEndingTime);
+        }
+
+        public IMessage GetGameStatus(Player player)
+        {
+            return new OpponentsMessage(Players, GameStartingTime, GameEndingTime, player.Name, player.Finnished, player.Place);
+        }
+
+        public void Remove(Player player)
+        {
+            Players.Remove(player);
+        }
+
+        public void CheckIfPlayerLeft(Player player)
+        {
+            if (player.Name.Contains("_removed"))
+            {
+                if (GetPlayer(player.Name) != null)
+                {
+                    Remove(GetPlayer(player.Name));
+                    Console.WriteLine("REMOVED: " + player.Name);
+                    Console.WriteLine("Playroom size: " + Players.Count());
+                }
+            }               
+        }
+        public bool CheckIfPlayerTriesToRestart(Player player)
+        {
+            if (player.Name.Contains("_restart"))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

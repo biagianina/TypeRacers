@@ -1,23 +1,19 @@
-﻿using System;
-using System.Linq;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Text;
 
 namespace Common
 {
     public class Player
     {
-        private TcpClient tcpClient;
+        private readonly TcpClient tcpClient;
         private NetworkStream networkStream;
 
         public Player(TcpClient tcpClient)
         {
-            this.TcpClient = tcpClient;
+            this.tcpClient = tcpClient;
         }
 
-
         public bool FirstTimeConnecting = true;
-
         public string Name { get; set; }
         public int Place { get; set; }
         public bool Restarting { get; set; }
@@ -25,10 +21,9 @@ namespace Common
         public bool Finnished { get; set; }
         public int WPMProgress { get; set; }
         public int CompletedTextPercentage { get; set; }
-        public IPlayroom<Player> Playroom { get; set; }
-        public TcpClient TcpClient { get => tcpClient; set => tcpClient = value; }
+        public IPlayroom Playroom { get; set; }
 
-        public void SetPlayroom(IPlayroom<Player> playroom)
+        public void SetPlayroom(IPlayroom playroom)
         {
             Playroom = playroom;
         }
@@ -41,9 +36,9 @@ namespace Common
 
         public string Read()
         {
-            networkStream = TcpClient.GetStream();
+            networkStream = tcpClient.GetStream();
 
-            byte[] buffer = new byte[TcpClient.ReceiveBufferSize];
+            byte[] buffer = new byte[tcpClient.ReceiveBufferSize];
             int bytesRead = networkStream.Read(buffer, 0, buffer.Length);
 
             var dataRecieved = Encoding.ASCII.GetString(buffer, 0, bytesRead);
@@ -70,7 +65,7 @@ namespace Common
         public void Write(IMessage message)
         {
 
-            networkStream = TcpClient.GetStream();
+            networkStream = tcpClient.GetStream();
             var toSend = message.ToByteArray();
             networkStream.Write(toSend, 0, toSend.Length);
         }

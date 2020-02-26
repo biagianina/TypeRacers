@@ -36,7 +36,7 @@ namespace TypeRacers.Client
         {
             do
             {
-                  var data = Player.Read();
+                var data = Player.Read();
                 if (Player.FirstTimeConnecting || Player.Restarting) 
                 {
                     gameInfo.SetGameInfo(data);
