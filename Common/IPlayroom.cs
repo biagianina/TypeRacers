@@ -12,5 +12,9 @@ namespace Common
         DateTime GameEndingTime { get; set; }
         DateTime TimeToWaitForOpponents { get; set; }
         int Place { get; set; }
+
+        bool Join(Common.Player player);
+        void TrySetGameStartingTime();
+        bool IsInPlayroom(string name);
     }
 }

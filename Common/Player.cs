@@ -43,11 +43,11 @@ namespace Common
             var dataRecieved = Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
             //solution to get complete messages
-            while (!dataRecieved.Last().Equals('#'))
-            {
-                bytesRead = networkStream.Read(buffer, 0, tcpClient.ReceiveBufferSize);
-                dataRecieved += Encoding.ASCII.GetString(buffer, dataRecieved.Length, bytesRead);
-            }
+            //while (!dataRecieved.Last().Equals('#'))
+            //{
+            //    bytesRead = networkStream.Read(buffer, 0, tcpClient.ReceiveBufferSize);
+            //    dataRecieved += Encoding.ASCII.GetString(buffer, dataRecieved.Length, bytesRead);
+            //}
 
             return dataRecieved.Remove(dataRecieved.Length - 1);
         }

@@ -19,6 +19,16 @@ namespace TypeRacers.Client
             return Players.Find(p => p.Name.Equals(name));
         }
 
+        public bool IsInPlayroom(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Join(Player player)
+        {
+            throw new NotImplementedException();
+        }
+
         public void SetGameInfo(string data)
         {
             CompetitionText = data.Substring(0, data.IndexOf('$'));
@@ -35,21 +45,23 @@ namespace TypeRacers.Client
         {
             foreach (var v in data)
             {
-
                 if (v.FirstOrDefault().Equals('*'))
                 {
                     var times = v.Substring(1).Split('+');
                     GameStartingTime = DateTime.Parse(times.FirstOrDefault());
                     GameEndingTime = DateTime.Parse(times.LastOrDefault());
                 }
-                
                 else
                 {
                     var nameAndInfos = v.Split(':');
                     SetOpponents(nameAndInfos);
                 }
             }
+        }
 
+        public void TrySetGameStartingTime()
+        {
+            throw new NotImplementedException();
         }
 
         private void SetOpponents(string[] nameAndInfos)

@@ -1,22 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Server;
 using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading;
 using Common;
 
 namespace Server
 {
     public class Rooms
     {
-        private readonly List<Playroom> playrooms;
-        public Playroom LastAvailablePlayroom { get; set; }
+        private readonly List<IPlayroom<Player>> playrooms;
+        public IPlayroom<Player> LastAvailablePlayroom { get; set; }
 
         public Rooms()
         {
-            playrooms = new List<Playroom>
+            playrooms = new List<IPlayroom<Player>>
             {
                 new Playroom()
             };
@@ -46,32 +42,35 @@ namespace Server
 
         private void ManagePlayerReceivedData(Player player, string[] infos)
         {
-            if (PlayerIsNew(player))
+            lock (LastAvailablePlayroom)
             {
-                if (!LastAvailablePlayroom.Join(player))
+                if (PlayerIsNew(player))
                 {
-                    LastAvailablePlayroom = CreateNewPlayroom();
+                    if (!playrooms.Any(p => p.Join(player)))
+                    {
+                        CreateNewPlayroom();
+                        LastAvailablePlayroom.Join(player);
+                    }
+                    player.SetPlayroom(LastAvailablePlayroom);
+                    player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]));
+                    LastAvailablePlayroom.TrySetGameStartingTime();
+                    player.Write(new GameMessage(LastAvailablePlayroom.CompetitionText, LastAvailablePlayroom.TimeToWaitForOpponents, LastAvailablePlayroom.GameStartingTime, LastAvailablePlayroom.GameEndingTime));
+                    Console.WriteLine("sending game info");
                 }
-                player.SetPlayroom(LastAvailablePlayroom);
-                player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]));
-                LastAvailablePlayroom.TrySetGameStartingTime();
-                player.Write(new GameMessage(LastAvailablePlayroom.CompetitionText, LastAvailablePlayroom.TimeToWaitForOpponents, LastAvailablePlayroom.GameStartingTime, LastAvailablePlayroom.GameEndingTime));
-                Console.WriteLine("sending game info");
-            }
 
-            else
-            {
-                LastAvailablePlayroom = (Playroom)player.Playroom;
-                player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]));
-                LastAvailablePlayroom.TrySetGameStartingTime();
-                if (int.Parse(infos[1]) == 100 && !player.Finnished)
-                {
-                    player.Finnished = true;
-                    player.Place = LastAvailablePlayroom.Place++;
+                else
+                {                    
+                    player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]));
+                    player.Playroom.TrySetGameStartingTime();
+                    if (int.Parse(infos[1]) == 100 && !player.Finnished)
+                    {
+                        player.Finnished = true;
+                        player.Place = LastAvailablePlayroom.Place++;
+                    }
+                    var toSend = new OpponentsMessage(player.Playroom.Players, player.Playroom.GameStartingTime, player.Playroom.GameEndingTime, player.Name, player.Finnished, player.Place);
+                    player.Write(toSend);
+                    Console.WriteLine("sending opponents");
                 }
-                var toSend = new OpponentsMessage(LastAvailablePlayroom.Players, LastAvailablePlayroom.GameStartingTime, LastAvailablePlayroom.GameEndingTime, player.Name, player.Finnished, player.Place);
-                player.Write(toSend);
-                Console.WriteLine("sending opponents");
             }
         }
         
@@ -80,11 +79,11 @@ namespace Server
             return !playrooms.Any(x => x.IsInPlayroom(player.Name));
         }
 
-        private Playroom CreateNewPlayroom()
+        private void CreateNewPlayroom()
         {
             var newPlayroom = new Playroom();
             playrooms.Add(newPlayroom);
-            return playrooms.Last();
+            LastAvailablePlayroom = playrooms.Last();
         }
     }
 }
