@@ -8,7 +8,6 @@ namespace Server
     public class Rooms
     {
         private readonly List<IPlayroom<Player>> playrooms;
-        public IPlayroom<Player> LastAvailablePlayroom { get; set; }
 
         public Rooms()
         {
@@ -16,7 +15,6 @@ namespace Server
             {
                 new Playroom()
             };
-            LastAvailablePlayroom = playrooms.Last();
         }
 
         public int GetNumberOfPlayrooms()
@@ -42,38 +40,33 @@ namespace Server
 
         private void ManagePlayerReceivedData(Player player, string[] infos)
         {
-            lock (LastAvailablePlayroom)
+            player.FirstTimeConnecting = Convert.ToBoolean(infos[2]);
+            player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]));
+            if (player.FirstTimeConnecting)
             {
-                if (PlayerIsNew(player))
-                {
-                    if (!playrooms.Any(p => p.Join(player)))
-                    {
-                        CreateNewPlayroom();
-                        LastAvailablePlayroom.Join(player);
-                    }
-                    player.SetPlayroom(LastAvailablePlayroom);
-                    player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]));
-                    LastAvailablePlayroom.TrySetGameStartingTime();
-                    player.Write(new GameMessage(LastAvailablePlayroom.CompetitionText, LastAvailablePlayroom.TimeToWaitForOpponents, LastAvailablePlayroom.GameStartingTime, LastAvailablePlayroom.GameEndingTime));
-                    Console.WriteLine("sending game info");
-                }
-
-                else
-                {                    
-                    player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]));
-                    player.Playroom.TrySetGameStartingTime();
-                    if (int.Parse(infos[1]) == 100 && !player.Finnished)
-                    {
-                        player.Finnished = true;
-                        player.Place = LastAvailablePlayroom.Place++;
-                    }
-                    var toSend = new OpponentsMessage(player.Playroom.Players, player.Playroom.GameStartingTime, player.Playroom.GameEndingTime, player.Name, player.Finnished, player.Place);
-                    player.Write(toSend);
-                    Console.WriteLine("sending opponents");
-                }
+                SetPlayroom(player);
+                player.Write(new GameMessage(player.Playroom.CompetitionText, player.Playroom.TimeToWaitForOpponents, player.Playroom.GameStartingTime, player.Playroom.GameEndingTime));
+                Console.WriteLine("sending game info");
+            }
+            else
+            {
+                player.Playroom.TrySetGameStartingTime();
+                player.TrySetRank();
+                player.Write(new OpponentsMessage(player.Playroom.Players, player.Playroom.GameStartingTime, player.Playroom.GameEndingTime, player.Name, player.Finnished, player.Place));
+                Console.WriteLine("sending opponents");
             }
         }
-        
+
+        private void SetPlayroom(Player player)
+        {
+            if(!playrooms.Any(p => p.Join(player)))
+            {
+                CreateNewPlayroom();
+                playrooms.Last().Join(player);
+            }
+            player.Playroom.TrySetGameStartingTime();
+        }
+
         public bool PlayerIsNew(Player player)
         {
             return !playrooms.Any(x => x.IsInPlayroom(player.Name));
@@ -83,7 +76,6 @@ namespace Server
         {
             var newPlayroom = new Playroom();
             playrooms.Add(newPlayroom);
-            LastAvailablePlayroom = playrooms.Last();
         }
     }
 }

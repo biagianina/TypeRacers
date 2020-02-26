@@ -73,7 +73,7 @@ namespace TypeRacers.Client
         {
             while (true)
             {
-                Player.Write(new PlayerMessage(Player.WPMProgress, Player.CompletedTextPercentage, Player.Name));
+                Player.Write(new PlayerMessage(Player.WPMProgress, Player.CompletedTextPercentage, Player.Name, Player.FirstTimeConnecting));
                 OnOpponentsChanged(Player.Playroom.Players);
                 Thread.Sleep(3000);
             }

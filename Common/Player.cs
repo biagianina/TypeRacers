@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 
@@ -50,6 +51,15 @@ namespace Common
             //}
 
             return dataRecieved.Remove(dataRecieved.Length - 1);
+        }
+
+        public void TrySetRank()
+        {
+            if (CompletedTextPercentage == 100 && !Finnished)
+            {
+                Finnished = true;
+                Place = Playroom.Place++;
+            }
         }
 
         public void Write(IMessage message)

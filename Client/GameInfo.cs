@@ -26,7 +26,8 @@ namespace TypeRacers.Client
 
         public bool Join(Player player)
         {
-            throw new NotImplementedException();
+            Players.Add(player);
+            return true;
         }
 
         public void SetGameInfo(string data)
@@ -76,7 +77,7 @@ namespace TypeRacers.Client
                 {
                     Name = name
                 };
-                Players.Add(player);
+                Join(player);
             }
 
             player.UpdateInfo(int.Parse(info[0]), int.Parse(info[1]));

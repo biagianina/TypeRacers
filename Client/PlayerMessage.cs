@@ -8,15 +8,17 @@ namespace TypeRacers.Client
         readonly int wpmProgress;
         readonly int completedTextPercentage;
         readonly string name;
-        public PlayerMessage(int wpmProgress, int completedTextPercentage, string name)
+        readonly bool firstConection;
+        public PlayerMessage(int wpmProgress, int completedTextPercentage, string name, bool firstConection)
         {
             this.wpmProgress = wpmProgress;
             this.completedTextPercentage = completedTextPercentage;
             this.name = name;
+            this.firstConection = firstConection;
         }
         public byte[] ToByteArray()
-        {
-            return Encoding.ASCII.GetBytes(wpmProgress + "&" + completedTextPercentage + "$" + name + "#");
+        { 
+            return Encoding.ASCII.GetBytes(wpmProgress + "&" + completedTextPercentage + "&" + firstConection + "$" + name + "#");
         }
     }
 }
