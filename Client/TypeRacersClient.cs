@@ -48,6 +48,7 @@ namespace TypeRacers.Client
                 }
 
                 Player.Playroom.SetOpponentsAndTimers(Player.Read());
+                OnOpponentsChanged(Player.Playroom.Players);
 
             }
             while (!Player.Removed);
@@ -69,6 +70,7 @@ namespace TypeRacers.Client
         {
             Player.Removed = true;
             Player.Write(new PlayerMessage(Player.WPMProgress, Player.CompletedTextPercentage, Player.Name, Player.Restarting, Player.Removed));
+            OnOpponentsChanged(Player.Playroom.Players);
         }
 
         public void RestartSearch()

@@ -376,8 +376,6 @@ namespace TypeRacers.ViewModel
                 {
                     EnableSearchingAnimation = false;
                     TriggerPropertyChanged(nameof(EnableSearchingAnimation));
-
-
                     EnableRestartOrExitAlert = true;
                     TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
 
@@ -387,7 +385,7 @@ namespace TypeRacers.ViewModel
 
         private void UpdateShownPlayers()
         {
-            if (Opponents == null || Opponents.Count() == 0)
+            if (Opponents.Count() == 0)
             {
                 ShowFirstOpponent = Visibility.Hidden;
                 ShowSecondOpponent = Visibility.Hidden;

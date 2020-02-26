@@ -12,7 +12,7 @@ namespace Server
         {
             Players = new List<Player>();
             CompetitionText = ServerGeneratedText.GetText();
-            TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(30);
+            TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(60);
         }
 
         public bool GameHasStarted => GameStartingTime != DateTime.MinValue;
