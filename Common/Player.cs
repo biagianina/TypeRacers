@@ -5,12 +5,11 @@ namespace Common
 {
     public class Player
     {
-        private readonly TcpClient tcpClient;
         private NetworkStream networkStream;
 
         public Player(TcpClient tcpClient)
         {
-            this.tcpClient = tcpClient;
+            TcpClient = tcpClient;
         }
 
         public bool FirstTimeConnecting = true;
@@ -22,6 +21,7 @@ namespace Common
         public int WPMProgress { get; set; }
         public int CompletedTextPercentage { get; set; }
         public IPlayroom Playroom { get; set; }
+        public TcpClient TcpClient { get;}
 
         public void SetPlayroom(IPlayroom playroom)
         {
@@ -36,21 +36,15 @@ namespace Common
 
         public string Read()
         {
-            networkStream = tcpClient.GetStream();
-
-            byte[] buffer = new byte[tcpClient.ReceiveBufferSize];
-            int bytesRead = networkStream.Read(buffer, 0, buffer.Length);
-
-            var dataRecieved = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-
-            //solution to get complete messages
-            //while (!dataRecieved.Last().Equals('#'))
-            //{
-            //    bytesRead = networkStream.Read(buffer, 0, tcpClient.ReceiveBufferSize);
-            //    dataRecieved += Encoding.ASCII.GetString(buffer, dataRecieved.Length, bytesRead);
-            //}
-
-            return dataRecieved.Remove(dataRecieved.Length - 1);
+            if (TcpClient.Connected)
+            {
+                networkStream = TcpClient.GetStream();
+                byte[] buffer = new byte[TcpClient.ReceiveBufferSize];
+                int bytesRead = networkStream.Read(buffer, 0, buffer.Length);
+                var dataRecieved = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                return dataRecieved.Remove(dataRecieved.Length - 1);
+            }
+            return string.Empty;
         }
 
         public void TrySetRank()
@@ -64,8 +58,7 @@ namespace Common
 
         public void Write(IMessage message)
         {
-
-            networkStream = tcpClient.GetStream();
+            networkStream = TcpClient.GetStream();
             var toSend = message.ToByteArray();
             networkStream.Write(toSend, 0, toSend.Length);
         }

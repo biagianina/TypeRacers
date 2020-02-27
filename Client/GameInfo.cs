@@ -14,9 +14,9 @@ namespace TypeRacers.Client
         public DateTime TimeToWaitForOpponents { get ; set ; }
         public int Place { get ; set ; }
 
-        public void CheckIfPlayerLeft(Player player)
+        public bool CheckIfPlayerLeft(Player player)
         {
-            player.Name.Contains("_removed");
+           return player.Name.Contains("_removed");
         }
 
         public bool CheckIfPlayerTriesToRestart(Player player)
@@ -43,11 +43,6 @@ namespace TypeRacers.Client
         {
             Players.Add(player);
             return true;
-        }
-
-        public void Remove(Player player)
-        {
-            throw new NotImplementedException();
         }
 
         public void SetGameInfo(string data)

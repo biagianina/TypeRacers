@@ -12,7 +12,7 @@ namespace Server
         {
             Players = new List<Player>();
             CompetitionText = ServerGeneratedText.GetText();
-            TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(60);
+            TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(10);
         }
 
         public bool GameHasStarted => GameStartingTime != DateTime.MinValue;
@@ -27,7 +27,7 @@ namespace Server
         {
             if (!GameHasStarted)
             {
-                if (Players.Count == 3 || TimeToWaitForOpponents - DateTime.UtcNow.AddSeconds(2) <= TimeSpan.Zero && Players.Count == 2)
+                if (Players.Count == 3 || (TimeToWaitForOpponents - DateTime.UtcNow.AddSeconds(2) <= TimeSpan.Zero && Players.Count == 2))
                 {
                     GameStartingTime = DateTime.UtcNow.AddSeconds(10);
                     GameEndingTime = GameStartingTime.AddSeconds(90);
@@ -104,30 +104,24 @@ namespace Server
             return new OpponentsMessage(Players, GameStartingTime, GameEndingTime, player.Name, player.Finnished, player.Place);
         }
 
-        public void Remove(Player player)
-        {
-            Players.Remove(player);
-        }
 
-        public void CheckIfPlayerLeft(Player player)
+        public bool CheckIfPlayerLeft(Player player)
         {
-            if (player.Name.Contains("_removed"))
+            if (player.Name.Contains("_removed") && GetPlayer(player.Name) != null)
             {
-                if (GetPlayer(player.Name) != null)
-                {
-                    Remove(GetPlayer(player.Name));
-                    Console.WriteLine("REMOVED: " + player.Name);
-                    Console.WriteLine("Playroom size: " + Players.Count());
-                }
-            }               
-        }
-        public bool CheckIfPlayerTriesToRestart(Player player)
-        {
-            if (player.Name.Contains("_restart"))
-            {
+                Leave(player.Name);
+                Console.WriteLine("REMOVED: " + player.Name);
+                Console.WriteLine("Playroom size: " + Players.Count);
+                player.TcpClient.Close();
                 return true;
             }
-            return false;
+
+           return false;
+        }
+
+        public bool CheckIfPlayerTriesToRestart(Player player)
+        {
+            return player.Name.Contains("_restart");
         }
     }
 }

@@ -34,10 +34,11 @@ namespace TypeRacers.Client
 
         private void Read()
         {
-            do
+
+            while (!Player.Removed)
             {
                 var data = Player.Read();
-                if (Player.FirstTimeConnecting || Player.Restarting) 
+                if (Player.FirstTimeConnecting || Player.Restarting)
                 {
                     gameInfo.SetGameInfo(data);
                     Player.FirstTimeConnecting = false;
@@ -48,9 +49,9 @@ namespace TypeRacers.Client
                 {
                     SetGameStatus(data);
                 }
-
+                Thread.Sleep(1000);
             }
-            while (!Player.Removed);
+
         }
 
         private void SetGameStatus(string data)
@@ -70,16 +71,15 @@ namespace TypeRacers.Client
             }
             gameInfo.SetOpponentsAndTimers(infos);
         }
+
         private void Write()
         {
-            do
+            while (!Player.Removed)
             {
-
                 Player.Write(new PlayerMessage(Player.WPMProgress, Player.CompletedTextPercentage, Player.Name, Player.FirstTimeConnecting, Player.Restarting, Player.Removed));
                 OnOpponentsChanged(Player.Playroom.Players);
                 Thread.Sleep(1000);
             }
-            while (!Player.Removed);
         }
 
         public void RemovePlayer()
@@ -106,7 +106,5 @@ namespace TypeRacers.Client
         {
             Player.Name = username;
         }
-
-
     }
 }
