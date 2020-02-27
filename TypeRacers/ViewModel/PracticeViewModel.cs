@@ -166,22 +166,13 @@ namespace TypeRacers.ViewModel
         private void CheckUserInput(string value)
         {
             //checks if current word is typed, clears textbox, reintializes remaining text to the validation, sends progress
-            if (isValid && value.EndsWith(" "))
-            {
-                spaceIndex += textToType.Length;
-
-                if (currentWordIndex < TextToType.Split().Length - 1)
-                {
-                    currentWordIndex++;
-                }
-
-                userInputValidator = new InputCharacterValidation(TextToType.Substring(spaceIndex));
-                numberOfCharactersTyped += CurrentInputText.Length;
-                textToType = string.Empty;
-                TriggerPropertyChanged(nameof(SliderProgress));
-                TriggerPropertyChanged(nameof(WPMProgress));//recalculates progress
-            }
+            CheckIfInputIsCompleteWord(value);
             //checks if current word is the last one
+            CheckIfInputIsLastWord();
+        }
+
+        private void CheckIfInputIsLastWord()
+        {
             if (ValidateInput && textToType.Length + spaceIndex == TextToType.Length)
             {
                 AllTextTyped = true;
@@ -198,6 +189,25 @@ namespace TypeRacers.ViewModel
 
                 TriggerPropertyChanged(nameof(WPMProgress));
                 TriggerPropertyChanged(nameof(SliderProgress));
+            }
+        }
+
+        private void CheckIfInputIsCompleteWord(string value)
+        {
+            if (isValid && value.EndsWith(" "))
+            {
+                spaceIndex += textToType.Length;
+
+                if (currentWordIndex < TextToType.Split().Length - 1)
+                {
+                    currentWordIndex++;
+                }
+
+                userInputValidator = new InputCharacterValidation(TextToType.Substring(spaceIndex));
+                numberOfCharactersTyped += CurrentInputText.Length;
+                textToType = string.Empty;
+                TriggerPropertyChanged(nameof(SliderProgress));
+                TriggerPropertyChanged(nameof(WPMProgress));//recalculates progress
             }
         }
 

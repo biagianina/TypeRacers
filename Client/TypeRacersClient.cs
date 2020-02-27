@@ -47,7 +47,6 @@ namespace TypeRacers.Client
                 {
                     SetGameStatus(data);
                 }
-                Thread.Sleep(1000);
             }
         }
 

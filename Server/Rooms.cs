@@ -55,11 +55,10 @@ namespace Server
             {
                 return;
             }
-
-            resendPlayroomInfo = currentPlayroom.CheckIfPlayerTriesToRestart(player);
           
             lock (currentPlayroom)
             {
+                resendPlayroomInfo = currentPlayroom.CheckIfPlayerTriesToRestart(player);
                 if (player.FirstTimeConnecting || resendPlayroomInfo)
                 {
                     SendGameInfo(player);
