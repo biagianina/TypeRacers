@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using TypeRacers.Client;
 
-
 namespace TypeRacers
 {
     //a class that handles the messages to and from the network
@@ -14,6 +13,7 @@ namespace TypeRacers
         private Player player;
         private readonly TcpClient client;
         private TypeRacersClient typeRacersClient;
+
         public NetworkHandler(string userName)
         {
             client = new TcpClient("localhost", 80);
@@ -70,7 +70,6 @@ namespace TypeRacers
             typeRacersClient.RemovePlayer();
         }
 
-
         internal bool PlayerFinnished()
         {
             return player.Finnished;
@@ -85,11 +84,11 @@ namespace TypeRacers
         {
             typeRacersClient.RestartSearch();
         }
+
         public void SubscribeToSearchingOpponents(Action<List<Player>> updateOpponentsList)
         {
             oponentsChangedEventHandler = new TypeRacersClient.OpponentsChangedEventHandler(updateOpponentsList);
             typeRacersClient.OpponentsChanged += new TypeRacersClient.OpponentsChangedEventHandler(oponentsChangedEventHandler);
         }
-
     }
 }

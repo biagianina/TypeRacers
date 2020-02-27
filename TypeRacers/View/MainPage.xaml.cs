@@ -20,7 +20,6 @@ namespace TypeRacers.View
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-         
             ViewModel.ContestNavigation = NavigationService.GetNavigationService(this);
             ViewModel.PracticeNavigation = NavigationService.GetNavigationService(this);
         }

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Common;
 
 namespace TypeRacers.Client
 {
@@ -34,7 +34,6 @@ namespace TypeRacers.Client
 
         private void Read()
         {
-
             while (!Player.Removed)
             {
                 var data = Player.Read();
@@ -44,14 +43,12 @@ namespace TypeRacers.Client
                     Player.FirstTimeConnecting = false;
                     Player.Restarting = false;
                 }
-
                 else
                 {
                     SetGameStatus(data);
                 }
                 Thread.Sleep(1000);
             }
-
         }
 
         private void SetGameStatus(string data)

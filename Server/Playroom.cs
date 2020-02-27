@@ -104,7 +104,6 @@ namespace Server
             return new OpponentsMessage(Players, GameStartingTime, GameEndingTime, player.Name, player.Finnished, player.Place);
         }
 
-
         public bool CheckIfPlayerLeft(Player player)
         {
             if (player.Name.Contains("_removed") && GetPlayer(player.Name) != null)
@@ -116,7 +115,7 @@ namespace Server
                 return true;
             }
 
-           return false;
+            return false;
         }
 
         public bool CheckIfPlayerTriesToRestart(Player player)

@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Common;
+using System;
 using System.Text;
-using System.Threading.Tasks;
-using Common;
+
 namespace Server
 {
     public class GameMessage : IMessage
     {
-        string competitionText;
-        DateTime timeToWaitForOpponents;
-        DateTime gameStartingTime;
-        DateTime gameEndingTime;
+        private string competitionText;
+        private DateTime timeToWaitForOpponents;
+        private DateTime gameStartingTime;
+        private DateTime gameEndingTime;
 
         public GameMessage(string competitionText, DateTime timeToWaitForOpponents, DateTime gameStartingTime, DateTime gameEndingTime)
         {
@@ -19,7 +17,6 @@ namespace Server
             this.timeToWaitForOpponents = timeToWaitForOpponents;
             this.gameStartingTime = gameStartingTime;
             this.gameEndingTime = gameEndingTime;
-          
         }
 
         public byte[] ToByteArray()

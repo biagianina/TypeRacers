@@ -21,7 +21,7 @@ namespace Common
         public int WPMProgress { get; set; }
         public int CompletedTextPercentage { get; set; }
         public IPlayroom Playroom { get; set; }
-        public TcpClient TcpClient { get;}
+        public TcpClient TcpClient { get; }
 
         public void SetPlayroom(IPlayroom playroom)
         {
