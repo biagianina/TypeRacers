@@ -48,7 +48,6 @@ namespace TypeRacers.ViewModel
             //start searching for 30 seconds and subscribe to timer
             model.SubscribeToSearchingOpponents(UpdateOpponents);
             CanUserType = false;
-
         }
 
         public CommandHandler RemovePlayer { get; }
@@ -343,7 +342,6 @@ namespace TypeRacers.ViewModel
             CheckIfStartTimeWasSet();
 
             CheckIfWaitingTimeHasPassed();
-
         }
 
         private void CheckIfStartTimeWasSet()
@@ -381,7 +379,6 @@ namespace TypeRacers.ViewModel
                     TriggerPropertyChanged(nameof(EnableSearchingAnimation));
                     EnableRestartOrExitAlert = true;
                     TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
-
                 }
             }
         }

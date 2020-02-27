@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TypeRacers
+﻿namespace TypeRacers
 {
     public class InputCharacterValidation
     {

@@ -1,19 +1,20 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Common;
+
 namespace Server
 {
     public class OpponentsMessage : IMessage
     {
-        List<Player> players;
-        DateTime startingTime;
-        DateTime endingTime;
-        string name;
-        bool finnished;
-        int place;
+        private List<Player> players;
+        private DateTime startingTime;
+        private DateTime endingTime;
+        private string name;
+        private bool finnished;
+        private int place;
+
         public OpponentsMessage(List<Player> players, DateTime startingTime, DateTime endingTime, string name, bool finnished, int place)
         {
             this.players = players;
@@ -42,8 +43,7 @@ namespace Server
                 return localOpp;
             });
 
-
-            opponents += "*" + startingTime.ToString() + "+" + endingTime.ToString()+ "%" + "!"+ finnished +"/" + place + "#";
+            opponents += "*" + startingTime.ToString() + "+" + endingTime.ToString() + "%" + "!" + finnished + "/" + place + "#";
 
             return opponents;
         }
