@@ -10,13 +10,13 @@ namespace TypeRacers.Client
         public string CompetitionText { get; set; }
         public List<Player> Players { get; set; } = new List<Player>();
         public DateTime GameStartingTime { get; set; }
-        public DateTime GameEndingTime { get ; set; }
-        public DateTime TimeToWaitForOpponents { get ; set ; }
-        public int Place { get ; set ; }
+        public DateTime GameEndingTime { get; set; }
+        public DateTime TimeToWaitForOpponents { get; set; }
+        public int Place { get; set; }
 
         public bool CheckIfPlayerLeft(Player player)
         {
-           return player.Name.Contains("_removed");
+            return player.Name.Contains("_removed");
         }
 
         public bool CheckIfPlayerTriesToRestart(Player player)

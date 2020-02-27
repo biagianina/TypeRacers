@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Common;
 using System;
-using Common;
-using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Server
 {
@@ -67,7 +66,6 @@ namespace Server
                 {
                     SendGamestatus(player);
                 }
-
             }
         }
 

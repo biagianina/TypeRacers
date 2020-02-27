@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using TypeRacers.ViewModel;
-using System.Windows.Threading; // For Dispatcher.
-using System.Windows;
 
 namespace TypeRacers.Model
 {

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Common
+﻿namespace Common
 {
-   public interface IMessage
+    public interface IMessage
     {
-         byte[] ToByteArray();
+        byte[] ToByteArray();
     }
 }

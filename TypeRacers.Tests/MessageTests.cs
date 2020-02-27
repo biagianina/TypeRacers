@@ -2,34 +2,40 @@
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
-using Common;
+using TypeRacers.Client;
 
 namespace TypeRacersFacts
 {
     public class MessageTests
     {
         [Fact]
-        public void ReturnCorrectClientInfoGeneratedMessage()
+        public void ReturnsCorrectSimplePlayerMessage()
         {
-            Message message = new Message("clientinfo", new object[] { "2" , "5", "alin" });
+            var byteArray = new PlayerMessage(0, 0, "Alin", true, false, false).ToByteArray();
 
-            Assert.Equal("2&5$alin#", message.GetMessage);
+            var generatedMessage = Encoding.ASCII.GetString(byteArray, 0, byteArray.Length);
+
+            Assert.Equal("0&0&True$Alin#", generatedMessage);
         }
 
-        //[Fact]
-        //public void ReturnCorrectGameInfoGeneratedMessage()
-        //{
-        //    Message message = new Message("gameinfo", new object[] { "type this text", DateTime.UtcNow.AddSeconds(15), DateTime.UtcNow.AddSeconds(30), DateTime.UtcNow.AddSeconds(45) });
+        [Fact]
+        public void ReturnsCorrectRestartedPlayerMessage()
+        {
+            var byteArray = new PlayerMessage(0, 0, "Alin", true, true, false).ToByteArray();
 
-        //    Assert.Equal("", message.GetMessage);
-        //}
+            var generatedMessage = Encoding.ASCII.GetString(byteArray, 0, byteArray.Length);
+
+            Assert.Equal("0&0&True$Alin_restart#", generatedMessage);
+        }
 
         [Fact]
-        public void ReturnCorrectOpponentsGeneratedMessage()
+        public void ReturnsCorrectRemovedPlayerMessage()
         {
-            Message message = new Message("clientInfo", new object[] { "2", "5", "alin" });
+            var byteArray = new PlayerMessage(0, 0, "Alin", true, false, true).ToByteArray();
 
-            Assert.Equal("2&5$alin#", message.GetMessage);
+            var generatedMessage = Encoding.ASCII.GetString(byteArray, 0, byteArray.Length);
+
+            Assert.Equal("0&0&True$Alin_removed#", generatedMessage);
         }
     }
 }
