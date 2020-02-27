@@ -13,6 +13,10 @@ namespace TypeRacers.Model
             networkHandler = new NetworkHandler(MainViewModel.Name);
         }
 
+        public void StartCommunication()
+        {
+            networkHandler.StartCommunication();
+        }
         public List<Common.Player> GetOpponents()
         {
             return networkHandler.GetOpponents();

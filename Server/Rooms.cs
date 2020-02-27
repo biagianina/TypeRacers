@@ -7,7 +7,6 @@ namespace Server
 {
     public class Rooms
     {
-        private bool resendPlayroomInfo;
         private readonly List<IPlayroom> playrooms;
         private IPlayroom currentPlayroom;
 
@@ -58,8 +57,7 @@ namespace Server
           
             lock (currentPlayroom)
             {
-                resendPlayroomInfo = currentPlayroom.CheckIfPlayerTriesToRestart(player);
-                if (player.FirstTimeConnecting || resendPlayroomInfo)
+                if (player.FirstTimeConnecting || currentPlayroom.CheckIfPlayerTriesToRestart(player))
                 {
                     SendGameInfo(player);
                 }
@@ -89,7 +87,7 @@ namespace Server
 
             Console.WriteLine("sending game info");
 
-            resendPlayroomInfo = false;
+
         }
 
         private void SetPlayroom(Player player)

@@ -19,12 +19,11 @@ namespace TypeRacers.Client
             Player = player;
             gameInfo = new GameInfo();
             Player.SetPlayroom(gameInfo);
-            StartServerCommunication();
         }
 
         public Player Player { get; set; }
 
-        private void StartServerCommunication()
+        public void StartServerCommunication()
         {
             Thread writeThread = new Thread(Write);
             Thread readThread = new Thread(Read);

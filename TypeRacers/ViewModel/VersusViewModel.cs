@@ -29,6 +29,7 @@ namespace TypeRacers.ViewModel
         public VersusViewModel()
         {
             model = new Model.Model();
+            model.StartCommunication();
             Thread.Sleep(1000);
             TextToType = model.GetGeneratedTextToTypeFromServer();
             userInputValidator = new InputCharacterValidation(TextToType);

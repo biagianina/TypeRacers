@@ -12,6 +12,8 @@ namespace TypeRacers
         private TypeRacersClient.OpponentsChangedEventHandler oponentsChangedEventHandler;
         private Player player;
         private readonly TcpClient client;
+
+
         private TypeRacersClient typeRacersClient;
 
         public NetworkHandler(string userName)
@@ -22,6 +24,11 @@ namespace TypeRacers
                 Name = userName
             };
             typeRacersClient = new TypeRacersClient(player);
+        }
+
+        internal void StartCommunication()
+        {
+            typeRacersClient.StartServerCommunication();
         }
 
         public DateTime GetStartingTime()
