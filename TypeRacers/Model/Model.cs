@@ -35,11 +35,6 @@ namespace TypeRacers.Model
             return networkHandler.GetEndingTime();
         }
 
-        //public Dictionary<string, Tuple<bool, int>> GetRanking()
-        //{
-        //    return networkHandler.GetRanking();
-        //}
-
         public DateTime GetWaitingTime()
         {
             return networkHandler.GetWaitingTime();

@@ -56,7 +56,9 @@ namespace Server
             {
                 return;
             }
+
             resendPlayroomInfo = currentPlayroom.CheckIfPlayerTriesToRestart(player);
+          
             lock (currentPlayroom)
             {
                 if (player.FirstTimeConnecting || resendPlayroomInfo)
@@ -67,7 +69,6 @@ namespace Server
                 {
                     SendGamestatus(player);
                 }
-
             }
         }
 

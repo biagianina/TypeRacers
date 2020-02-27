@@ -35,7 +35,7 @@ namespace Server
 
                 if ((Players.Count == 1) && TimeToWaitForOpponents - DateTime.UtcNow.AddSeconds(2) <= TimeSpan.Zero)
                 {
-                    ResetPlayroom();
+                    Reset();
                 }
             }
         }
@@ -59,7 +59,7 @@ namespace Server
 
             if (Players.Count == 0)
             {
-                ResetPlayroom();
+                Reset();
             }
         }
 
@@ -89,7 +89,7 @@ namespace Server
             }
         }
 
-        private void ResetPlayroom()
+        private void Reset()
         {
             TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(20);
         }

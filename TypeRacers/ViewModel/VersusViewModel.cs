@@ -225,6 +225,14 @@ namespace TypeRacers.ViewModel
         private void CheckUserInput(string value)
         {
             //checks if current word is typed, clears textbox, reintializes remaining text to the validation, sends progress
+            CheckIfInputIsCompleteWord(value);
+
+            //checks if current word is the last one
+            CheckIfIsLastWord();
+        }
+
+        private void CheckIfInputIsCompleteWord(string value)
+        {
             if (isValid && value.EndsWith(" "))
             {
                 spaceIndex += textToType.Length;
@@ -241,8 +249,10 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(SliderProgress));
                 TriggerPropertyChanged(nameof(WPMProgress));
             }
+        }
 
-            //checks if current word is the last one
+        private void CheckIfIsLastWord()
+        {
             if (InputValidation && textToType.Length + spaceIndex == TextToType.Length)
             {
                 AllTextTyped = true;

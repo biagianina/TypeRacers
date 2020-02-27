@@ -24,7 +24,7 @@ namespace TypeRacers.Client
 
         public Player Player { get; set; }
 
-        public void StartServerCommunication()
+        private void StartServerCommunication()
         {
             Thread writeThread = new Thread(Write);
             Thread readThread = new Thread(Read);
@@ -94,7 +94,7 @@ namespace TypeRacers.Client
             Player.Restarting = true;
         }
 
-        protected void OnOpponentsChanged(List<Player> opponents)
+        void OnOpponentsChanged(List<Player> opponents)
         {
             if (opponents != null && OpponentsChanged != null && !Player.Restarting)
             {
