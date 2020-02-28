@@ -41,7 +41,7 @@ namespace TypeRacers.Server
                 Thread thread = new Thread(() =>
                 {
                     client = server.AcceptTcpClient();
-                    Player newConnectedClient = new Player(client);
+                    Player newConnectedClient = new Player(new TypeRacersNetworkClient(client));
                     playrooms.AllocatePlayroom(newConnectedClient);
                 });
                 thread.Start();

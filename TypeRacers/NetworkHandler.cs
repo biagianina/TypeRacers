@@ -10,7 +10,7 @@ namespace TypeRacers
     public class NetworkHandler
     {
         private TypeRacersClient.OpponentsChangedEventHandler oponentsChangedEventHandler;
-        private Player player;
+        private readonly Player player;
         private readonly TcpClient client;
 
 
@@ -19,7 +19,7 @@ namespace TypeRacers
         public NetworkHandler(string userName)
         {
             client = new TcpClient("localhost", 80);
-            player = new Player(client)
+            player = new Player(new TypeRacersNetworkClient(client))
             {
                 Name = userName
             };
