@@ -7,7 +7,6 @@ namespace Common
 {
     public class Player
     {
-        private string dataRecieved;
 
         public Player(INetworkClient tcpClient)
         {

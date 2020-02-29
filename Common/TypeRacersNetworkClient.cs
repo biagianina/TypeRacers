@@ -13,7 +13,8 @@ namespace Common
         // The real implementation
         private NetworkStream networkStream;
         private readonly TcpClient realTcpClient;
-        private string dataRecieved;
+        public string DataReceieved { get; set; }
+
         public NetworkStream GetStream() => realTcpClient.GetStream();
 
         public TypeRacersNetworkClient()
@@ -51,15 +52,15 @@ namespace Common
                 networkStream = realTcpClient.GetStream();
                 byte[] buffer = new byte[1024];
                 int bytesRead = networkStream.Read(buffer, 0, buffer.Length);
-                dataRecieved = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                while (!dataRecieved.Contains("#"))
+                DataReceieved = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                while (!DataReceieved.Contains("#"))
                 {
                     bytesRead = networkStream.Read(buffer, 0, 1024);
-                    dataRecieved += Encoding.ASCII.GetString(buffer, dataRecieved.Length, bytesRead);
+                    DataReceieved += Encoding.ASCII.GetString(buffer, DataReceieved.Length, bytesRead);
                 }
 
-                string completeMessage = dataRecieved.Substring(0, dataRecieved.IndexOf('#'));
-                dataRecieved.Remove(0, completeMessage.Length - 1);
+                string completeMessage = DataReceieved.Substring(0, DataReceieved.IndexOf('#'));
+                DataReceieved.Remove(0, completeMessage.Length - 1);
 
                 return completeMessage;
             }

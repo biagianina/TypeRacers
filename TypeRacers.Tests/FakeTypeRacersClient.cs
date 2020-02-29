@@ -6,6 +6,8 @@ namespace TypeRacersFacts
 {
     public class FakeTypeRacersClient : INetworkClient
     {
+        public string DataReceieved { get; set; } = "just a text";
+            
         public void Close()
         {
             throw new NotImplementedException();
@@ -18,12 +20,13 @@ namespace TypeRacersFacts
 
         public string Read()
         {
-            return "just a text";
+            return DataReceieved;
         }
 
         public void Write(IMessage message)
         {
-            throw new NotImplementedException();
+            var data = message.ToByteArray();
+            DataReceieved = Encoding.ASCII.GetString(data, 0, data.Length);
         }
     }
 }
