@@ -35,7 +35,8 @@ namespace TypeRacers.Client
         {
             while (!Player.Removed)
             {
-                var data = Player.Read();
+                var message = (ReceivedMessage)Player.Read();
+                var data = message.GetData();
                 if (Player.FirstTimeConnecting || Player.Restarting)
                 {
                     gameInfo.SetGameInfo(data);
