@@ -7,7 +7,6 @@ namespace Common
 {
     public class Player
     {
-
         public Player(INetworkClient tcpClient)
         {
             NetworkClient = tcpClient;

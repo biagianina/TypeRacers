@@ -84,7 +84,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\LocalGeneratedText.cs" />
-    <Compile Include="NetworkHandler.cs" />
+    <Compile Include="Model\NetworkHandler.cs" />
     <Compile Include="ViewModel\Commander.cs" />
     <Compile Include="ViewModel\ITextToType.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />

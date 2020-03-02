@@ -19,7 +19,7 @@ namespace TypeRacers
         public NetworkHandler(string userName)
         {
             client = new TcpClient();
-            player = new Player(client)
+            player = new Player(new TypeRacersNetworkClient(client))
             {
                 Name = userName
             };
@@ -42,60 +42,15 @@ namespace TypeRacers
             typeRacersClient.StartServerCommunication();
         }
 
-        public DateTime GetStartingTime()
-        {
-            return typeRacersClient.gameInfo.GameStartingTime;
-        }
-
-        public DateTime GetEndingTime()
-        {
-            return typeRacersClient.gameInfo.GameEndingTime;
-        }
-
-        public DateTime GetWaitingTime()
-        {
-            return typeRacersClient.gameInfo.TimeToWaitForOpponents;
-        }
-
-        public List<Player> GetOpponents()
-        {
-            return typeRacersClient.gameInfo.Players;
-        }
-
-        //public Dictionary<string, Tuple<bool, int>> GetRanking()
-        //{
-        //    return client.Rank;
-        //}
-
-        public string GetTextFromServer()
-        {
-            return typeRacersClient.gameInfo.CompetitionText;
-        }
-
         public void SendProgressToServer(int wpmProgress, int completedTextPercentage)
         {
             //to implement finished and place
             typeRacersClient.Player.UpdateInfo(wpmProgress, completedTextPercentage);
         }
 
-        public void NameClient(string username)
-        {
-            typeRacersClient.NameClient(username);
-        }
-
         public void RemovePlayer()
         {
             typeRacersClient.RemovePlayer();
-        }
-
-        internal bool PlayerFinnished()
-        {
-            return player.Finnished;
-        }
-
-        internal string PlayerPlace()
-        {
-            return player.Place.ToString();
         }
 
         public void RestartSearch()

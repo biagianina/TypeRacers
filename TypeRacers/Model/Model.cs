@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using TypeRacers.ViewModel;
 
@@ -7,11 +8,15 @@ namespace TypeRacers.Model
     public class Model
     {
         private readonly NetworkHandler networkHandler;
-        private string textToType = LocalGeneratedText.GetText();
+        private readonly string textToType = LocalGeneratedText.GetText();
+        Player player;
+        IPlayroom gameInfo;
 
         public Model()
         {
             networkHandler = new NetworkHandler(MainViewModel.Name);
+            player = networkHandler.PlayerModel();
+            gameInfo = networkHandler.GameModel();
         }
 
         public void StartCommunication()
@@ -19,18 +24,18 @@ namespace TypeRacers.Model
             networkHandler.StartCommunication();
         }
 
-        public Common.Player GetPlayerModel()
+        public Player GetPlayerModel()
         {
-            return networkHandler.PlayerModel();
+            return player;
         }
 
-        public Common.IPlayroom GetGameModel()
+        public IPlayroom GetGameModel()
         {
-            return networkHandler.GameModel();
+            return gameInfo;
         }
-        public List<Common.Player> GetOpponents()
+        public List<Player> GetOpponents()
         {
-            return networkHandler.GetOpponents();
+            return gameInfo.Players;
         }
 
         public void RestartSearch()
@@ -40,20 +45,20 @@ namespace TypeRacers.Model
 
         public DateTime GetStartingTime()
         {
-            return networkHandler.GetStartingTime();
+            return gameInfo.GameStartingTime;
         }
 
         public DateTime GetEndingTime()
         {
-            return networkHandler.GetEndingTime();
+            return gameInfo.GameEndingTime;
         }
 
         public DateTime GetWaitingTime()
         {
-            return networkHandler.GetWaitingTime();
+            return gameInfo.TimeToWaitForOpponents;
         }
 
-        public void SubscribeToSearchingOpponents(Action<List<Common.Player>> updateOpponents)
+        public void SubscribeToSearchingOpponents(Action<List<Player>> updateOpponents)
         {
             networkHandler.SubscribeToSearchingOpponents(updateOpponents);
         }
@@ -70,7 +75,7 @@ namespace TypeRacers.Model
 
         public string GetGeneratedTextToTypeFromServer()
         {
-            return networkHandler.GetTextFromServer();
+            return gameInfo.CompetitionText;
         }
 
         public void RemovePlayer()
@@ -80,12 +85,12 @@ namespace TypeRacers.Model
 
         internal bool PlayerFinnished()
         {
-            return networkHandler.PlayerFinnished();
+            return player.Finnished;
         }
 
         internal string PlayerPlace()
         {
-            return networkHandler.PlayerPlace();
+            return player.Place.ToString();
         }
     }
 }
