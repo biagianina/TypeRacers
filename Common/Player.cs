@@ -33,6 +33,7 @@ namespace Common
             WPMProgress = wpmProgress;
             CompletedTextPercentage = completedText;
         }
+
         public void TrySetRank()
         {
             if (CompletedTextPercentage == 100 && !Finnished)
@@ -42,7 +43,7 @@ namespace Common
             }
         }
 
-        public string Read()
+        public IMessage Read()
         {
             return NetworkClient.Read();
         }

@@ -28,18 +28,18 @@ namespace Server
         {
             while (true)
             {
-                var dataRead = player.Read();
-                if (string.IsNullOrEmpty(dataRead))
+                var message = (ReceivedMessage)player.Read();
+                var data = message?.GetData();
+                if (string.IsNullOrEmpty(data))
                 {
                     return;
                 }
-                dataRead.Remove(dataRead.Length - 1);
 
-                var nameAndInfo = dataRead.Split('$');
+                var nameAndInfo = data.Split('$');
                 var infos = nameAndInfo.FirstOrDefault()?.Split('&');
                 player.Name = nameAndInfo.LastOrDefault();
 
-                Console.WriteLine(dataRead);
+                Console.WriteLine(data);
 
                 ManagePlayerReceivedData(player, infos);
             }
@@ -54,7 +54,7 @@ namespace Server
             {
                 return;
             }
-          
+
             lock (currentPlayroom)
             {
                 if (player.FirstTimeConnecting || currentPlayroom.CheckIfPlayerTriesToRestart(player))

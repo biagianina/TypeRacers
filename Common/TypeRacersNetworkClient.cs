@@ -44,27 +44,30 @@ namespace Common
             networkStream.Write(toSend, 0, toSend.Length);
         }
 
-        public string Read()
+        public IMessage Read()
         {
 
             if (realTcpClient.Connected)
             {
                 networkStream = realTcpClient.GetStream();
-                byte[] buffer = new byte[1024];
-                int bytesRead = networkStream.Read(buffer, 0, buffer.Length);
-                DataReceieved = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                while (!DataReceieved.Contains("#"))
-                {
-                    bytesRead = networkStream.Read(buffer, 0, 1024);
-                    DataReceieved += Encoding.ASCII.GetString(buffer, DataReceieved.Length, bytesRead);
-                }
+                var receivedMessage = new ReceivedMessage();
+                receivedMessage.DecodeMessage(networkStream);
 
-                string completeMessage = DataReceieved.Substring(0, DataReceieved.IndexOf('#'));
-                DataReceieved.Remove(0, completeMessage.Length - 1);
+                return receivedMessage;
+                //byte[] buffer = new byte[1024];
+                //int bytesRead = networkStream.Read(buffer, 0, buffer.Length);
+                //DataReceieved = Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
-                return completeMessage;
+                //while (!DataReceieved.Contains("#"))
+                //{
+                //    bytesRead = networkStream.Read(buffer, 0, 1024);
+                //    DataReceieved += Encoding.ASCII.GetString(buffer, DataReceieved.Length, bytesRead);
+                //}
+                //string completeMessage = DataReceieved.Substring(0, DataReceieved.IndexOf('#'));
+                //DataReceieved.Remove(0, completeMessage.Length - 1);
+
             }
-            return string.Empty;
+            return default;
         }
     }
 }

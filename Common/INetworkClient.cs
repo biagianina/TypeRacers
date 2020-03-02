@@ -10,9 +10,8 @@ namespace Common
 {
     public interface INetworkClient : IDisposable
     {
-        string DataReceieved { get; set; }
         void Write(IMessage message);
-        string Read();
+        IMessage Read();
         void Close();
     }
 }
