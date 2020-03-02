@@ -21,7 +21,7 @@ namespace Server
         public DateTime GameEndingTime { get; set; }
         public DateTime TimeToWaitForOpponents { get; set; }
         public int Place { get; set; } = 1;
-        public string CompetitionText { get; }
+        public string CompetitionText { get; set; }
 
         public void TrySetGameStartingTime()
         {
@@ -79,16 +79,6 @@ namespace Server
             return true;
         }
 
-        internal void CheckRanking(Player player, string completedTextPerecentage)
-        {
-            var currentPlayer = GetPlayer(player.Name);
-            if (completedTextPerecentage.Equals(100))
-            {
-                currentPlayer.Finnished = true;
-                currentPlayer.Place = Place++;
-            }
-        }
-
         private void Reset()
         {
             TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(20);
@@ -121,6 +111,10 @@ namespace Server
         public bool CheckIfPlayerTriesToRestart(Player player)
         {
             return player.Name.Contains("_restart");
+        }
+
+        public void SubscribeToSearchingOpponents(Action<List<Player>> updateOpponents)
+        {
         }
     }
 }

@@ -7,10 +7,8 @@ namespace TypeRacers.ViewModel
 {
     internal class MainViewModel : INotifyPropertyChanged
     {
-        
         private VersusPage race;
         private PracticePage practice;
-
         public MainViewModel()
         {
             ContestCommand = new CommandHandler(() => NavigateContest(), () => true);
@@ -35,7 +33,6 @@ namespace TypeRacers.ViewModel
                 if (string.IsNullOrEmpty(value))
                 {
                     UsernameEntered = false;
-
                     TriggerPropertyChanged(nameof(UsernameEntered));
                     return;
                 }
@@ -56,7 +53,8 @@ namespace TypeRacers.ViewModel
                 Model.StartCommunication();
                 race = new VersusPage
                 {
-                    Model = Model
+                    Player = Model.GetPlayer(),
+                    GameInfo = Model.GetGameInfo()
                 };
                 ContestNavigation.Navigate(race);
             }
@@ -74,8 +72,9 @@ namespace TypeRacers.ViewModel
                 Model = new Model.Model();
                 practice = new PracticePage
                 {
-                    Model = Model
+                    TextToType = Model.GetGeneratedTextToTypeLocally()
                 };
+                
                 PracticeNavigation.Navigate(practice);
             }
             else

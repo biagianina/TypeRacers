@@ -9,10 +9,8 @@ namespace TypeRacers
     //a class that handles the messages to and from the network
     public class NetworkHandler
     {
-        private TypeRacersClient.OpponentsChangedEventHandler oponentsChangedEventHandler;
         private Player player;
         private readonly TcpClient client;
-
 
         private TypeRacersClient typeRacersClient;
 
@@ -40,28 +38,6 @@ namespace TypeRacers
         {
             client.Connect("localhost", 80);
             typeRacersClient.StartServerCommunication();
-        }
-
-        public void SendProgressToServer(int wpmProgress, int completedTextPercentage)
-        {
-            //to implement finished and place
-            typeRacersClient.Player.UpdateInfo(wpmProgress, completedTextPercentage);
-        }
-
-        public void RemovePlayer()
-        {
-            typeRacersClient.RemovePlayer();
-        }
-
-        public void RestartSearch()
-        {
-            typeRacersClient.RestartSearch();
-        }
-
-        public void SubscribeToSearchingOpponents(Action<List<Player>> updateOpponentsList)
-        {
-            oponentsChangedEventHandler = new TypeRacersClient.OpponentsChangedEventHandler(updateOpponentsList);
-            typeRacersClient.OpponentsChanged += new TypeRacersClient.OpponentsChangedEventHandler(oponentsChangedEventHandler);
         }
     }
 }

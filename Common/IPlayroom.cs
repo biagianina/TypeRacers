@@ -5,7 +5,7 @@ namespace Common
 {
     public interface IPlayroom
     {
-        string CompetitionText { get; }
+        string CompetitionText { get; set; }
         DateTime GameStartingTime { get; set; }
         DateTime GameEndingTime { get; set; }
         DateTime TimeToWaitForOpponents { get; set; }
@@ -26,5 +26,6 @@ namespace Common
         bool CheckIfPlayerLeft(Player player);
 
         bool CheckIfPlayerTriesToRestart(Player player);
+        void SubscribeToSearchingOpponents(Action<List<Player>> updateOpponents);
     }
 }

@@ -19,11 +19,6 @@ namespace Server
             currentPlayroom = playrooms.Last();
         }
 
-        public int GetNumberOfPlayrooms()
-        {
-            return playrooms.Count;
-        }
-
         public void AllocatePlayroom(Player player)
         {
             while (true)
@@ -86,8 +81,6 @@ namespace Server
             player.Write(currentPlayroom.GameMessage());
 
             Console.WriteLine("sending game info");
-
-
         }
 
         private void SetPlayroom(Player player)

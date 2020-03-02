@@ -8,10 +8,6 @@ namespace TypeRacers.Client
 {
     public class TypeRacersClient
     {
-        public delegate void OpponentsChangedEventHandler(List<Player> updatedOpponents);
-
-        public event OpponentsChangedEventHandler OpponentsChanged;
-
         public GameInfo gameInfo;
 
         public TypeRacersClient(Player player)
@@ -70,37 +66,17 @@ namespace TypeRacers.Client
 
         private void Write()
         {
-            while (!Player.Removed)
+            while (true)
             {
                 Player.Write(new PlayerMessage(Player.WPMProgress, Player.CompletedTextPercentage, Player.Name, Player.FirstTimeConnecting, Player.Restarting, Player.Removed));
-                OnOpponentsChanged(Player.Playroom.Players);
+                gameInfo.OnOpponentsChanged(gameInfo.Players);
                 Thread.Sleep(1000);
+                if (Player.Removed)
+                {
+                    Player.Write(new PlayerMessage(Player.WPMProgress, Player.CompletedTextPercentage, Player.Name, Player.FirstTimeConnecting, Player.Restarting, Player.Removed));
+                    break;
+                }
             }
-        }
-
-        public void RemovePlayer()
-        {
-            Player.Removed = true;
-            Player.Write(new PlayerMessage(Player.WPMProgress, Player.CompletedTextPercentage, Player.Name, Player.FirstTimeConnecting, Player.Restarting, Player.Removed));
-            OnOpponentsChanged(Player.Playroom.Players);
-        }
-
-        public void RestartSearch()
-        {
-            Player.Restarting = true;
-        }
-
-        void OnOpponentsChanged(List<Player> opponents)
-        {
-            if (opponents != null && OpponentsChanged != null && !Player.Restarting)
-            {
-                OpponentsChanged(opponents);
-            }
-        }
-
-        public void NameClient(string username)
-        {
-            Player.Name = username;
         }
     }
 }

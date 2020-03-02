@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using Common;
 
 namespace TypeRacers.ViewModel
 {
@@ -20,7 +21,6 @@ namespace TypeRacers.ViewModel
         private int numberOfCharactersTyped;
         private int correctTyping;
         private int incorrectTyping;
-        private Model.Model model;
         private InputCharacterValidation userInputValidator;
 
         public PracticeViewModel()
@@ -32,19 +32,6 @@ namespace TypeRacers.ViewModel
             TriggerPropertyChanged(nameof(GetReadyAlert));
         }
 
-        public Model.Model Model 
-        {
-            get => model; 
-            set 
-            { 
-                model = value;
-                TriggerPropertyChanged(nameof(TextToType));
-                TriggerPropertyChanged(nameof(SliderProgress));
-                TriggerPropertyChanged(nameof(TextToTypeStyles));
-                TriggerPropertyChanged(nameof(UserInputValidator));
-            } 
-        }
-
         public IEnumerable<Inline> TextToTypeStyles
         {
             get => new[] { new Run() { Text = TextToType.Substring(0, spaceIndex) , Foreground = Brushes.Salmon},
@@ -54,7 +41,7 @@ namespace TypeRacers.ViewModel
                 new Run() {Text = TextToType.Substring(spaceIndex + CurrentWordLength) }
                 };
         }
-        private InputCharacterValidation UserInputValidator { get =>  userInputValidator ?? new InputCharacterValidation(TextToType); set => userInputValidator = value; }
+        private InputCharacterValidation UserInputValidator { get => userInputValidator ?? new InputCharacterValidation(TextToType); set => userInputValidator = value; }
         public bool ValidateInput
         {
             get => isValid;
@@ -135,7 +122,18 @@ namespace TypeRacers.ViewModel
                 return default;
             }
         }
-        public string TextToType => Model?.GetGeneratedTextToTypeLocally() ?? string.Empty;
+        public string TextToType
+        {
+            get => textToType;
+            set
+            {
+                textToType = value;
+                TriggerPropertyChanged(nameof(TextToType));
+                TriggerPropertyChanged(nameof(SliderProgress));
+                TriggerPropertyChanged(nameof(TextToTypeStyles));
+                TriggerPropertyChanged(nameof(UserInputValidator));
+            }
+        }
         public string CurrentInputText
         {
             get => textToType;
@@ -166,7 +164,7 @@ namespace TypeRacers.ViewModel
         public string SecondsToGetReady { get; internal set; }
         public int Accuracy { get; private set; }
         public bool ShowFinishResults { get; private set; }
-        public DateTime StartTime { get; set; } 
+        public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         private void CheckUserInput(string value)
         {

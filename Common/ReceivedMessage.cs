@@ -7,7 +7,6 @@ namespace Common
 {
     public class ReceivedMessage : IMessage
     {
-
         private string Data { get; set; }
 
         public byte[] ToByteArray()

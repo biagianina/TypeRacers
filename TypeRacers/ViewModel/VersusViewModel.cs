@@ -21,20 +21,52 @@ namespace TypeRacers.ViewModel
         private int incorrectChars;
         private int currentWordIndex;
         private bool alert;
-        private Model.Model model;
         private int numberOfCharactersTyped;
         private int incorrectTyping;
         private int correctTyping;
         private bool startReporting;
+        private Player player;
+        private IPlayroom gameInfo;
 
         public VersusViewModel()
         {
+            UpdateShownPlayers();
             EnableSearchingAnimation = true;
             ExitProgramCommand = new CommandHandler(() => ExitProgram(), () => true);
             RemovePlayer = new CommandHandler(() => RemovePlayerFromPlayroom(), () => true);
             RestartSearchingOpponentsCommand = new CommandHandler(() => RestartSearchingOpponents(), () => true);
         }
 
+        public Player Player
+        {
+            get => player;
+            set 
+            {
+                player = value;
+                TriggerPropertyChanged(nameof(Player));
+            } 
+        }
+        public IPlayroom GameInfo
+        {
+            get => gameInfo;
+            set
+            {
+                gameInfo = value;
+                TriggerPropertyChanged(nameof(GameInfo));
+                TriggerPropertyChanged(nameof(TextToType));
+                TriggerPropertyChanged(nameof(TextToTypeStyles));
+                TriggerPropertyChanged(nameof(SliderProgress));
+                TriggerPropertyChanged(nameof(UserInputValidator));
+                GameInfo.SubscribeToSearchingOpponents(UpdateOpponents);
+                TriggerPropertyChanged(nameof(Opponents));
+                TriggerPropertyChanged(nameof(WaitingTime));
+                TriggerPropertyChanged(nameof(StartTime));
+                TriggerPropertyChanged(nameof(EndTime));
+                TriggerPropertyChanged(nameof(ShowRanking));
+                TriggerPropertyChanged(nameof(RankingPlace));
+                UpdateShownPlayers();
+            }
+        }
         public CommandHandler RemovePlayer { get; }
         public CommandHandler RestartSearchingOpponentsCommand { get; }
         public CommandHandler ExitProgramCommand { get; }
@@ -49,13 +81,13 @@ namespace TypeRacers.ViewModel
                 };
         }
 
-        public IEnumerable<Player> Opponents => Model?.GetOpponents() ?? new List<Player>();
+        public IEnumerable<Player> Opponents => GameInfo?.Players ?? new List<Player>();
 
         public Visibility ShowFirstOpponent { get; set; }
 
         public Visibility ShowSecondOpponent { get; set; }
 
-        public DateTime WaitingTime => Model.GetWaitingTime();
+        public DateTime WaitingTime => GameInfo.TimeToWaitForOpponents;
         public DateTime TimeToStart => DateTime.UtcNow.AddSeconds((WaitingTime - DateTime.UtcNow).Seconds);
         public int OpponentsCount { get; set; }
 
@@ -74,8 +106,6 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(InputBackgroundColor));
             }
         }
-
-        public bool CanUserType { get; set; }
 
         public int SliderProgress
         {
@@ -110,7 +140,6 @@ namespace TypeRacers.ViewModel
             get => TextToType.Split()[currentWordIndex].Length;//length of current word
         }
 
-        public bool GetReadyAlert { get; set; }
         public bool AllTextTyped { get; set; }
 
         //determines if a popup alert should apear, binded in open property of popup xaml
@@ -159,7 +188,7 @@ namespace TypeRacers.ViewModel
             }
         }
 
-        public string TextToType => model?.GetGeneratedTextToTypeFromServer() ?? string.Empty;
+        public string TextToType => GameInfo?.CompetitionText ?? string.Empty;
 
         public string CurrentInputText
         {
@@ -191,38 +220,18 @@ namespace TypeRacers.ViewModel
         public string SecondsToGetReady { get; set; }
         public bool EnableSearchingAnimation { get; private set; }
         public DateTime StartTime { get; set; }
-        public bool ShowRanking => Model?.PlayerFinnished() ?? false;
-        public string RankingPlace => Model?.PlayerPlace() ?? string.Empty;
+        public bool ShowRanking => Player?.Finnished ?? false;
+        public string RankingPlace => Player?.Place.ToString() ?? string.Empty;
         public int Accuracy { get; private set; }
         public bool OpenFinishPopup { get; private set; }
         public DateTime EndTime { get; private set; }
-        public Model.Model Model 
-        { 
-            get => model;
-            set
-            {
-                model = value;
-                TriggerPropertyChanged(nameof(TextToType));
-                TriggerPropertyChanged(nameof(TextToTypeStyles));
-                TriggerPropertyChanged(nameof(SliderProgress));
-                TriggerPropertyChanged(nameof(UserInputValidator));
-                model.SubscribeToSearchingOpponents(UpdateOpponents);
-                TriggerPropertyChanged(nameof(Opponents));
-                TriggerPropertyChanged(nameof(WaitingTime));
-                TriggerPropertyChanged(nameof(StartTime));
-                TriggerPropertyChanged(nameof(EndTime));
-                TriggerPropertyChanged(nameof(ShowRanking));
-                TriggerPropertyChanged(nameof(RankingPlace));
-                UpdateShownPlayers();
-            }
-        }
 
         private void ReportProgress()
         {
             if (StartReportingProgress)
             {
                 TriggerPropertyChanged(nameof(Opponents));
-                model.ReportProgress(WPMProgress, SliderProgress);
+                Player.UpdateInfo(WPMProgress, SliderProgress);
             }
         }
 
@@ -322,7 +331,7 @@ namespace TypeRacers.ViewModel
             EnableRestartOrExitAlert = false;
             TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
 
-            Model.RestartSearch();
+            Player.Restarting = true;
             Thread.Sleep(1000);
             //getting the waiting time again
             TriggerPropertyChanged(nameof(WaitingTime));
@@ -333,13 +342,13 @@ namespace TypeRacers.ViewModel
 
         private void ExitProgram()
         {
+            Player.Removed = true;
             Application.Current.Shutdown();
-            model.RemovePlayer();
         }
 
         private void RemovePlayerFromPlayroom()
         {
-            Model.RemovePlayer();
+            Player.Removed = true;
         }
 
         private void UpdateOpponents(List<Player> uppdateOpponents)
@@ -362,15 +371,15 @@ namespace TypeRacers.ViewModel
 
         private void CheckIfStartTimeWasSet()
         {
-            if (Model.GetStartingTime() != DateTime.MinValue)
+            if (GameInfo.GameStartingTime != DateTime.MinValue)
             {
                 EnableSearchingAnimation = false;
                 TriggerPropertyChanged(nameof(EnableSearchingAnimation));
 
-                StartTime = model.GetStartingTime();
+                StartTime = GameInfo.GameStartingTime;
                 TriggerPropertyChanged(nameof(StartTime));
 
-                EndTime = model.GetEndingTime();
+                EndTime = GameInfo.GameEndingTime;
                 TriggerPropertyChanged(nameof(EndTime));
 
                 SecondsToGetReady = (StartTime - DateTime.UtcNow).Seconds.ToString();
@@ -383,7 +392,7 @@ namespace TypeRacers.ViewModel
 
         private void CheckIfWaitingTimeHasPassed()
         {
-            if (TimeToStart.Subtract(DateTime.UtcNow) <= TimeSpan.Zero && model.GetStartingTime() == DateTime.MinValue && !EnableGetReadyAlert)
+            if (TimeToStart.Subtract(DateTime.UtcNow) <= TimeSpan.Zero && GameInfo.GameStartingTime == DateTime.MinValue && !EnableGetReadyAlert)
             {
                 if (Opponents.Count() == 1)
                 {

@@ -8,6 +8,10 @@ namespace TypeRacers.Client
 {
     public class GameInfo : IPlayroom
     {
+        public delegate void OpponentsChangedEventHandler(List<Player> updatedOpponents);
+
+        public event OpponentsChangedEventHandler OpponentsChanged;
+
         public string CompetitionText { get; set; }
         public List<Player> Players { get; set; } = new List<Player>();
         public DateTime GameStartingTime { get; set; }
@@ -76,6 +80,12 @@ namespace TypeRacers.Client
             }
         }
 
+        public void SubscribeToSearchingOpponents(Action<List<Player>> updateOpponents)
+        {
+            OpponentsChanged = new OpponentsChangedEventHandler(updateOpponents);
+            OpponentsChanged += new OpponentsChangedEventHandler(OpponentsChanged);
+        }
+
         public void TrySetGameStartingTime()
         {
         }
@@ -99,6 +109,14 @@ namespace TypeRacers.Client
             player.UpdateInfo(int.Parse(info[0]), int.Parse(info[1]));
             player.Finnished = Convert.ToBoolean(info[2]);
             player.Place = int.Parse(info[3]);
+        }
+
+        public void OnOpponentsChanged(List<Player> opponents)
+        {
+            if (opponents != null && OpponentsChanged != null)
+            {
+                OpponentsChanged(opponents);
+            }
         }
     }
 }

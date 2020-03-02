@@ -13,8 +13,6 @@ namespace Common
         // The real implementation
         private NetworkStream networkStream;
         private readonly TcpClient realTcpClient;
-        public string DataReceieved { get; set; }
-
         public NetworkStream GetStream() => realTcpClient.GetStream();
 
         public TypeRacersNetworkClient()
