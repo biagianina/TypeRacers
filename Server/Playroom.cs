@@ -12,7 +12,7 @@ namespace Server
         {
             Players = new List<Player>();
             CompetitionText = ServerGeneratedText.GetText();
-            TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(10);
+            TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(20);
         }
 
         public bool GameHasStarted => GameStartingTime != DateTime.MinValue;
@@ -111,7 +111,7 @@ namespace Server
                 Leave(player.Name);
                 Console.WriteLine("REMOVED: " + player.Name);
                 Console.WriteLine("Playroom size: " + Players.Count);
-                player.TcpClient.Close();
+                player.NetworkClient.Close();
                 return true;
             }
 

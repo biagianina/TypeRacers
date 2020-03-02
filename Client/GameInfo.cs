@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 
 namespace TypeRacers.Client
 {
@@ -87,7 +88,8 @@ namespace TypeRacers.Client
 
             if (player == default)
             {
-                player = new Player(new System.Net.Sockets.TcpClient())
+                var tcpClient = new TcpClient();
+                player = new Player(new TypeRacersNetworkClient(tcpClient))
                 {
                     Name = name
                 };

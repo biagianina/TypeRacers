@@ -334,6 +334,7 @@ namespace TypeRacers.ViewModel
         private void ExitProgram()
         {
             Application.Current.Shutdown();
+            model.RemovePlayer();
         }
 
         private void RemovePlayerFromPlayroom()
