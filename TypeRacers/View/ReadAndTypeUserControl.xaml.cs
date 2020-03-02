@@ -244,7 +244,7 @@ namespace TypeRacers.View
                 RATUCStartReportingProgress = false;
                 TriggerPropertyChanged(nameof(RATUCStartReportingProgress));
 
-                RATUCSecondsInGame = "You finnished!";
+                RATUCSecondsInGame = "Game finished!";
                 TriggerPropertyChanged(nameof(RATUCSecondsInGame));
             }
 

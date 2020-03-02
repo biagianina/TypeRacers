@@ -13,11 +13,13 @@
     MinHeight="450"
     MinWidth="450">
 
+    
     <Page.Resources>
         <vm:PracticeViewModel
             x:Key="PracticeVM" />
     </Page.Resources>
     <Grid
+        
         DataContext="{StaticResource PracticeVM}">
 
         <Grid.RowDefinitions>
@@ -52,6 +54,7 @@
                     Color="#FF853C95" />
             </Button.Effect>
         </Button>
+        
         <local:CarAndProgressUserControl
             Grid.Row="2"
             VerticalAlignment="Center"

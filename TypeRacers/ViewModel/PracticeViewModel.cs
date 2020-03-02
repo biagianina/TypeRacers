@@ -11,28 +11,38 @@ namespace TypeRacers.ViewModel
     public class PracticeViewModel : ITextToType, INotifyPropertyChanged
     {
         private string textToType;
-        private InputCharacterValidation userInputValidator;
         private bool isValid;
         private int spaceIndex;
         private int correctChars;
         private int incorrectChars;
         private int currentWordIndex;
         private bool alert;
-        private readonly Model.Model model;
         private int numberOfCharactersTyped;
         private int correctTyping;
         private int incorrectTyping;
+        private Model.Model model;
+        private InputCharacterValidation userInputValidator;
 
         public PracticeViewModel()
         {
-            model = new Model.Model();
-            TextToType = model.GetGeneratedTextToTypeLocally();
-            userInputValidator = new InputCharacterValidation(TextToType);
-            GetReadyAlert = true;
-            TriggerPropertyChanged(nameof(GetReadyAlert));
             StartTime = DateTime.UtcNow.AddSeconds(5);
             EndTime = StartTime.AddSeconds(90);
             SecondsToGetReady = (StartTime - DateTime.UtcNow).Seconds.ToString();
+            GetReadyAlert = true;
+            TriggerPropertyChanged(nameof(GetReadyAlert));
+        }
+
+        public Model.Model Model 
+        {
+            get => model; 
+            set 
+            { 
+                model = value;
+                TriggerPropertyChanged(nameof(TextToType));
+                TriggerPropertyChanged(nameof(SliderProgress));
+                TriggerPropertyChanged(nameof(TextToTypeStyles));
+                TriggerPropertyChanged(nameof(UserInputValidator));
+            } 
         }
 
         public IEnumerable<Inline> TextToTypeStyles
@@ -44,7 +54,7 @@ namespace TypeRacers.ViewModel
                 new Run() {Text = TextToType.Substring(spaceIndex + CurrentWordLength) }
                 };
         }
-
+        private InputCharacterValidation UserInputValidator { get =>  userInputValidator ?? new InputCharacterValidation(TextToType); set => userInputValidator = value; }
         public bool ValidateInput
         {
             get => isValid;
@@ -64,7 +74,7 @@ namespace TypeRacers.ViewModel
         {
             get
             {
-                if (AllTextTyped)
+                if (AllTextTyped || TextToType.Length == 0)
                 {
                     return 100;
                 }
@@ -109,7 +119,6 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(TypingAlert));
             }
         }
-
         public string InputBackgroundColor
         {
             get
@@ -118,7 +127,7 @@ namespace TypeRacers.ViewModel
                 {
                     return default;
                 }
-                if (!isValid)
+                if (!ValidateInput)
                 {
                     return "Salmon";
                 }
@@ -126,9 +135,7 @@ namespace TypeRacers.ViewModel
                 return default;
             }
         }
-
-        public string TextToType { get; }
-
+        public string TextToType => Model?.GetGeneratedTextToTypeLocally() ?? string.Empty;
         public string CurrentInputText
         {
             get => textToType;
@@ -141,7 +148,7 @@ namespace TypeRacers.ViewModel
                 textToType = value;
 
                 //validate current word
-                ValidateInput = userInputValidator.ValidateWord(CurrentInputText, CurrentInputText.Length);
+                ValidateInput = UserInputValidator.ValidateWord(CurrentInputText, CurrentInputText.Length);
 
                 CheckUserInput(textToType);
 
@@ -153,16 +160,14 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(CurrentInputText));
             }
         }
-
         public bool CanUserType { get; internal set; }
         public string SecondsInGame { get; internal set; } = "90 seconds";
         public bool GetReadyAlert { get; internal set; }
         public string SecondsToGetReady { get; internal set; }
         public int Accuracy { get; private set; }
         public bool ShowFinishResults { get; private set; }
-        public DateTime StartTime { get; private set; }
+        public DateTime StartTime { get; set; } 
         public DateTime EndTime { get; set; }
-
         private void CheckUserInput(string value)
         {
             //checks if current word is typed, clears textbox, reintializes remaining text to the validation, sends progress
@@ -170,7 +175,6 @@ namespace TypeRacers.ViewModel
             //checks if current word is the last one
             CheckIfInputIsLastWord();
         }
-
         private void CheckIfInputIsLastWord()
         {
             if (ValidateInput && textToType.Length + spaceIndex == TextToType.Length)
@@ -191,10 +195,9 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(SliderProgress));
             }
         }
-
         private void CheckIfInputIsCompleteWord(string value)
         {
-            if (isValid && value.EndsWith(" "))
+            if (ValidateInput && value.EndsWith(" "))
             {
                 spaceIndex += textToType.Length;
 
@@ -215,7 +218,7 @@ namespace TypeRacers.ViewModel
         {
             if (!Keyboard.IsKeyDown(Key.Back))
             {
-                if (isValid)
+                if (ValidateInput)
                 {
                     TypingAlert = false;
                     correctChars = textToType.Length;
@@ -223,7 +226,7 @@ namespace TypeRacers.ViewModel
                     incorrectChars = 0;
                 }
 
-                if (!isValid)
+                if (!ValidateInput)
                 {
                     incorrectTyping++;
                     incorrectChars++;
@@ -237,7 +240,7 @@ namespace TypeRacers.ViewModel
             }
             else
             {
-                if (!isValid && !string.IsNullOrEmpty(textToType))
+                if (!ValidateInput && !string.IsNullOrEmpty(textToType))
                 {
                     incorrectChars--;
                 }

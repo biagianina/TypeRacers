@@ -48,7 +48,7 @@
                            FontFamily="Pristina"
                            FontWeight="Bold"></Label>
                     <TextBox x:Name="username"
-                             Text="{Binding Username, Mode=OneWayToSource}"
+                             Text="{Binding Username, Mode=TwoWay}"
                              Foreground="Black"
                              FontSize="20"
                              Background="White"
@@ -75,7 +75,8 @@
                                 FontFamily="Sylfaen"
                                 Background="#FFAE578E"
                                 Margin="15 10"
-                                Command="{Binding PracticeCommand}" />
+                                Command="{Binding PracticeCommand}"
+                                />
                     </StackPanel>
                 </StackPanel>
             </Border>

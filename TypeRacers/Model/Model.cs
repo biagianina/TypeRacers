@@ -7,6 +7,7 @@ namespace TypeRacers.Model
     public class Model
     {
         private readonly NetworkHandler networkHandler;
+        private string textToType = LocalGeneratedText.GetText();
 
         public Model()
         {
@@ -16,6 +17,16 @@ namespace TypeRacers.Model
         public void StartCommunication()
         {
             networkHandler.StartCommunication();
+        }
+
+        public Common.Player GetPlayerModel()
+        {
+            return networkHandler.PlayerModel();
+        }
+
+        public Common.IPlayroom GetGameModel()
+        {
+            return networkHandler.GameModel();
         }
         public List<Common.Player> GetOpponents()
         {
@@ -54,7 +65,7 @@ namespace TypeRacers.Model
 
         public string GetGeneratedTextToTypeLocally()
         {
-            return LocalGeneratedText.GetText();
+            return textToType;
         }
 
         public string GetGeneratedTextToTypeFromServer()

@@ -18,7 +18,7 @@ namespace TypeRacers
 
         public NetworkHandler(string userName)
         {
-            client = new TcpClient("localhost", 80);
+            client = new TcpClient();
             player = new Player(client)
             {
                 Name = userName
@@ -26,8 +26,19 @@ namespace TypeRacers
             typeRacersClient = new TypeRacersClient(player);
         }
 
+        internal IPlayroom GameModel()
+        {
+            return player.Playroom;
+        }
+
+        internal Player PlayerModel()
+        {
+            return player;
+        }
+
         internal void StartCommunication()
         {
+            client.Connect("localhost", 80);
             typeRacersClient.StartServerCommunication();
         }
 

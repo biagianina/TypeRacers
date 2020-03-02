@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using TypeRacers.Model;
+using TypeRacers.ViewModel;
 
 namespace TypeRacers.View
 {
@@ -13,6 +15,10 @@ namespace TypeRacers.View
         {
             InitializeComponent();
         }
+
+        public Model.Model Model { get => ViewModel.Model; internal set => ViewModel.Model = value; }
+
+        public PracticeViewModel ViewModel => (PracticeViewModel)Resources["PracticeVM"];
 
         public void Back_click(object sender, RoutedEventArgs e)
         {

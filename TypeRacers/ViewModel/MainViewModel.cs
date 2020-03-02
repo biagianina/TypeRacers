@@ -1,11 +1,16 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Navigation;
+using TypeRacers.View;
 
 namespace TypeRacers.ViewModel
 {
     internal class MainViewModel : INotifyPropertyChanged
     {
+        
+        private VersusPage race;
+        private PracticePage practice;
+
         public MainViewModel()
         {
             ContestCommand = new CommandHandler(() => NavigateContest(), () => true);
@@ -13,7 +18,7 @@ namespace TypeRacers.ViewModel
         }
 
         public bool UsernameEntered { get; set; }
-
+        public Model.Model Model { get; set; }
         public bool EnterUsernameMessage { get; set; }
         public CommandHandler ContestCommand { get; }
 
@@ -47,7 +52,13 @@ namespace TypeRacers.ViewModel
         {
             if (UsernameEntered)
             {
-                ContestNavigation.Navigate(new Uri("View/VersusPage.xaml", UriKind.RelativeOrAbsolute));
+                Model = new Model.Model();
+                Model.StartCommunication();
+                race = new VersusPage
+                {
+                    Model = Model
+                };
+                ContestNavigation.Navigate(race);
             }
             else
             {
@@ -60,7 +71,12 @@ namespace TypeRacers.ViewModel
         {
             if (UsernameEntered)
             {
-                PracticeNavigation.Navigate(new Uri("View/PracticePage.xaml", UriKind.RelativeOrAbsolute));
+                Model = new Model.Model();
+                practice = new PracticePage
+                {
+                    Model = Model
+                };
+                PracticeNavigation.Navigate(practice);
             }
             else
             {

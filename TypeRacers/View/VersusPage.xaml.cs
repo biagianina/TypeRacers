@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using TypeRacers.Model;
+using TypeRacers.ViewModel;
 
 namespace TypeRacers.View
 {
@@ -13,6 +15,10 @@ namespace TypeRacers.View
         {
             InitializeComponent();
         }
+
+        public Model.Model Model { get => VersusViewModel.Model; set => VersusViewModel.Model = value; }
+
+        public VersusViewModel VersusViewModel => (VersusViewModel)Resources["VersusVM"];
 
         public void BackBtn_Click(object sender, RoutedEventArgs e)
         {
