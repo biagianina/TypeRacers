@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="MainWindow"
-        SizeToContent="WidthAndHeight">
+        SizeToContent="WidthAndHeight"
+        Closed="Window_Closed">
     <Frame Name="Frame"
            NavigationUIVisibility="Hidden"
            HorizontalContentAlignment="Stretch"

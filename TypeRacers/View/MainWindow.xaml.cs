@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using TypeRacers.ViewModel;
 
 namespace TypeRacers.View
 {
@@ -8,6 +9,8 @@ namespace TypeRacers.View
     /// </summary>
     public partial class MainWindow : Window
     {
+        MainPage mainPage;
+        MainViewModel mainViewModel;
         public MainWindow()
         {
             InitializeComponent();
@@ -17,7 +20,14 @@ namespace TypeRacers.View
 
         public void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            Frame.NavigationService.Navigate(new MainPage());
+            mainPage = new MainPage();
+            mainViewModel = (MainViewModel)mainPage.Resources["MainVM"];
+            Frame.NavigationService.Navigate(mainPage);
+        }
+
+        private void Window_Closed(object sender, System.EventArgs e)
+        {
+            mainViewModel.Model.GetPlayer().Removed = true;
         }
     }
 }
