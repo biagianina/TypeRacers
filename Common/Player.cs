@@ -1,9 +1,4 @@
-﻿using System.IO;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-
-namespace Common
+﻿namespace Common
 {
     public class Player
     {

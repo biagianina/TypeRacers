@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net.Sockets;
 
 namespace Common
 {
@@ -12,7 +6,9 @@ namespace Common
     {
         // The real implementation
         private NetworkStream networkStream;
+
         private readonly TcpClient realTcpClient;
+
         public NetworkStream GetStream() => realTcpClient.GetStream();
 
         public TypeRacersNetworkClient()
@@ -25,14 +21,11 @@ namespace Common
             realTcpClient = client;
         }
 
-        public void Close()
-        {
-            realTcpClient.Close();
-        }
-
         public void Dispose()
         {
+            networkStream.Dispose();
             realTcpClient.Dispose();
+            realTcpClient.Close();
         }
 
         public void Write(IMessage message)
@@ -44,26 +37,10 @@ namespace Common
 
         public IMessage Read()
         {
-
             if (realTcpClient.Connected)
             {
                 networkStream = realTcpClient.GetStream();
-                var receivedMessage = new ReceivedMessage();
-                receivedMessage.DecodeMessage(networkStream);
-
-                return receivedMessage;
-                //byte[] buffer = new byte[1024];
-                //int bytesRead = networkStream.Read(buffer, 0, buffer.Length);
-                //DataReceieved = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-
-                //while (!DataReceieved.Contains("#"))
-                //{
-                //    bytesRead = networkStream.Read(buffer, 0, 1024);
-                //    DataReceieved += Encoding.ASCII.GetString(buffer, DataReceieved.Length, bytesRead);
-                //}
-                //string completeMessage = DataReceieved.Substring(0, DataReceieved.IndexOf('#'));
-                //DataReceieved.Remove(0, completeMessage.Length - 1);
-
+                return new ReceivedMessage(realTcpClient);
             }
             return default;
         }

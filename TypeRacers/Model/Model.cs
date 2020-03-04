@@ -1,6 +1,4 @@
 ﻿using Common;
-using System;
-using System.Collections.Generic;
 using TypeRacers.ViewModel;
 
 namespace TypeRacers.Model

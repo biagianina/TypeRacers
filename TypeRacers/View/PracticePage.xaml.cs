@@ -1,8 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
-using Common;
-using TypeRacers.Model;
 using TypeRacers.ViewModel;
 
 namespace TypeRacers.View
@@ -18,7 +16,9 @@ namespace TypeRacers.View
         }
 
         public PracticeViewModel ViewModel => (PracticeViewModel)Resources["PracticeVM"];
-        public string TextToType {
+
+        public string TextToType
+        {
             get => ViewModel.TextToType;
             set
             {

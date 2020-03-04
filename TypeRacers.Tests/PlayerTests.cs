@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
-using Common;
+﻿using Common;
 using TypeRacers.Client;
+using Xunit;
+
 namespace TypeRacersFacts
 {
     public class PlayerTests
@@ -13,7 +11,8 @@ namespace TypeRacersFacts
         {
             var player = new Player(new FakeTypeRacersClient());
 
-            Assert.Equal("just a text", player.Read());
+            var message = (ReceivedMessage)player.Read();
+            Assert.Equal("just a text", message.GetData());
         }
 
         [Fact]
@@ -22,7 +21,8 @@ namespace TypeRacersFacts
             var player = new Player(new FakeTypeRacersClient());
 
             player.Write(new PlayerMessage(4, 3, "george", true, false, false));
-            Assert.Equal("4&3&True$george#", player.Read());
+            var message = (ReceivedMessage)player.Read();
+            Assert.Equal("4&3&True$george#", message.GetData());
         }
 
         [Fact]

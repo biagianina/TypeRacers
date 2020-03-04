@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using Common;
 
 namespace TypeRacers.ViewModel
 {
@@ -41,7 +40,9 @@ namespace TypeRacers.ViewModel
                 new Run() {Text = TextToType.Substring(spaceIndex + CurrentWordLength) }
                 };
         }
+
         private InputCharacterValidation UserInputValidator { get => userInputValidator ?? new InputCharacterValidation(TextToType); set => userInputValidator = value; }
+
         public bool ValidateInput
         {
             get => isValid;
@@ -106,6 +107,7 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(TypingAlert));
             }
         }
+
         public string InputBackgroundColor
         {
             get
@@ -122,6 +124,7 @@ namespace TypeRacers.ViewModel
                 return default;
             }
         }
+
         public string TextToType
         {
             get => textToType;
@@ -134,6 +137,7 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(UserInputValidator));
             }
         }
+
         public string CurrentInputText
         {
             get => textToType;
@@ -158,6 +162,7 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(CurrentInputText));
             }
         }
+
         public bool CanUserType { get; internal set; }
         public string SecondsInGame { get; internal set; } = "90 seconds";
         public bool GetReadyAlert { get; internal set; }
@@ -166,6 +171,7 @@ namespace TypeRacers.ViewModel
         public bool ShowFinishResults { get; private set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
+
         private void CheckUserInput(string value)
         {
             //checks if current word is typed, clears textbox, reintializes remaining text to the validation, sends progress
@@ -173,6 +179,7 @@ namespace TypeRacers.ViewModel
             //checks if current word is the last one
             CheckIfInputIsLastWord();
         }
+
         private void CheckIfInputIsLastWord()
         {
             if (ValidateInput && textToType.Length + spaceIndex == TextToType.Length)
@@ -193,6 +200,7 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(SliderProgress));
             }
         }
+
         private void CheckIfInputIsCompleteWord(string value)
         {
             if (ValidateInput && value.EndsWith(" "))

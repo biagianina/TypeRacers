@@ -1,12 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Text;
 
 namespace Common
 {
     public class ReceivedMessage : IMessage
     {
+        private readonly TcpClient tcpClient;
+
+        public ReceivedMessage(string data)
+        {
+            Data = data;
+        }
+
+        public ReceivedMessage(TcpClient tcpClient)
+        {
+            this.tcpClient = tcpClient;
+        }
+
         private string Data { get; set; }
 
         public byte[] ToByteArray()
@@ -14,8 +24,9 @@ namespace Common
             return default;
         }
 
-        public void DecodeMessage(NetworkStream stream)
+        public void DecodeMessage()
         {
+            var stream = tcpClient.GetStream();
             byte[] buffer = new byte[1024];
             int bytesRead = stream.Read(buffer, 0, buffer.Length);
             Data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
@@ -31,6 +42,11 @@ namespace Common
 
         public string GetData()
         {
+            if (tcpClient != null)
+            {
+                DecodeMessage();
+            }
+
             return string.IsNullOrEmpty(Data) ? string.Empty : Data;
         }
     }

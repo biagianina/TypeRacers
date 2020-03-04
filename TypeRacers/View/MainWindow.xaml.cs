@@ -9,8 +9,9 @@ namespace TypeRacers.View
     /// </summary>
     public partial class MainWindow : Window
     {
-        MainPage mainPage;
-        MainViewModel mainViewModel;
+        private MainPage mainPage;
+        private MainViewModel mainViewModel;
+
         public MainWindow()
         {
             InitializeComponent();

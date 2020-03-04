@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -7,7 +8,6 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using Common;
 
 namespace TypeRacers.ViewModel
 {
@@ -40,12 +40,13 @@ namespace TypeRacers.ViewModel
         public Player Player
         {
             get => player;
-            set 
+            set
             {
                 player = value;
                 TriggerPropertyChanged(nameof(Player));
-            } 
+            }
         }
+
         public IPlayroom GameInfo
         {
             get => gameInfo;
@@ -67,6 +68,7 @@ namespace TypeRacers.ViewModel
                 UpdateShownPlayers();
             }
         }
+
         public CommandHandler RemovePlayer { get; }
         public CommandHandler RestartSearchingOpponentsCommand { get; }
         public CommandHandler ExitProgramCommand { get; }
@@ -92,6 +94,7 @@ namespace TypeRacers.ViewModel
         public int OpponentsCount { get; set; }
 
         private InputCharacterValidation UserInputValidator { get => userInputValidator ?? new InputCharacterValidation(TextToType); set => userInputValidator = value; }
+
         public bool InputValidation
         {
             get => isValid;
@@ -353,7 +356,7 @@ namespace TypeRacers.ViewModel
 
         private void UpdateOpponents(List<Player> uppdateOpponents)
         {
-        //    Opponents = uppdateOpponents;
+            //    Opponents = uppdateOpponents;
             TriggerPropertyChanged(nameof(Opponents));
 
             OpponentsCount = Opponents.Count();

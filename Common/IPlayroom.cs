@@ -26,6 +26,7 @@ namespace Common
         bool CheckIfPlayerLeft(Player player);
 
         bool CheckIfPlayerTriesToRestart(Player player);
+
         void SubscribeToSearchingOpponents(Action<List<Player>> updateOpponents);
     }
 }
