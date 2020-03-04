@@ -18,8 +18,7 @@
     </Page.Resources>
 
     <Grid
-        DataContext="{StaticResource VersusVM}"
-        >
+        DataContext="{StaticResource VersusVM}">
         <Grid.RowDefinitions>
             <RowDefinition
                 Height="10" />

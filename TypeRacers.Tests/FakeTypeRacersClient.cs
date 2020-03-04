@@ -1,26 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Common;
 using System.Text;
-using Common;
+
 namespace TypeRacersFacts
 {
     public class FakeTypeRacersClient : INetworkClient
     {
         public string DataReceieved { get; set; } = "just a text";
-            
-        public void Close()
-        {
-            throw new NotImplementedException();
-        }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            DataReceieved = string.Empty;
         }
 
-        public string Read()
+        public IMessage Read()
         {
-            return DataReceieved;
+            return new ReceivedMessage(DataReceieved);
         }
 
         public void Write(IMessage message)

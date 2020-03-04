@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows.Navigation;
 using TypeRacers.View;
 
@@ -9,6 +8,7 @@ namespace TypeRacers.ViewModel
     {
         private VersusPage race;
         private PracticePage practice;
+
         public MainViewModel()
         {
             ContestCommand = new CommandHandler(() => NavigateContest(), () => true);
@@ -74,7 +74,7 @@ namespace TypeRacers.ViewModel
                 {
                     TextToType = Model.GetGeneratedTextToTypeLocally()
                 };
-                
+
                 PracticeNavigation.Navigate(practice);
             }
             else

@@ -101,7 +101,7 @@ namespace Server
                 Leave(player.Name);
                 Console.WriteLine("REMOVED: " + player.Name);
                 Console.WriteLine("Playroom size: " + Players.Count);
-                player.NetworkClient.Close();
+                player.NetworkClient.Dispose();
                 return true;
             }
 
