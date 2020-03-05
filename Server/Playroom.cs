@@ -75,9 +75,64 @@ namespace Server
                 Players.Add(currentPlayer);
                 currentPlayer.Playroom = this;
                 Console.WriteLine("adding player:" + currentPlayer.Name + ", playroom size: " + Players.Count);
+                StartCommunication(currentPlayer);
                 return true;
             }
             return false;
+        }
+
+        private void StartCommunication(Player currentPlayer)
+        {
+            while (true)
+            {
+                var message = (ReceivedMessage)currentPlayer.Read();
+                var data = message?.GetData();
+                if (string.IsNullOrEmpty(data))
+                {
+                    return;
+                }
+
+                var nameAndInfo = data.Split('$');
+                var infos = nameAndInfo.FirstOrDefault()?.Split('&');
+                currentPlayer.Name = nameAndInfo.LastOrDefault();
+
+                Console.WriteLine(data);
+
+                ManagePlayerReceivedData(currentPlayer, infos);
+            }
+        }
+        private void ManagePlayerReceivedData(Player player, string[] infos)
+        {
+            player.FirstTimeConnecting = Convert.ToBoolean(infos[2]);
+            player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]));
+            if (CheckIfPlayerLeft(player))
+            {
+                return;
+            }
+
+            if (player.FirstTimeConnecting || CheckIfPlayerTriesToRestart(player))
+            {
+                SendGameInfo(player);
+            }
+            else
+            {
+                SendGamestatus(player);
+            }
+
+        }
+
+        private void SendGamestatus(Player player)
+        {
+            player.TrySetRank();
+            player.Write(GetGameStatus(player));
+            Console.WriteLine("sending opponents");
+        }
+
+        private void SendGameInfo(Player player)
+        {
+            TrySetGameStartingTime();
+            player.Write(GameMessage());
+            Console.WriteLine("sending game info");
         }
 
         private void Reset()
@@ -112,10 +167,6 @@ namespace Server
         public bool CheckIfPlayerTriesToRestart(Player player)
         {
             return player.Name.Contains("_restart");
-        }
-
-        public void SubscribeToSearchingOpponents(Action<List<Player>> updateOpponents)
-        {
         }
     }
 }
