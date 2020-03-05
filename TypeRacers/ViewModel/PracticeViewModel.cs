@@ -150,7 +150,7 @@ namespace TypeRacers.ViewModel
                 textToType = value;
 
                 //validate current word
-                ValidateInput = UserInputValidator.ValidateWord(CurrentInputText, CurrentInputText.Length);
+               // ValidateInput = UserInputValidator.ValidateWord(CurrentInputText, CurrentInputText.Length);
 
                 CheckUserInput(textToType);
 
