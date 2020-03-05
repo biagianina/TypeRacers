@@ -12,6 +12,7 @@
 
     <Page.Resources>
         <y:MainViewModel x:Key="MainVM" />
+        <BooleanToVisibilityConverter x:Key="VisibleConverter" />
     </Page.Resources>
     <Grid Style="{StaticResource FocusTextBox}"
           Background="#FF7726B0"
@@ -79,6 +80,69 @@
                     </StackPanel>
                 </StackPanel>
             </Border>
+        </StackPanel>
+        <StackPanel Grid.Row="1"
+                    Visibility="{Binding EnableConnectingAnimation, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibleConverter}}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+            <Image Source="pack://application:,,,/TypeRacers;component/Images/loading.png"
+                   Width="100"
+                   Height="100"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   RenderTransformOrigin="0.5, 0.5">
+                <Image.RenderTransform>
+                    <RotateTransform x:Name="noFreeze" />
+                </Image.RenderTransform>
+                <Image.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
+                                                 To="360"
+                                                 Duration="0:0:1"
+                                                 RepeatBehavior="Forever" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Image.Triggers>
+            </Image>
+            <Label Content="Gathering game information..."
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Bottom"
+                   FontFamily="Times New Roman"
+                   FontSize="14"
+                   FontWeight="Bold"
+                   Foreground="DarkSalmon" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="1"
+                    Visibility="{Binding EnableRetry, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibleConverter}}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Background="Purple">
+            <Image Source="pack://application:,,,/TypeRacers;component/Images/sad.png"
+                   Width="100"
+                   Height="100"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   RenderTransformOrigin="0.5, 0.5">
+            </Image>
+            <Label Content="Connection lost..."
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Bottom"
+                   FontFamily="Times New Roman"
+                   FontSize="14"
+                   FontWeight="Bold"
+                   Foreground="MediumPurple" />
+            <Button Width="150"
+                    Content=" Retry "
+                    Foreground="Black"
+                    FontSize="24"
+                    Background="#FFAE578E"
+                    Margin="15 10"
+                    Command="{Binding RetryCommand}"
+                    FontFamily="Sylfaen" />
         </StackPanel>
         <Popup IsOpen="{Binding EnterUsernameMessage}"
                PlacementTarget="{Binding ElementName=username}"

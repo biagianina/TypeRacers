@@ -28,7 +28,10 @@ namespace TypeRacers.View
 
         private void Window_Closed(object sender, System.EventArgs e)
         {
-            mainViewModel.Model.GetPlayer().Removed = true;
+            if (mainViewModel.Model != null)
+            {
+                mainViewModel.Model.GetPlayer().Removed = true;
+            }
         }
     }
 }

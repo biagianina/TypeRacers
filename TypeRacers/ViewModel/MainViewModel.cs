@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel;
+using System.Threading;
+using System.Windows;
 using System.Windows.Navigation;
+using System.Windows.Threading;
 using TypeRacers.View;
 
 namespace TypeRacers.ViewModel
@@ -11,6 +14,7 @@ namespace TypeRacers.ViewModel
 
         public MainViewModel()
         {
+            RetryCommand = new CommandHandler(() => NavigateContest(), () => true);
             ContestCommand = new CommandHandler(() => NavigateContest(), () => true);
             PracticeCommand = new CommandHandler(() => NavigatePractice(), () => true);
         }
@@ -18,12 +22,10 @@ namespace TypeRacers.ViewModel
         public bool UsernameEntered { get; set; }
         public Model.Model Model { get; set; }
         public bool EnterUsernameMessage { get; set; }
+        public CommandHandler RetryCommand { get; }
         public CommandHandler ContestCommand { get; }
-
         public NavigationService ContestNavigation { get; set; }
-
         public CommandHandler PracticeCommand { get; }
-
         public NavigationService PracticeNavigation { get; set; }
 
         public string Username
@@ -44,19 +46,49 @@ namespace TypeRacers.ViewModel
         }
 
         public static string Name { get; private set; }
+        public bool EnableConnectingAnimation { get; set; }
+        public bool EnableRetry { get; set; } 
 
         private void NavigateContest()
         {
+            EnableRetry = false;
+            TriggerPropertyChanged(nameof(EnableRetry));
             if (UsernameEntered)
             {
+                race = new VersusPage();
+
                 Model = new Model.Model();
-                Model.StartCommunication();
-                race = new VersusPage
+                Thread connect = new Thread(() =>
                 {
-                    Player = Model.GetPlayer(),
-                    GameInfo = Model.GetGameInfo()
-                };
-                ContestNavigation.Navigate(race);
+                    try
+                    {
+                        Model.StartCommunication();
+                        var gameInfo = Model.GetGameInfo();
+                        var player = Model.GetPlayer();
+                        while(!gameInfo.GameInfoIsSet)
+                        {
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                EnableConnectingAnimation = true;
+                                TriggerPropertyChanged(nameof(EnableConnectingAnimation));
+                            });
+                        }
+                        Application.Current.Dispatcher.Invoke(() => race.GameInfo = gameInfo);
+                        Application.Current.Dispatcher.Invoke(() => race.Player = player);
+                        Application.Current.Dispatcher.Invoke(() => ContestNavigation.Navigate(race));
+                    }
+                    catch
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            EnableRetry = true;
+                            TriggerPropertyChanged(nameof(EnableRetry));
+                            EnableConnectingAnimation = false;
+                            TriggerPropertyChanged(nameof(EnableConnectingAnimation));
+                        });
+                    }
+                });
+                connect.Start();
             }
             else
             {
@@ -85,7 +117,6 @@ namespace TypeRacers.ViewModel
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
         public void TriggerPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

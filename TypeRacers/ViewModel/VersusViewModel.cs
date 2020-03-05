@@ -90,7 +90,7 @@ namespace TypeRacers.ViewModel
         public Visibility ShowSecondOpponent { get; set; }
 
         public DateTime WaitingTime => GameInfo.TimeToWaitForOpponents;
-        public DateTime TimeToStart => DateTime.UtcNow.AddSeconds((WaitingTime - DateTime.UtcNow).Seconds);
+        public DateTime TimeToStart => DateTime.UtcNow.AddSeconds((WaitingTime.Subtract(DateTime.UtcNow).Seconds));
         public int OpponentsCount { get; set; }
 
         private InputCharacterValidation UserInputValidator { get => userInputValidator ?? new InputCharacterValidation(TextToType); set => userInputValidator = value; }

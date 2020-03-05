@@ -6,24 +6,20 @@ namespace TypeRacers.Model
     public class Model
     {
         private readonly NetworkHandler networkHandler;
-        private readonly Player player;
-        private readonly IPlayroom gameInfo;
-
+   
         public Model()
         {
             networkHandler = new NetworkHandler(MainViewModel.Name);
-            player = networkHandler.PlayerModel();
-            gameInfo = networkHandler.GameModel();
         }
 
         public Player GetPlayer()
         {
-            return player;
+            return networkHandler.PlayerModel();
         }
 
         public IPlayroom GetGameInfo()
         {
-            return gameInfo;
+            return networkHandler.GameModel();
         }
 
         public void StartCommunication()

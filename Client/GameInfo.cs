@@ -18,6 +18,7 @@ namespace TypeRacers.Client
         public DateTime GameEndingTime { get; set; }
         public DateTime TimeToWaitForOpponents { get; set; }
         public int Place { get; set; }
+        public bool GameInfoIsSet { get ; set ; }
 
         public bool CheckIfPlayerLeft(Player player)
         {
@@ -60,6 +61,7 @@ namespace TypeRacers.Client
             var startAndEndTimes = gameTimers.LastOrDefault().Split('+');
             GameStartingTime = DateTime.Parse(startAndEndTimes.FirstOrDefault());
             GameEndingTime = DateTime.Parse(startAndEndTimes.LastOrDefault());
+            GameInfoIsSet = true;
         }
 
         public void SetOpponentsAndTimers(List<string> data)

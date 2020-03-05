@@ -10,7 +10,7 @@ namespace Common
         DateTime GameEndingTime { get; set; }
         DateTime TimeToWaitForOpponents { get; set; }
         int Place { get; set; }
-
+        bool GameInfoIsSet { get; set; }
         bool Join(Player player);
 
         Player GetPlayer(string name);
