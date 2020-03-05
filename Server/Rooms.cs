@@ -7,8 +7,8 @@ namespace Server
 {
     public class Rooms
     {
-        private readonly List<IPlayroom> playrooms;
-        private IPlayroom currentPlayroom;
+        public readonly List<IPlayroom> playrooms;
+        public IPlayroom currentPlayroom;
 
         public Rooms()
         {
@@ -45,13 +45,13 @@ namespace Server
             player.FirstTimeConnecting = Convert.ToBoolean(infos[2]);
             player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]));
 
-            if (currentPlayroom.CheckIfPlayerLeft(player))
-            {
-                return;
-            }
-
             lock (currentPlayroom)
             {
+                if (currentPlayroom.CheckIfPlayerLeft(player))
+                {
+                    return;
+                }
+
                 if (player.FirstTimeConnecting || currentPlayroom.CheckIfPlayerTriesToRestart(player))
                 {
                     SendGameInfo(player);
@@ -61,6 +61,11 @@ namespace Server
                     SendGamestatus(player);
                 }
             }
+        }
+
+        public int GetNumberOfPlayrooms()
+        {
+            return playrooms.Count;
         }
 
         private void SendGamestatus(Player player)

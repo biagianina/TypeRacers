@@ -6,7 +6,7 @@ namespace TypeRacers.Model
     public class Model
     {
         private readonly NetworkHandler networkHandler;
-   
+
         public Model()
         {
             networkHandler = new NetworkHandler(MainViewModel.Name);

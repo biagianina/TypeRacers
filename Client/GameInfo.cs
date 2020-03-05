@@ -18,7 +18,7 @@ namespace TypeRacers.Client
         public DateTime GameEndingTime { get; set; }
         public DateTime TimeToWaitForOpponents { get; set; }
         public int Place { get; set; }
-        public bool GameInfoIsSet { get ; set ; }
+        public bool GameInfoIsSet { get; set; }
 
         public bool CheckIfPlayerLeft(Player player)
         {

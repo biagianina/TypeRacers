@@ -11,6 +11,7 @@ namespace Common
         DateTime TimeToWaitForOpponents { get; set; }
         int Place { get; set; }
         bool GameInfoIsSet { get; set; }
+
         bool Join(Player player);
 
         Player GetPlayer(string name);

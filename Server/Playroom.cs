@@ -76,8 +76,9 @@ namespace Server
                 Players.Add(currentPlayer);
                 currentPlayer.Playroom = this;
                 Console.WriteLine("adding player:" + currentPlayer.Name + ", playroom size: " + Players.Count);
+                return true;
             }
-            return true;
+            return false;
         }
 
         private void Reset()
