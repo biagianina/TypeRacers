@@ -56,7 +56,8 @@
 
         public bool IsLastWord()
         {
-          return isValid && currentText.Length + spaceIndex == originalText.Length;            
+          return isValid && currentText.Length + spaceIndex == originalText.Length;        
+            
         }
 
     }
