@@ -24,8 +24,6 @@ namespace Server
                 CreateNewPlayroom();
                 playrooms.Last().Join(player);
             }
-            var currentPlayroom = (Playroom)player.Playroom;
-            currentPlayroom.TrySetGameStartingTime();
         }
         public int GetNumberOfPlayrooms()
         {
