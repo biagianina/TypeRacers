@@ -37,7 +37,7 @@ namespace Common
                 Data += Encoding.ASCII.GetString(buffer, Data.Length, bytesRead);
             }
 
-            Data = Data.Substring(0, Data.IndexOf('#') - 1);
+            Data = Data.Substring(0, Data.IndexOf('#'));
         }
 
         public string GetData()

@@ -22,9 +22,9 @@ namespace TypeRacers
             typeRacersClient = new TypeRacersClient(player);
         }
 
-        internal IPlayroom GameModel()
+        internal GameInfo GameModel()
         {
-            return player.Playroom;
+            return (GameInfo)player.Playroom;
         }
 
         internal Player PlayerModel()

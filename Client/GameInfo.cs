@@ -20,26 +20,6 @@ namespace TypeRacers.Client
         public int Place { get; set; }
         public bool GameInfoIsSet { get; set; }
 
-        public bool CheckIfPlayerLeft(Player player)
-        {
-            return player.Name.Contains("_removed");
-        }
-
-        public bool CheckIfPlayerTriesToRestart(Player player)
-        {
-            return player.Name.Contains("_restart");
-        }
-
-        public IMessage GameMessage()
-        {
-            return null;
-        }
-
-        public IMessage GetGameStatus(Player player)
-        {
-            return null;
-        }
-
         public Player GetPlayer(string name)
         {
             return Players.Find(p => p.Name.Equals(name));
@@ -86,10 +66,6 @@ namespace TypeRacers.Client
         {
             OpponentsChanged = new OpponentsChangedEventHandler(updateOpponents);
             OpponentsChanged += new OpponentsChangedEventHandler(OpponentsChanged);
-        }
-
-        public void TrySetGameStartingTime()
-        {
         }
 
         private void SetOpponents(string[] nameAndInfos)

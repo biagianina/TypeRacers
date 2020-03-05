@@ -8,12 +8,13 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using TypeRacers.Client;
 
 namespace TypeRacers.ViewModel
 {
     public class VersusViewModel : ITextToType, INotifyPropertyChanged
     {
-        private string currentInputText;
+        private string textToType;
         private InputCharacterValidation userInputValidator;
         private bool isValid;
         private int spaceIndex;
@@ -26,15 +27,15 @@ namespace TypeRacers.ViewModel
         private int correctTyping;
         private bool startReporting;
         private Player player;
-        private IPlayroom gameInfo;
+        private GameInfo gameInfo;
 
         public VersusViewModel()
         {
             UpdateShownPlayers();
             EnableSearchingAnimation = true;
-            ExitProgramCommand = new CommandHandler(ExitProgram, () => true);
-            RemovePlayer = new CommandHandler(RemovePlayerFromPlayroom, () => true);
-            RestartSearchingOpponentsCommand = new CommandHandler(RestartSearchingOpponents, () => true);
+            ExitProgramCommand = new CommandHandler(() => ExitProgram(), () => true);
+            RemovePlayer = new CommandHandler(() => RemovePlayerFromPlayroom(), () => true);
+            RestartSearchingOpponentsCommand = new CommandHandler(() => RestartSearchingOpponents(), () => true);
         }
 
         public Player Player
@@ -47,7 +48,7 @@ namespace TypeRacers.ViewModel
             }
         }
 
-        public IPlayroom GameInfo
+        public GameInfo GameInfo
         {
             get => gameInfo;
             set
@@ -121,12 +122,6 @@ namespace TypeRacers.ViewModel
 
                 return spaceIndex * 100 / TextToType.Length;
             }
-            set
-            {
-                SliderProgress = value;
-
-                TriggerPropertyChanged(nameof(SliderProgress));
-            }
         }
 
         public int WPMProgress
@@ -142,13 +137,6 @@ namespace TypeRacers.ViewModel
                 var secondsInGame = (int)(DateTime.UtcNow - StartTime).TotalSeconds;
                 return wordperminut / secondsInGame;
             }
-
-            set
-            {
-                WPMProgress = value;
-
-                TriggerPropertyChanged(nameof(WPMProgress));
-            }
         }
 
         public int CurrentWordLength
@@ -156,19 +144,7 @@ namespace TypeRacers.ViewModel
             get => TextToType.Split()[currentWordIndex].Length;//length of current word
         }
 
-        public bool AllTextTyped
-        {
-            get
-            {
-                return AllTextTyped;
-            }
-            set
-            {
-                AllTextTyped = value;
-                TriggerPropertyChanged(nameof(AllTextTyped));
-
-            }
-        }
+        public bool AllTextTyped { get; set; }
 
         //determines if a popup alert should apear, binded in open property of popup xaml
         public bool TypingAlert
@@ -218,6 +194,31 @@ namespace TypeRacers.ViewModel
 
         public string TextToType => GameInfo?.CompetitionText ?? string.Empty;
 
+        public string CurrentInputText
+        {
+            get => textToType;
+            set
+            {
+                // return because we dont need to execute logic if the input text has not changed
+                if (textToType == value)
+                    return;
+
+                textToType = value;
+
+                //validate current word
+                InputValidation = UserInputValidator.ValidateWord(CurrentInputText, CurrentInputText.Length);
+
+                CheckUserInput(textToType);
+
+                TriggerPropertyChanged(nameof(CurrentWordLength));//moves to next word
+
+                //determine number of characters that are valid/invalid to form substrings
+                HighlightText();
+
+                TriggerPropertyChanged(nameof(CurrentInputText));
+            }
+        }
+
         public bool EnableGetReadyAlert { get; set; }
         public bool EnableRestartOrExitAlert { get; set; }
         public string SecondsToGetReady { get; set; }
@@ -225,34 +226,9 @@ namespace TypeRacers.ViewModel
         public DateTime StartTime { get; set; }
         public bool ShowRanking => Player?.Finnished ?? false;
         public string RankingPlace => Player?.Place.ToString() ?? string.Empty;
-        public int Accuracy
-        {
-            get { return Accuracy; }
-            private set
-            {
-                Accuracy = value;
-                TriggerPropertyChanged(nameof(Accuracy));
-            }
-        }
-        public bool OpenFinishPopup
-        {
-            get { return OpenFinishPopup; }
-            private set
-            {
-                OpenFinishPopup = value;
-                TriggerPropertyChanged(nameof(OpenFinishPopup));
-            }
-        }
-        public DateTime EndTime
-        {
-            get { return EndTime; }
-            private set
-            {
-
-                EndTime = value;
-                TriggerPropertyChanged(nameof(EndTime));
-            }
-        }
+        public int Accuracy { get; private set; }
+        public bool OpenFinishPopup { get; private set; }
+        public DateTime EndTime { get; private set; }
 
         private void ReportProgress()
         {
@@ -262,34 +238,54 @@ namespace TypeRacers.ViewModel
                 Player.UpdateInfo(WPMProgress, SliderProgress);
             }
         }
-        public string CurrentInputText
+
+        private void CheckUserInput(string value)
         {
-            get => currentInputText;
-            set
+            //checks if current word is typed, clears textbox, reintializes remaining text to the validation, sends progress
+            CheckIfInputIsCompleteWord(value);
+
+            //checks if current word is the last one
+            CheckIfIsLastWord();
+        }
+
+        private void CheckIfInputIsCompleteWord(string value)
+        {
+            if (isValid && value.EndsWith(" "))
             {
-                // return because we dont need to execute logic if the input text has not changed
-                if (currentInputText == value)
-                    return;
+                spaceIndex += textToType.Length;
 
-                currentInputText = value;
-
-                //validate current word
-                InputValidation = UserInputValidator.ValidateWord(CurrentInputText, CurrentInputText.Length, ref spaceIndex, ref currentWordIndex, ref numberOfCharactersTyped);
-
-                //CheckUserInput(currentInputText);
-                if (UserInputValidator.IsLastWord())
+                if (currentWordIndex < TextToType.Split().Length - 1)
                 {
-                    AllTextTyped = true;
-                    EndTime = DateTime.Now;
-                    Accuracy = 100 - (incorrectTyping * 100 / correctTyping);
-                    OpenFinishPopup = true;
-
+                    currentWordIndex++;
                 }
 
-                TriggerPropertyChanged(nameof(CurrentWordLength));//moves to next word
-                //determine number of characters that are valid/invalid to form substrings
-                HighlightText();
-                TriggerPropertyChanged(nameof(CurrentInputText));
+                userInputValidator = new InputCharacterValidation(TextToType.Substring(spaceIndex));
+                numberOfCharactersTyped += CurrentInputText.Length;
+                textToType = string.Empty;
+
+                TriggerPropertyChanged(nameof(SliderProgress));
+                TriggerPropertyChanged(nameof(WPMProgress));
+            }
+        }
+
+        private void CheckIfIsLastWord()
+        {
+            if (InputValidation && textToType.Length + spaceIndex == TextToType.Length)
+            {
+                AllTextTyped = true;
+                TriggerPropertyChanged(nameof(AllTextTyped));
+
+                EndTime = DateTime.UtcNow;
+                TriggerPropertyChanged(nameof(EndTime));
+
+                Accuracy = 100 - (incorrectTyping * 100 / correctTyping);
+                TriggerPropertyChanged(nameof(Accuracy));
+
+                OpenFinishPopup = true;
+                TriggerPropertyChanged(nameof(OpenFinishPopup));
+
+                TriggerPropertyChanged(nameof(SliderProgress));
+                TriggerPropertyChanged(nameof(WPMProgress));//recalculates progress
             }
         }
 
@@ -301,7 +297,7 @@ namespace TypeRacers.ViewModel
                 {
                     correctTyping++;
                     TypingAlert = false;
-                    correctChars = currentInputText.Length;
+                    correctChars = textToType.Length;
                     incorrectChars = 0;
                 }
 
@@ -312,21 +308,21 @@ namespace TypeRacers.ViewModel
                     if (CurrentWordLength - correctChars - incorrectChars < 0)
                     {
                         TypingAlert = true;
-                        currentInputText = currentInputText.Substring(0, correctChars);
+                        textToType = textToType.Substring(0, correctChars);
                         incorrectChars = 0;
                     }
                 }
             }
             else
             {
-                if (!isValid && !string.IsNullOrEmpty(currentInputText))
+                if (!isValid && !string.IsNullOrEmpty(textToType))
                 {
                     incorrectChars--;
                 }
                 else
                 {
                     TypingAlert = false;
-                    correctChars = currentInputText.Length;
+                    correctChars = textToType.Length;
                     incorrectChars = 0;
                 }
             }

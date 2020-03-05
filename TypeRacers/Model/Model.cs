@@ -1,4 +1,5 @@
 ﻿using Common;
+using TypeRacers.Client;
 using TypeRacers.ViewModel;
 
 namespace TypeRacers.Model
@@ -17,7 +18,7 @@ namespace TypeRacers.Model
             return networkHandler.PlayerModel();
         }
 
-        public IPlayroom GetGameInfo()
+        public GameInfo GetGameInfo()
         {
             return networkHandler.GameModel();
         }

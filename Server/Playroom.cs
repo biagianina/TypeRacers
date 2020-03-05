@@ -22,7 +22,6 @@ namespace Server
         public DateTime TimeToWaitForOpponents { get; set; }
         public int Place { get; set; } = 1;
         public string CompetitionText { get; set; }
-        public bool GameInfoIsSet { get; set; }
 
         public void TrySetGameStartingTime()
         {

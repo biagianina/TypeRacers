@@ -7,12 +7,12 @@ namespace Server
 {
     public class Rooms
     {
-        public readonly List<IPlayroom> playrooms;
-        public IPlayroom currentPlayroom;
+        public readonly List<Playroom> playrooms;
+        public Playroom currentPlayroom;
 
         public Rooms()
         {
-            playrooms = new List<IPlayroom>
+            playrooms = new List<Playroom>
             {
                 new Playroom()
             };
@@ -70,7 +70,7 @@ namespace Server
 
         private void SendGamestatus(Player player)
         {
-            currentPlayroom = player.Playroom;
+            currentPlayroom = (Playroom)player.Playroom;
             currentPlayroom.TrySetGameStartingTime();
             player.TrySetRank();
             player.Write(currentPlayroom.GetGameStatus(player));
@@ -81,7 +81,7 @@ namespace Server
         {
             SetPlayroom(player);
 
-            currentPlayroom = player.Playroom;
+            currentPlayroom = (Playroom)player.Playroom;
             currentPlayroom.TrySetGameStartingTime();
             player.Write(currentPlayroom.GameMessage());
 
@@ -95,7 +95,8 @@ namespace Server
                 CreateNewPlayroom();
                 playrooms.Last().Join(player);
             }
-            player.Playroom.TrySetGameStartingTime();
+            currentPlayroom = (Playroom)player.Playroom;
+            currentPlayroom.TrySetGameStartingTime();
         }
 
         private void CreateNewPlayroom()
