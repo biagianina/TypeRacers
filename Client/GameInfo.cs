@@ -98,7 +98,7 @@ namespace TypeRacers.Client
         }
 
         public void Leave(string name)
-        {            
+        {
         }
 
         public void TrySetStartingTime()

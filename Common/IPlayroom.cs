@@ -10,6 +10,7 @@ namespace Common
         DateTime GameEndingTime { get; set; }
         DateTime TimeToWaitForOpponents { get; set; }
         int Place { get; set; }
+
         bool Join(Player player);
 
         Player GetPlayer(string name);
@@ -17,6 +18,7 @@ namespace Common
         List<Player> Players { get; set; }
 
         void Leave(string name);
+
         void TrySetStartingTime();
     }
 }

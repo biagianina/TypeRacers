@@ -22,7 +22,7 @@ namespace TypeRacersFacts
 
             player.Write(new PlayerMessage(4, 3, "george", true, false, false));
             var message = (ReceivedMessage)player.Read();
-            Assert.Equal("4&3&True$george#", message.GetData());
+            Assert.Equal("4&3&True$george", message.GetData());
         }
 
         [Fact]

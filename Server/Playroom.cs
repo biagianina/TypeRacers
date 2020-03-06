@@ -35,14 +35,14 @@ namespace Server
                 Players.Add(currentPlayer);
                 currentPlayer.Playroom = this;
                 Console.WriteLine("adding player:" + currentPlayer.Name + ", playroom size: " + Players.Count);
-                var communicator = new ReceivedInformationManager(currentPlayer, this);
+                var communicator = new ServerReceivedInformationManager(currentPlayer, this);
                 communicator.StartCommunication();
                 return true;
+
             }
             return false;
         }
-      
-      
+
         private bool IsInPlayroom(string playerName)
         {
             return Players.Any(x => x.Name.Equals(playerName));

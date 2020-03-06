@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Common;
+using System;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using Common;
 
 namespace TypeRacers.Client
 {
-    public class ReceivedInformationManager : IRecievedInformationManager
+    public class ClientReceivedInformationManager : IRecievedInformationManager
     {
         public Player Player { get; set; }
         public IPlayroom Playroom { get; set; }
-        private GameInfo GameInfo {get; set;}
+        private GameInfo GameInfo { get; set; }
 
-        public ReceivedInformationManager(Player player, IPlayroom playroom)
+        public ClientReceivedInformationManager(Player player, IPlayroom playroom)
         {
             Player = player;
             Playroom = playroom;
@@ -39,6 +36,7 @@ namespace TypeRacers.Client
                 }
             }
         }
+
         private void SetGameStatus(string data)
         {
             var infos = data.Split('%').ToList();
@@ -57,6 +55,7 @@ namespace TypeRacers.Client
 
             GameInfo.SetOpponentsAndTimers(infos);
         }
+
         public void Write()
         {
             while (true)
@@ -67,10 +66,8 @@ namespace TypeRacers.Client
                 if (Player.Removed)
                 {
                     Player.Write(new PlayerMessage(Player.WPMProgress, Player.CompletedTextPercentage, Player.Name, Player.FirstTimeConnecting, Player.Restarting, Player.Removed));
-                    break;
                 }
             }
         }
-
     }
 }

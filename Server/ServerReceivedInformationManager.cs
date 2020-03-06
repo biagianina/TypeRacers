@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Common;
+﻿using Common;
+using System;
 
 namespace Server
 {
-    public class ReceivedInformationManager : IRecievedInformationManager
+    public class ServerReceivedInformationManager : IRecievedInformationManager
     {
         public Player Player { get; set; }
         public IPlayroom Playroom { get; set; }
 
-        public ReceivedInformationManager(Player player, IPlayroom playroom)
+        public ServerReceivedInformationManager(Player player, IPlayroom playroom)
         {
             Player = player;
             Playroom = playroom;
         }
+
         public void StartCommunication()
         {
             while (true)
@@ -50,7 +47,6 @@ namespace Server
                 SendGamestatus();
             }
         }
-
 
         private void SendGamestatus()
         {

@@ -50,7 +50,7 @@ namespace Common
         {
             NetworkClient.Write(message);
         }
-     
+
         public void UpdateInfo(string data)
         {
             var nameAndInfo = data.Split('$');
@@ -62,7 +62,7 @@ namespace Common
             FirstTimeConnecting = Convert.ToBoolean(infos[2]);
             UpdateProgress(int.Parse(infos[0]), int.Parse(infos[1]));
         }
-       
+
         public bool CheckIfTriesToRestart()
         {
             return Name.Contains("_restart");
