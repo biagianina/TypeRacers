@@ -35,7 +35,8 @@ namespace Server
                 Players.Add(currentPlayer);
                 currentPlayer.Playroom = this;
                 Console.WriteLine("adding player:" + currentPlayer.Name + ", playroom size: " + Players.Count);
-                currentPlayer.StartCommunication();
+                var communicator = new ReceivedInformationManager(currentPlayer, this);
+                communicator.StartCommunication();
                 return true;
             }
             return false;
