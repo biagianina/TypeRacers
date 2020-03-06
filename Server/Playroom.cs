@@ -35,65 +35,45 @@ namespace Server
                 Players.Add(currentPlayer);
                 currentPlayer.Playroom = this;
                 Console.WriteLine("adding player:" + currentPlayer.Name + ", playroom size: " + Players.Count);
-                StartCommunication(currentPlayer);
+                currentPlayer.StartCommunication();
                 return true;
             }
             return false;
         }
-        private void StartCommunication(Player currentPlayer)
+      
+      
+        private bool IsInPlayroom(string playerName)
         {
-            while (true)
-            {
-                var message = (ReceivedMessage)currentPlayer.Read();
-                var data = message?.GetData();
-                if (string.IsNullOrEmpty(data))
-                {
-                    return;
-                }
-
-                var nameAndInfo = data.Split('$');
-                var infos = nameAndInfo.FirstOrDefault()?.Split('&');
-                currentPlayer.Name = nameAndInfo.LastOrDefault();
-
-                Console.WriteLine(data);
-
-                ManagePlayerReceivedData(currentPlayer, infos);
-            }
-        }
-        private void ManagePlayerReceivedData(Player player, string[] infos)
-        {
-            player.FirstTimeConnecting = Convert.ToBoolean(infos[2]);
-            player.UpdateInfo(int.Parse(infos[0]), int.Parse(infos[1]));
-            if (CheckIfPlayerLeft(player))
-            {
-                return;
-            }
-
-            if (player.FirstTimeConnecting || CheckIfPlayerTriesToRestart(player))
-            {
-                SendGameInfo(player);
-            }
-            else
-            {
-                SendGamestatus(player);
-            }
-
+            return Players.Any(x => x.Name.Equals(playerName));
         }
 
-        private void SendGamestatus(Player player)
+        public Player GetPlayer(string name)
         {
-            player.TrySetRank();
-            player.Write(GetGameStatus(player));
-            Console.WriteLine("sending opponents");
+            return Players.Find(x => x.Name.Equals(name));
         }
 
-        private void SendGameInfo(Player player)
+        public void Leave(string playerName)
         {
-            TrySetGameStartingTime();
-            player.Write(GameMessage());
-            Console.WriteLine("sending game info");
+            if (IsInPlayroom(playerName))
+            {
+                Players.Remove(Players.Find(x => x.Name.Equals(playerName)));
+            }
+
+            if (Players.Count == 0)
+            {
+                Reset();
+            }
+
+            Console.WriteLine("REMOVED: " + playerName);
+            Console.WriteLine("Playroom size: " + Players.Count);
         }
-        private void TrySetGameStartingTime()
+
+        private void Reset()
+        {
+            TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(20);
+        }
+
+        public void TrySetStartingTime()
         {
             if (!GameHasStarted)
             {
@@ -108,62 +88,6 @@ namespace Server
                     Reset();
                 }
             }
-        }
-
-        private bool IsInPlayroom(string playerName)
-        {
-            return Players.Any(x => x.Name.Equals(playerName));
-        }
-
-        public Player GetPlayer(string name)
-        {
-            return Players.Find(x => x.Name.Equals(name));
-        }
-
-        private void Leave(string playerName)
-        {
-            if (IsInPlayroom(playerName))
-            {
-                Players.Remove(Players.Find(x => x.Name.Equals(playerName)));
-            }
-
-            if (Players.Count == 0)
-            {
-                Reset();
-            }
-        }
-
-        private void Reset()
-        {
-            TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(20);
-        }
-        private bool CheckIfPlayerLeft(Player player)
-        {
-            if (player.Name.Contains("_removed") && GetPlayer(player.Name) != null)
-            {
-                Leave(player.Name);
-                Console.WriteLine("REMOVED: " + player.Name);
-                Console.WriteLine("Playroom size: " + Players.Count);
-                player.NetworkClient.Dispose();
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool CheckIfPlayerTriesToRestart(Player player)
-        {
-            return player.Name.Contains("_restart");
-        }
-
-        private IMessage GameMessage()
-        {
-            return new GameMessage(CompetitionText, TimeToWaitForOpponents, GameStartingTime, GameEndingTime);
-        }
-
-        private IMessage GetGameStatus(Player player)
-        {
-            return new OpponentsMessage(Players, GameStartingTime, GameEndingTime, player.Name, player.Finnished, player.Place);
         }
     }
 }

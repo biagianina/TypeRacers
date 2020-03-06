@@ -30,10 +30,9 @@ namespace TypeRacers.Server
 
             Console.WriteLine("Server started");
 
-            CommunicationSetup();//separated the communication from server starter
+            CommunicationSetup();
         }
 
-        //to implement thread with start func players.Allocate method
         private void CommunicationSetup()
         {
             while (true)

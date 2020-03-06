@@ -15,5 +15,8 @@ namespace Common
         Player GetPlayer(string name);
 
         List<Player> Players { get; set; }
+
+        void Leave(string name);
+        void TrySetStartingTime();
     }
 }

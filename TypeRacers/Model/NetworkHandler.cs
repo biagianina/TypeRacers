@@ -35,7 +35,7 @@ namespace TypeRacers
         internal void StartCommunication()
         {
             client.Connect("localhost", 80);
-            typeRacersClient.StartServerCommunication();
+            typeRacersClient.StartCommunication();
         }
     }
 }

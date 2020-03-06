@@ -25,6 +25,7 @@ namespace Server
                 playrooms.Last().Join(player);
             }
         }
+
         public int GetNumberOfPlayrooms()
         {
             return playrooms.Count;

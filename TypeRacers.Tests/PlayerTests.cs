@@ -30,7 +30,7 @@ namespace TypeRacersFacts
         {
             var player = new Player(new FakeTypeRacersClient());
 
-            player.UpdateInfo(3, 5);
+            player.UpdateProgress(3, 5);
 
             Assert.Equal(3, player.WPMProgress);
             Assert.Equal(5, player.CompletedTextPercentage);

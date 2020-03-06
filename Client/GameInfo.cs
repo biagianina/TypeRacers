@@ -84,7 +84,7 @@ namespace TypeRacers.Client
                 Join(player);
             }
 
-            player.UpdateInfo(int.Parse(info[0]), int.Parse(info[1]));
+            player.UpdateProgress(int.Parse(info[0]), int.Parse(info[1]));
             player.Finnished = Convert.ToBoolean(info[2]);
             player.Place = int.Parse(info[3]);
         }
@@ -95,6 +95,14 @@ namespace TypeRacers.Client
             {
                 OpponentsChanged(opponents);
             }
+        }
+
+        public void Leave(string name)
+        {            
+        }
+
+        public void TrySetStartingTime()
+        {
         }
     }
 }

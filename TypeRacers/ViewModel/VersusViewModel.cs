@@ -235,7 +235,7 @@ namespace TypeRacers.ViewModel
             if (StartReportingProgress)
             {
                 TriggerPropertyChanged(nameof(Opponents));
-                Player.UpdateInfo(WPMProgress, SliderProgress);
+                Player.UpdateProgress(WPMProgress, SliderProgress);
             }
         }
 

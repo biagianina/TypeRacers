@@ -18,7 +18,7 @@ namespace TypeRacers.Client
 
         public Player Player { get; set; }
 
-        public void StartServerCommunication()
+        public void StartCommunication()
         {
             Thread writeThread = new Thread(Write);
             Thread readThread = new Thread(Read);
