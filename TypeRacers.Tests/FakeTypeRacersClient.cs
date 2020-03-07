@@ -5,7 +5,7 @@ namespace TypeRacersFacts
 {
     public class FakeTypeRacersClient : INetworkClient
     {
-        public string DataReceieved { get; set; } = "just a text";
+        public string DataReceieved { get; set; } = "just a text#";
 
         public void Dispose()
         {

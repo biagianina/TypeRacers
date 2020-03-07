@@ -22,7 +22,7 @@ namespace TypeRacersFacts
 
             player.Write(new PlayerMessage(4, 3, "george", true, false, false));
             var message = (ReceivedMessage)player.Read();
-            Assert.Equal("4&3&True$george#", message.GetData());
+            Assert.Equal("4&3&True$george", message.GetData());
         }
 
         [Fact]
@@ -30,7 +30,7 @@ namespace TypeRacersFacts
         {
             var player = new Player(new FakeTypeRacersClient());
 
-            player.UpdateInfo(3, 5);
+            player.UpdateProgress(3, 5);
 
             Assert.Equal(3, player.WPMProgress);
             Assert.Equal(5, player.CompletedTextPercentage);

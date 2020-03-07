@@ -1,218 +1,183 @@
-﻿<Page
-    x:Name="PageVersus"
-    x:Class="TypeRacers.View.VersusPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:TypeRacers.View"
-    xmlns:vm="clr-namespace:TypeRacers.ViewModel"
-    MinHeight="450"
-    MinWidth="450"
-    Title="Versus"
-    Style="{StaticResource AppStyle}">
+﻿<Page x:Name="PageVersus"
+      x:Class="TypeRacers.View.VersusPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="clr-namespace:TypeRacers.View"
+      xmlns:vm="clr-namespace:TypeRacers.ViewModel"
+      MinHeight="450"
+      MinWidth="450"
+      Title="Versus"
+      Style="{StaticResource AppStyle}">
 
     <Page.Resources>
-        <vm:VersusViewModel
-            x:Key="VersusVM" />
-        <BooleanToVisibilityConverter
-            x:Key="VisibleConverter" />
+        <vm:VersusViewModel x:Key="VersusVM" />
+        <BooleanToVisibilityConverter x:Key="VisibleConverter" />
     </Page.Resources>
 
-    <Grid
-        DataContext="{StaticResource VersusVM}">
+    <Grid DataContext="{StaticResource VersusVM}">
         <Grid.RowDefinitions>
-            <RowDefinition
-                Height="10" />
-            <RowDefinition
-                Height="*" />
-            <RowDefinition
-                Height="auto" />
-            <RowDefinition
-                Height="10" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="10" />
         </Grid.RowDefinitions>
-        <Grid
-            Grid.Row="1"
-            VerticalAlignment="Center"
-            Width="auto"
-            Height="auto">
+        <Grid Grid.Row="1"
+              VerticalAlignment="Center"
+              Width="auto"
+              Height="auto">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition
-                    Width="*" />
-                <ColumnDefinition
-                    Width="*" />
-                <ColumnDefinition
-                    Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition
-                    Height="auto" />
-                <RowDefinition
-                    Height="*" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Button
-                Grid.Column="0"
-                Name="Back"
-                Click="BackBtn_Click"
-                Command="{Binding RemovePlayer}"
-                Margin="10 5"
-                Width="70"
-                Height="30"
-                HorizontalAlignment="Left"
-                Style="{StaticResource RoundButtonTemplate}"
-                Background="#e84a5f"
-                Content="Back"
-                BorderBrush="#FFAE00FF"
-                BorderThickness="5">
+            <Button Grid.Column="0"
+                    Name="Back"
+                    Click="BackBtn_Click"
+                    Command="{Binding RemovePlayer}"
+                    Margin="10 5"
+                    Width="70"
+                    Height="30"
+                    HorizontalAlignment="Left"
+                    Style="{StaticResource RoundButtonTemplate}"
+                    Background="#e84a5f"
+                    Content="Back"
+                    BorderBrush="#FFAE00FF"
+                    BorderThickness="5">
 
                 <Button.Effect>
-                    <DropShadowEffect
-                        Color="#FF853C95" />
+                    <DropShadowEffect Color="#FF853C95" />
                 </Button.Effect>
             </Button>
-            <StackPanel
-                Grid.Row="1"
-                Grid.ColumnSpan="3"
-                VerticalAlignment="Center">
+            <StackPanel Grid.Row="1"
+                        Grid.ColumnSpan="3"
+                        VerticalAlignment="Center">
 
-                <local:CarAndProgressUserControl
-                    CAPUCProgress="{Binding WPMProgress, UpdateSourceTrigger=PropertyChanged}"
-                    CAPUCName="You"
-                    CAPUCAccuracy="{Binding Accuracy, UpdateSourceTrigger=PropertyChanged}"
-                    CAPUCShowFinishResults="{Binding OpenFinishPopup, UpdateSourceTrigger=PropertyChanged}"
-                    CAPUCShowRanking="{Binding ShowRanking}"
-                    CAPUCRanking="{Binding RankingPlace}"
-                    CAPUCSliderProgress="{Binding SliderProgress, UpdateSourceTrigger=PropertyChanged}"
-                    CAPUCSliderStyle="{StaticResource GreenSliderStyle}" />
+                <local:CarAndProgressUserControl CAPUCProgress="{Binding WPMProgress, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCName="You"
+                                                 CAPUCAccuracy="{Binding Accuracy, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCShowFinishResults="{Binding OpenFinishPopup, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCShowRanking="{Binding ShowRanking}"
+                                                 CAPUCRanking="{Binding RankingPlace}"
+                                                 CAPUCSliderProgress="{Binding SliderProgress, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCSliderStyle="{StaticResource GreenSliderStyle}" />
 
-                <local:CarAndProgressUserControl
-                    CAPUCCanBeShown="{Binding ShowFirstOpponent}"
-                    CAPUCName="{Binding Opponents[0].Name, UpdateSourceTrigger=PropertyChanged}"
-                    CAPUCProgress="{Binding  Opponents[0].WPMProgress, UpdateSourceTrigger=PropertyChanged}"
-                    CAPUCSliderProgress="{Binding Opponents[0].CompletedTextPercentage, UpdateSourceTrigger=PropertyChanged}"
-                    CAPUCShowRanking="{Binding Opponents[0].Finnished, UpdateSourceTrigger=PropertyChanged}"
-                    CAPUCRanking="{Binding Opponents[0].Place, UpdateSourceTrigger=PropertyChanged}"
-                    CAPUCSliderStyle="{StaticResource YellowSliderStyle}" />
+                <local:CarAndProgressUserControl CAPUCCanBeShown="{Binding ShowFirstOpponent}"
+                                                 CAPUCName="{Binding Opponents[0].Name, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCProgress="{Binding  Opponents[0].WPMProgress, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCSliderProgress="{Binding Opponents[0].CompletedTextPercentage, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCShowRanking="{Binding Opponents[0].Finnished, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCRanking="{Binding Opponents[0].Place, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCSliderStyle="{StaticResource YellowSliderStyle}" />
 
-                <local:CarAndProgressUserControl
-                    CAPUCCanBeShown="{Binding ShowSecondOpponent}"
-                    CAPUCName="{Binding Opponents[1].Name, UpdateSourceTrigger=PropertyChanged}"
-                    CAPUCProgress="{Binding  Opponents[1].WPMProgress, UpdateSourceTrigger=PropertyChanged}"
-                    CAPUCSliderProgress="{Binding Opponents[1].CompletedTextPercentage, UpdateSourceTrigger=PropertyChanged}"
-                    CAPUCShowRanking="{Binding Opponents[1].Finnished, UpdateSourceTrigger=PropertyChanged}"
-                    CAPUCRanking="{Binding Opponents[1].Place, UpdateSourceTrigger=PropertyChanged}"
-                    CAPUCSliderStyle="{StaticResource PinkSliderStyle}" />
+                <local:CarAndProgressUserControl CAPUCCanBeShown="{Binding ShowSecondOpponent}"
+                                                 CAPUCName="{Binding Opponents[1].Name, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCProgress="{Binding  Opponents[1].WPMProgress, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCSliderProgress="{Binding Opponents[1].CompletedTextPercentage, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCShowRanking="{Binding Opponents[1].Finnished, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCRanking="{Binding Opponents[1].Place, UpdateSourceTrigger=PropertyChanged}"
+                                                 CAPUCSliderStyle="{StaticResource PinkSliderStyle}" />
             </StackPanel>
         </Grid>
-        <Grid
-            Grid.Row="2"
-            VerticalAlignment="Center">
-            <local:ReadAndTypeUserControl
-                x:Name="UserCTRL"
-                Width="auto"
-                Height="auto"
-                Margin="20"
-                RATUCStartReportingProgress="{Binding StartReportingProgress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                RATUCEndingTime="{Binding EndTime, UpdateSourceTrigger=PropertyChanged}"
-                RATUCSearchingForOpponents="{Binding EnableSearchingAnimation}"
-                RATUCStartingTime="{Binding StartTime, UpdateSourceTrigger=PropertyChanged}"
-                RATUCInlines="{Binding TextToTypeStyles}"
-                RATUCSecondsToStart="{Binding SecondsToGetReady, UpdateSourceTrigger=PropertyChanged}"
-                RATUCSecondsInGame="90 seconds left"
-                RATUCCanType="{Binding CanUserType}"
-                RATUCGetReadyAlert="{Binding EnableGetReadyAlert}"
-                RATUCAllTextTyped="{Binding AllTextTyped}"
-                RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
-                RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}">
+        <Grid Grid.Row="2"
+              VerticalAlignment="Center">
+            <local:ReadAndTypeUserControl x:Name="UserCTRL"
+                                          Width="auto"
+                                          Height="auto"
+                                          Margin="20"
+                                          RATUCStartReportingProgress="{Binding StartReportingProgress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          RATUCEndingTime="{Binding EndTime, UpdateSourceTrigger=PropertyChanged}"
+                                          RATUCSearchingForOpponents="{Binding EnableSearchingAnimation}"
+                                          RATUCStartingTime="{Binding StartTime, UpdateSourceTrigger=PropertyChanged}"
+                                          RATUCInlines="{Binding TextToTypeStyles}"
+                                          RATUCSecondsToStart="{Binding SecondsToGetReady, UpdateSourceTrigger=PropertyChanged}"
+                                          RATUCSecondsInGame="90 seconds left"
+                                          RATUCCanType="{Binding CanUserType}"
+                                          RATUCGetReadyAlert="{Binding EnableGetReadyAlert}"
+                                          RATUCAllTextTyped="{Binding AllTextTyped}"
+                                          RATUCCurrentInputText="{Binding CurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                          RATUCBackgroundColor="{Binding InputBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
+                                          RATUCTypingAlert="{Binding TypingAlert, UpdateSourceTrigger=PropertyChanged}">
             </local:ReadAndTypeUserControl>
         </Grid>
-        <StackPanel
-            Grid.Row="1"
-            Visibility="{Binding EnableSearchingAnimation, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibleConverter}}"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Center">
-            <Image
-                Source="pack://application:,,,/TypeRacers;component/Images/loading.png"
-                Width="100"
-                Height="100"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center"
-                RenderTransformOrigin="0.5, 0.5">
+        <StackPanel Grid.Row="1"
+                    Visibility="{Binding EnableSearchingAnimation, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibleConverter}}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+            <Image Source="pack://application:,,,/TypeRacers;component/Images/loading.png"
+                   Width="100"
+                   Height="100"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   RenderTransformOrigin="0.5, 0.5">
                 <Image.RenderTransform>
-                    <RotateTransform
-                        x:Name="noFreeze" />
+                    <RotateTransform x:Name="noFreeze" />
                 </Image.RenderTransform>
                 <Image.Triggers>
-                    <EventTrigger
-                        RoutedEvent="Loaded">
+                    <EventTrigger RoutedEvent="Loaded">
                         <BeginStoryboard>
                             <Storyboard>
-                                <DoubleAnimation
-                                    Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
-                                    To="360"
-                                    Duration="0:0:1"
-                                    RepeatBehavior="Forever" />
+                                <DoubleAnimation Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
+                                                 To="360"
+                                                 Duration="0:0:1"
+                                                 RepeatBehavior="Forever" />
                             </Storyboard>
                         </BeginStoryboard>
                     </EventTrigger>
                 </Image.Triggers>
             </Image>
-            <Label
-                Content="Searching for opponents"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Bottom"
-                FontFamily="Times New Roman"
-                FontSize="14"
-                FontWeight="Bold"
-                Foreground="White" />
+            <Label Content="Searching for opponents"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Bottom"
+                   FontFamily="Times New Roman"
+                   FontSize="14"
+                   FontWeight="Bold"
+                   Foreground="White" />
         </StackPanel>
-        <Popup
-            Name="TimerReadyPopup"
-            IsOpen="{Binding EnableRestartOrExitAlert}"
-            Placement="Center"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Center"
-            AllowsTransparency="True"
-            Width="200"
-            Height="200">
+        <Popup Name="TimerReadyPopup"
+               IsOpen="{Binding EnableRestartOrExitAlert}"
+               Placement="Center"
+               VerticalAlignment="Center"
+               HorizontalAlignment="Center"
+               AllowsTransparency="True"
+               Width="200"
+               Height="200">
 
-            <Border
-                BorderThickness="4"
-                BorderBrush="#7ac5cd"
-                CornerRadius="7"
-                Padding="1"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center">
+            <Border BorderThickness="4"
+                    BorderBrush="#7ac5cd"
+                    CornerRadius="7"
+                    Padding="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
 
-                <StackPanel
-                    Background="White">
-                    <TextBlock
-                        Margin="0,50,0,60"
-                        FontFamily="Arial"
-                        Opacity="0.9"
-                        FontSize="15"
-                        Foreground="#bbcedd"
-                        Background="White"
-                        TextAlignment="Center"
-                        VerticalAlignment="Center"
-                        Text="No opponents found" />
+                <StackPanel Background="White">
+                    <TextBlock Margin="0,50,0,60"
+                               FontFamily="Arial"
+                               Opacity="0.9"
+                               FontSize="15"
+                               Foreground="#bbcedd"
+                               Background="White"
+                               TextAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="No opponents found" />
 
-                    <StackPanel
-                        HorizontalAlignment="Center"
-                        Orientation="Horizontal">
-                        <Button
-                            Background="Red"
-                            Foreground="White"
-                            Width="100"
-                            Height="70"
-                            Content="TRY AGAIN"
-                            Command="{Binding RestartSearchingOpponentsCommand}" />
-                        <Button
-                            Background="#7ac5cd"
-                            Foreground="White"
-                            Width="100"
-                            Height="70"
-                            Content="EXIT"
-                            Command="{Binding ExitProgramCommand}" />
+                    <StackPanel HorizontalAlignment="Center"
+                                Orientation="Horizontal">
+                        <Button Background="Red"
+                                Foreground="White"
+                                Width="100"
+                                Height="70"
+                                Content="TRY AGAIN"
+                                Command="{Binding RestartSearchingOpponentsCommand}" />
+                        <Button Background="#7ac5cd"
+                                Foreground="White"
+                                Width="100"
+                                Height="70"
+                                Content="EXIT"
+                                Command="{Binding ExitProgramCommand}" />
                     </StackPanel>
                 </StackPanel>
             </Border>

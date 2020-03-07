@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Windows;
 using System.Windows.Navigation;
-using System.Windows.Threading;
 using TypeRacers.View;
 
 namespace TypeRacers.ViewModel
@@ -47,7 +46,7 @@ namespace TypeRacers.ViewModel
 
         public static string Name { get; private set; }
         public bool EnableConnectingAnimation { get; set; }
-        public bool EnableRetry { get; set; } 
+        public bool EnableRetry { get; set; }
 
         private void NavigateContest()
         {
@@ -65,7 +64,7 @@ namespace TypeRacers.ViewModel
                         Model.StartCommunication();
                         var gameInfo = Model.GetGameInfo();
                         var player = Model.GetPlayer();
-                        while(!gameInfo.GameInfoIsSet)
+                        while (!gameInfo.GameInfoIsSet)
                         {
                             Application.Current.Dispatcher.Invoke(() =>
                             {
@@ -117,6 +116,7 @@ namespace TypeRacers.ViewModel
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
         public void TriggerPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -19,4 +19,8 @@
     <ProjectReference Include="..\TypeRacers\TypeRacers.csproj" />
   </ItemGroup>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="copy &quot;$(SolutionDir)Texts.txt&quot; &quot;$(TargetDir)&quot;" />
+  </Target>
+
 </Project>

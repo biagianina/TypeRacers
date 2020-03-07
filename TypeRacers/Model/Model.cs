@@ -1,4 +1,5 @@
 ﻿using Common;
+using TypeRacers.Client;
 using TypeRacers.ViewModel;
 
 namespace TypeRacers.Model
@@ -6,7 +7,7 @@ namespace TypeRacers.Model
     public class Model
     {
         private readonly NetworkHandler networkHandler;
-   
+
         public Model()
         {
             networkHandler = new NetworkHandler(MainViewModel.Name);
@@ -17,7 +18,7 @@ namespace TypeRacers.Model
             return networkHandler.PlayerModel();
         }
 
-        public IPlayroom GetGameInfo()
+        public GameInfo GetGameInfo()
         {
             return networkHandler.GameModel();
         }

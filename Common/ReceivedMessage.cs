@@ -36,8 +36,6 @@ namespace Common
                 bytesRead = stream.Read(buffer, 0, 1024);
                 Data += Encoding.ASCII.GetString(buffer, Data.Length, bytesRead);
             }
-
-            Data = Data.Substring(0, Data.IndexOf('#'));
         }
 
         public string GetData()
@@ -46,8 +44,10 @@ namespace Common
             {
                 DecodeMessage();
             }
-
-            return string.IsNullOrEmpty(Data) ? string.Empty : Data;
+            
+            var data = Data.Substring(0, Data.IndexOf('#'));
+            Data.Remove(0, data.Length + 1);
+            return string.IsNullOrEmpty(data) ? string.Empty : data;
         }
     }
 }

@@ -9,8 +9,6 @@ namespace Common
 
         private readonly TcpClient realTcpClient;
 
-        public NetworkStream GetStream() => realTcpClient.GetStream();
-
         public TypeRacersNetworkClient()
         {
             realTcpClient = new TcpClient();

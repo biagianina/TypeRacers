@@ -1,4 +1,7 @@
-﻿namespace Common
+﻿using System;
+using System.Linq;
+
+namespace Common
 {
     public class Player
     {
@@ -23,7 +26,7 @@
             Playroom = playroom;
         }
 
-        public void UpdateInfo(int wpmProgress, int completedText)
+        public void UpdateProgress(int wpmProgress, int completedText)
         {
             WPMProgress = wpmProgress;
             CompletedTextPercentage = completedText;
@@ -46,6 +49,35 @@
         public void Write(IMessage message)
         {
             NetworkClient.Write(message);
+        }
+
+        public void UpdateInfo(string data)
+        {
+            var nameAndInfo = data.Split('$');
+            var infos = nameAndInfo.FirstOrDefault()?.Split('&');
+            Name = nameAndInfo.LastOrDefault();
+
+            Console.WriteLine(data);
+
+            FirstTimeConnecting = Convert.ToBoolean(infos[2]);
+            UpdateProgress(int.Parse(infos[0]), int.Parse(infos[1]));
+        }
+
+        public bool CheckIfTriesToRestart()
+        {
+            return Name.Contains("_restart");
+        }
+
+        public bool CheckIfLeft()
+        {
+            if (Name.Contains("_removed") && Name != null)
+            {
+                Playroom.Leave(Name);
+                NetworkClient.Dispose();
+                return true;
+            }
+
+            return false;
         }
     }
 }

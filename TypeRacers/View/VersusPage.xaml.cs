@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using TypeRacers.Client;
 using TypeRacers.ViewModel;
 
 namespace TypeRacers.View
@@ -19,7 +20,7 @@ namespace TypeRacers.View
         public VersusViewModel VersusViewModel => (VersusViewModel)Resources["VersusVM"];
 
         public Player Player { get => VersusViewModel.Player; set => VersusViewModel.Player = value; }
-        public IPlayroom GameInfo { get => VersusViewModel.GameInfo; set => VersusViewModel.GameInfo = value; }
+        public GameInfo GameInfo { get => VersusViewModel.GameInfo; set => VersusViewModel.GameInfo = value; }
 
         public void BackBtn_Click(object sender, RoutedEventArgs e)
         {

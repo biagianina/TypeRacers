@@ -75,6 +75,7 @@
     <Compile Include="InputCharacterValidation.cs" />
     <Compile Include="OpponentsMessage.cs" />
     <Compile Include="Playroom.cs" />
+    <Compile Include="ServerReceivedInformationManager.cs" />
     <Compile Include="Rooms.cs" />
     <Compile Include="ServerGeneratedText.cs" />
     <Compile Include="ServerSetup.cs" />
