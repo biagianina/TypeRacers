@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using TypeRacers.Client;
 
 namespace TypeRacers.ViewModel
 {
@@ -29,7 +30,7 @@ namespace TypeRacers.ViewModel
         private int correctTyping;
         private bool startReporting;
         private Player player;
-        private IPlayroom gameInfo;
+        private GameInfo gameInfo;
 
         public VersusViewModel()
         {
@@ -50,7 +51,7 @@ namespace TypeRacers.ViewModel
             }
         }
 
-        public IPlayroom GameInfo
+        public GameInfo GameInfo
         {
             get => gameInfo;
             set
@@ -208,7 +209,7 @@ namespace TypeRacers.ViewModel
             if (StartReportingProgress)
             {
                 TriggerPropertyChanged(nameof(Opponents));
-                Player.UpdateInfo(WPMProgress, SliderProgress);
+                Player.UpdateProgress(WPMProgress, SliderProgress);
             }
         }
 
