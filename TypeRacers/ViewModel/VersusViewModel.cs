@@ -8,34 +8,36 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using TypeRacers.Client;
 
 namespace TypeRacers.ViewModel
 {
     public class VersusViewModel : ITextToType, INotifyPropertyChanged
     {
-        private string textToType;
+
+        private string typedText;
         private InputCharacterValidation userInputValidator;
         private bool isValid;
         private int spaceIndex;
         private int correctChars;
         private int incorrectChars;
         private int currentWordIndex;
+        private bool wordIsCompletelyTyped;
+        private bool isLastWord;
         private bool alert;
         private int numberOfCharactersTyped;
         private int incorrectTyping;
         private int correctTyping;
         private bool startReporting;
         private Player player;
-        private GameInfo gameInfo;
+        private IPlayroom gameInfo;
 
         public VersusViewModel()
         {
             UpdateShownPlayers();
             EnableSearchingAnimation = true;
-            ExitProgramCommand = new CommandHandler(() => ExitProgram(), () => true);
-            RemovePlayer = new CommandHandler(() => RemovePlayerFromPlayroom(), () => true);
-            RestartSearchingOpponentsCommand = new CommandHandler(() => RestartSearchingOpponents(), () => true);
+            ExitProgramCommand = new CommandHandler(ExitProgram, () => true);
+            RemovePlayer = new CommandHandler(RemovePlayerFromPlayroom, () => true);
+            RestartSearchingOpponentsCommand = new CommandHandler(RestartSearchingOpponents, () => true);
         }
 
         public Player Player
@@ -48,7 +50,7 @@ namespace TypeRacers.ViewModel
             }
         }
 
-        public GameInfo GameInfo
+        public IPlayroom GameInfo
         {
             get => gameInfo;
             set
@@ -96,7 +98,7 @@ namespace TypeRacers.ViewModel
 
         private InputCharacterValidation UserInputValidator { get => userInputValidator ?? new InputCharacterValidation(TextToType); set => userInputValidator = value; }
 
-        public bool InputValidation
+        public bool IsValid
         {
             get => isValid;
 
@@ -106,7 +108,7 @@ namespace TypeRacers.ViewModel
                     return;
 
                 isValid = value;
-                TriggerPropertyChanged(nameof(InputValidation));
+                TriggerPropertyChanged(nameof(IsValid));
                 TriggerPropertyChanged(nameof(InputBackgroundColor));
             }
         }
@@ -162,7 +164,6 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(TypingAlert));
             }
         }
-
         public string InputBackgroundColor
         {
             get
@@ -179,7 +180,6 @@ namespace TypeRacers.ViewModel
                 return default;
             }
         }
-
         public bool StartReportingProgress
         {
             get => startReporting;
@@ -191,34 +191,7 @@ namespace TypeRacers.ViewModel
                 ReportProgress();
             }
         }
-
         public string TextToType => GameInfo?.CompetitionText ?? string.Empty;
-
-        public string CurrentInputText
-        {
-            get => textToType;
-            set
-            {
-                // return because we dont need to execute logic if the input text has not changed
-                if (textToType == value)
-                    return;
-
-                textToType = value;
-
-                //validate current word
-                InputValidation = UserInputValidator.ValidateWord(CurrentInputText, CurrentInputText.Length);
-
-                CheckUserInput(textToType);
-
-                TriggerPropertyChanged(nameof(CurrentWordLength));//moves to next word
-
-                //determine number of characters that are valid/invalid to form substrings
-                HighlightText();
-
-                TriggerPropertyChanged(nameof(CurrentInputText));
-            }
-        }
-
         public bool EnableGetReadyAlert { get; set; }
         public bool EnableRestartOrExitAlert { get; set; }
         public string SecondsToGetReady { get; set; }
@@ -235,42 +208,49 @@ namespace TypeRacers.ViewModel
             if (StartReportingProgress)
             {
                 TriggerPropertyChanged(nameof(Opponents));
-                Player.UpdateProgress(WPMProgress, SliderProgress);
+                Player.UpdateInfo(WPMProgress, SliderProgress);
             }
         }
 
-        private void CheckUserInput(string value)
+        public string CurrentInputText
         {
-            //checks if current word is typed, clears textbox, reintializes remaining text to the validation, sends progress
-            CheckIfInputIsCompleteWord(value);
+            get => typedText;
+            set
+            {
+                // return because we dont need to execute logic if the input text has not changed
+                if (typedText == value)
+                    return;
 
-            //checks if current word is the last one
-            CheckIfIsLastWord();
+                typedText = value;
+
+                //validate current word
+                IsValid = UserInputValidator.ValidateWord(typedText, typedText.Length, spaceIndex, out wordIsCompletelyTyped, out isLastWord);
+                CheckUserInput();
+                //determine number of characters that are valid/invalid to form substrings
+                GetTypingAlertInfo();
+
+                TriggerPropertyChanged(nameof(CurrentWordLength));//moves to next word
+                TriggerPropertyChanged(nameof(CurrentInputText));
+            }
         }
 
-        private void CheckIfInputIsCompleteWord(string value)
+        private void CheckUserInput()
         {
-            if (isValid && value.EndsWith(" "))
+            //checks if current word is typed, clears textbox, reintializes remaining text to the validation, sends progress
+            if (wordIsCompletelyTyped)
             {
-                spaceIndex += textToType.Length;
+                spaceIndex += typedText.Length;
 
                 if (currentWordIndex < TextToType.Split().Length - 1)
                 {
                     currentWordIndex++;
                 }
 
-                userInputValidator = new InputCharacterValidation(TextToType.Substring(spaceIndex));
-                numberOfCharactersTyped += CurrentInputText.Length;
-                textToType = string.Empty;
-
-                TriggerPropertyChanged(nameof(SliderProgress));
-                TriggerPropertyChanged(nameof(WPMProgress));
+                ResetValidation();
             }
-        }
 
-        private void CheckIfIsLastWord()
-        {
-            if (InputValidation && textToType.Length + spaceIndex == TextToType.Length)
+            //checks if current word is the last one
+            if (isLastWord)
             {
                 AllTextTyped = true;
                 TriggerPropertyChanged(nameof(AllTextTyped));
@@ -283,47 +263,47 @@ namespace TypeRacers.ViewModel
 
                 OpenFinishPopup = true;
                 TriggerPropertyChanged(nameof(OpenFinishPopup));
-
                 TriggerPropertyChanged(nameof(SliderProgress));
                 TriggerPropertyChanged(nameof(WPMProgress));//recalculates progress
             }
         }
 
-        private void HighlightText()
+
+        private void ResetValidation()
         {
-            if (!Keyboard.IsKeyDown(Key.Back))
+            UserInputValidator = new InputCharacterValidation(TextToType.Substring(spaceIndex));
+            numberOfCharactersTyped += CurrentInputText.Length;
+            typedText = string.Empty;
+            TriggerPropertyChanged(nameof(SliderProgress));
+            TriggerPropertyChanged(nameof(WPMProgress));
+        }
+
+        private void GetTypingAlertInfo()
+        {
+            if (Keyboard.IsKeyDown(Key.Back) && !IsValid && !string.IsNullOrEmpty(typedText))
             {
-                if (isValid)
+                incorrectChars--;
+            }
+            else
+            {
+                if (IsValid)
                 {
                     correctTyping++;
                     TypingAlert = false;
-                    correctChars = textToType.Length;
+                    correctChars = typedText.Length;
                     incorrectChars = 0;
                 }
 
-                if (!isValid)
+                if (!IsValid)
                 {
                     incorrectTyping++;
                     incorrectChars++;
                     if (CurrentWordLength - correctChars - incorrectChars < 0)
                     {
                         TypingAlert = true;
-                        textToType = textToType.Substring(0, correctChars);
+                        typedText = typedText.Substring(0, correctChars);
                         incorrectChars = 0;
                     }
-                }
-            }
-            else
-            {
-                if (!isValid && !string.IsNullOrEmpty(textToType))
-                {
-                    incorrectChars--;
-                }
-                else
-                {
-                    TypingAlert = false;
-                    correctChars = textToType.Length;
-                    incorrectChars = 0;
                 }
             }
 
