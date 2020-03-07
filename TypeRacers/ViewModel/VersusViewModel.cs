@@ -265,7 +265,7 @@ namespace TypeRacers.ViewModel
                 OpenFinishPopup = true;
                 TriggerPropertyChanged(nameof(OpenFinishPopup));
                 TriggerPropertyChanged(nameof(SliderProgress));
-                TriggerPropertyChanged(nameof(WPMProgress));//recalculates progress
+                TriggerPropertyChanged(nameof(WPMProgress));
             }
         }
 
