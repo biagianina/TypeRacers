@@ -19,8 +19,6 @@ namespace TypeRacers.ViewModel
         private InputCharacterValidation userInputValidator;
         private bool isValid;
         private int spaceIndex;
-        private int correctChars;
-        private int incorrectChars;
         private int currentWordIndex;
         private bool wordIsCompletelyTyped;
         private bool isLastWord;
@@ -79,12 +77,7 @@ namespace TypeRacers.ViewModel
 
         public IEnumerable<Inline> TextToTypeStyles
         {
-            get => new[] { new Run() { Text = TextToType.Substring(0, spaceIndex) , Foreground = Brushes.Salmon},
-                new Run() { Text = TextToType.Substring(spaceIndex, correctChars), Foreground = Brushes.Salmon, TextDecorations = TextDecorations.Underline},
-                new Run() { Text = TextToType.Substring(correctChars + spaceIndex, incorrectChars), TextDecorations = TextDecorations.Underline, Background = Brushes.Salmon},
-                new Run() {Text = TextToType.Substring(spaceIndex + correctChars + incorrectChars, CurrentWordLength - correctChars - incorrectChars), TextDecorations = TextDecorations.Underline},
-                new Run() {Text = TextToType.Substring(spaceIndex + CurrentWordLength) }
-                };
+            get => UserInputValidator.TextToTypeStyles;
         }
 
         public IEnumerable<Player> Opponents => GameInfo?.Players ?? new List<Player>();
@@ -94,7 +87,7 @@ namespace TypeRacers.ViewModel
         public Visibility ShowSecondOpponent { get; set; }
 
         public DateTime WaitingTime => GameInfo.TimeToWaitForOpponents;
-        public DateTime TimeToStart => DateTime.UtcNow.AddSeconds((WaitingTime.Subtract(DateTime.UtcNow).Seconds));
+        public DateTime TimeToStart => DateTime.UtcNow.AddSeconds(WaitingTime.Subtract(DateTime.UtcNow).Seconds);
         public int OpponentsCount { get; set; }
 
         private InputCharacterValidation UserInputValidator { get => userInputValidator ?? new InputCharacterValidation(TextToType); set => userInputValidator = value; }
@@ -140,12 +133,7 @@ namespace TypeRacers.ViewModel
                 var secondsInGame = (int)(DateTime.UtcNow - StartTime).TotalSeconds;
                 return wordperminut / secondsInGame;
             }
-        }
-
-        public int CurrentWordLength
-        {
-            get => TextToType.Split()[currentWordIndex].Length;//length of current word
-        }
+        }  
 
         public bool AllTextTyped { get; set; }
 
@@ -225,12 +213,12 @@ namespace TypeRacers.ViewModel
                 typedText = value;
 
                 //validate current word
-                IsValid = UserInputValidator.ValidateWord(typedText, typedText.Length, spaceIndex, out wordIsCompletelyTyped, out isLastWord);
-                CheckUserInput();
-                //determine number of characters that are valid/invalid to form substrings
-                GetTypingAlertInfo();
+                IsValid = UserInputValidator.ValidateWord(typedText, spaceIndex, out wordIsCompletelyTyped, out isLastWord);
 
-                TriggerPropertyChanged(nameof(CurrentWordLength));//moves to next word
+                CheckUserInput();
+                TypingAlert = UserInputValidator.GenerateHighlightInfo(Keyboard.IsKeyDown(Key.Back));
+
+                TriggerPropertyChanged(nameof(TextToTypeStyles));
                 TriggerPropertyChanged(nameof(CurrentInputText));
             }
         }
@@ -279,37 +267,37 @@ namespace TypeRacers.ViewModel
             TriggerPropertyChanged(nameof(WPMProgress));
         }
 
-        private void GetTypingAlertInfo()
-        {
-            if (Keyboard.IsKeyDown(Key.Back) && !IsValid && !string.IsNullOrEmpty(typedText))
-            {
-                incorrectChars--;
-            }
-            else
-            {
-                if (IsValid)
-                {
-                    correctTyping++;
-                    TypingAlert = false;
-                    correctChars = typedText.Length;
-                    incorrectChars = 0;
-                }
+        //private void GenerateHighlightInfo()
+        //{
+        //    if (Keyboard.IsKeyDown(Key.Back) && !IsValid && !string.IsNullOrEmpty(typedText))
+        //    {
+        //        incorrectChars--;
+        //    }
+        //    else
+        //    {
+        //        if (IsValid)
+        //        {
+        //            correctTyping++;
+        //            TypingAlert = false;
+        //            correctChars = typedText.Length;
+        //            incorrectChars = 0;
+        //        }
 
-                if (!IsValid)
-                {
-                    incorrectTyping++;
-                    incorrectChars++;
-                    if (CurrentWordLength - correctChars - incorrectChars < 0)
-                    {
-                        TypingAlert = true;
-                        typedText = typedText.Substring(0, correctChars);
-                        incorrectChars = 0;
-                    }
-                }
-            }
+        //        if (!IsValid)
+        //        {
+        //            incorrectTyping++;
+        //            incorrectChars++;
+        //            if (CurrentWordLength - correctChars - incorrectChars < 0)
+        //            {
+        //                TypingAlert = true;
+        //                typedText = typedText.Substring(0, correctChars);
+        //                incorrectChars = 0;
+        //            }
+        //        }
+        //    }
 
-            TriggerPropertyChanged(nameof(TextToTypeStyles)); //new Inlines formed at each char in input
-        }
+        //    //TriggerPropertyChanged(nameof(TextToTypeStyles)); //new Inlines formed at each char in input
+        //}
 
         private void RestartSearchingOpponents()
         {
