@@ -1,3 +1,4 @@
+
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -5,12 +6,17 @@ using System.Windows.Documents;
 using System.Windows.Media;
 
 namespace TypeRacers
+
 {
     public class InputCharacterValidation
     {
         string typedText;
         private string originalText = string.Empty;
-        bool isValid;
+
+        private bool isValid;
+        private string typedText;
+        private InputCharacterValidation userInputValidator;
+
         private int spaceIndex;
         private int correctChars;
         private int incorrectChars;
@@ -21,7 +27,10 @@ namespace TypeRacers
         private int numberOfCharactersTyped;
         private int incorrectTyping;
         private int correctTyping;
-        bool typingAlert;
+
+        private bool startReporting;
+        private bool typingAlert;
+
 
         public InputCharacterValidation(string input)
         {

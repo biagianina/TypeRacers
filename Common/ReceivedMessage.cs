@@ -44,9 +44,9 @@ namespace Common
             {
                 DecodeMessage();
             }
-            
+
             var data = Data.Substring(0, Data.IndexOf('#'));
-            Data.Remove(0, data.Length + 1);
+            Data = Data.Remove(0, data.Length + 1);
             return string.IsNullOrEmpty(data) ? string.Empty : data;
         }
     }

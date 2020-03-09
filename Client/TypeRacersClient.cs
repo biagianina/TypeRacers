@@ -21,13 +21,11 @@ namespace TypeRacers.Client
             Thread receiveCommunication = new Thread(() =>
             {
                 communicator.StartCommunication();
-
             });
             receiveCommunication.Start();
             Thread sendCommunication = new Thread(() =>
             {
                 communicator.Write();
-
             });
             sendCommunication.Start();
         }

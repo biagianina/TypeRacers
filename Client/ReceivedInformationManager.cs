@@ -22,18 +22,23 @@ namespace TypeRacers.Client
         {
             while (!Player.Removed)
             {
-                var message = (ReceivedMessage)Player.Read();
-                var data = message.GetData();
-                if (Player.FirstTimeConnecting || Player.Restarting)
-                {
-                    GameInfo.SetGameInfo(data);
-                    Player.FirstTimeConnecting = false;
-                    Player.Restarting = false;
-                }
-                else
-                {
-                    SetGameStatus(data);
-                }
+                GetData();
+            }
+        }
+
+        public void GetData()
+        {
+            var message = (ReceivedMessage)Player.Read();
+            var data = message.GetData();
+            if (Player.FirstTimeConnecting || Player.Restarting)
+            {
+                GameInfo.SetGameInfo(data);
+                Player.FirstTimeConnecting = false;
+                Player.Restarting = false;
+            }
+            else
+            {
+                SetGameStatus(data);
             }
         }
 
