@@ -8,10 +8,10 @@ namespace Server
 {
     public class Playroom : IPlayroom
     {
-        public Playroom()
+        public Playroom(ITextToType textToType)
         {
             Players = new List<Player>();
-            CompetitionText = ServerGeneratedText.GetText();
+            CompetitionText = textToType.GetData();
             TimeToWaitForOpponents = DateTime.UtcNow.AddSeconds(20);
         }
 
@@ -23,7 +23,8 @@ namespace Server
         public int Place { get; set; } = 1;
         public string CompetitionText { get; set; }
 
-        public bool Join(Player currentPlayer)
+
+        public bool Join(Player currentPlayer, IRecievedInformationManager informationManager)
         {
             if (GameHasStarted || Players.Count == 3)
             {
@@ -34,9 +35,7 @@ namespace Server
             {
                 Players.Add(currentPlayer);
                 currentPlayer.Playroom = this;
-                Console.WriteLine("adding player:" + currentPlayer.Name + ", playroom size: " + Players.Count);
-                var communicator = new ServerReceivedInformationManager(currentPlayer, this);
-                communicator.StartCommunication();
+                informationManager.StartCommunication();
 
                 return true;
             }
@@ -49,15 +48,16 @@ namespace Server
         }
 
         public Player GetPlayer(string name)
-        {
+        { 
             return Players.Find(x => x.Name.Equals(name));
         }
 
-        public void Leave(string playerName)
+        public bool Leave(string playerName)
         {
             if (IsInPlayroom(playerName))
             {
                 Players.Remove(Players.Find(x => x.Name.Equals(playerName)));
+                return true;
             }
 
             if (Players.Count == 0)
@@ -67,6 +67,7 @@ namespace Server
 
             Console.WriteLine("REMOVED: " + playerName);
             Console.WriteLine("Playroom size: " + Players.Count);
+            return false;
         }
 
         private void Reset()

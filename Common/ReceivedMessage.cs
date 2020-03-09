@@ -26,8 +26,10 @@ namespace Common
 
         public void DecodeMessage()
         {
+             
             var stream = tcpClient.GetStream();
             byte[] buffer = new byte[1024];
+             
             int bytesRead = stream.Read(buffer, 0, buffer.Length);
             Data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
 

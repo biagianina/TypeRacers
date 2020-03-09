@@ -14,7 +14,6 @@ namespace TypeRacers
         private string originalText = string.Empty;
 
         private bool isValid;
-        private string typedText;
         private InputCharacterValidation userInputValidator;
 
         private int spaceIndex;

@@ -30,7 +30,8 @@ namespace TypeRacers.Model
 
         public string GetGeneratedTextToTypeLocally()
         {
-            return LocalGeneratedText.GetText();
+            var localText = new LocalGeneratedText();
+            return localText.GetData();
         }
     }
 }

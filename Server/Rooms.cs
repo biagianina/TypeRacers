@@ -12,16 +12,18 @@ namespace Server
         {
             playrooms = new List<Playroom>
             {
-                new Playroom()
+                new Playroom(new ServerGeneratedText())
             };
         }
 
         public void AllocatePlayroom(Player player)
         {
-            if (!playrooms.Any(p => p.Join(player)))
+            var communicator = new ServerReceivedInformationManager(player, playrooms.Last());
+            if (!playrooms.Any(p => p.Join(player, communicator)))
             {
                 CreateNewPlayroom();
-                playrooms.Last().Join(player);
+                communicator = new ServerReceivedInformationManager(player, playrooms.Last());
+                playrooms.Last().Join(player, communicator);
             }
         }
 
@@ -32,7 +34,7 @@ namespace Server
 
         private void CreateNewPlayroom()
         {
-            var newPlayroom = new Playroom();
+            var newPlayroom = new Playroom(new ServerGeneratedText());
             playrooms.Add(newPlayroom);
         }
     }

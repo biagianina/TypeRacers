@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
-namespace TypeRacers.Server
+using Common;
+namespace Server
 {
-    public class ServerGeneratedText
+    public class ServerGeneratedText : ITextToType
     {
         //Path for the .txt document
         private static readonly string ExePath = AppDomain.CurrentDomain.BaseDirectory + "Texts.txt";
 
         //Genertes random lines from the text document
-        public static string GetText()
+        public string GetData()
         {
             List<string> lines = GetLines().ToList();
             var random = new Random();

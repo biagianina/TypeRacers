@@ -25,7 +25,7 @@ namespace TypeRacers.Client
             return Players.Find(p => p.Name.Equals(name));
         }
 
-        public bool Join(Player player)
+        public bool Join(Player player, IRecievedInformationManager informationManager)
         {
             Players.Add(player);
             return true;
@@ -81,7 +81,8 @@ namespace TypeRacers.Client
                 {
                     Name = name
                 };
-                Join(player);
+                var informationManager = new ClientReceivedInformationManager(player, this);
+                Join(player, informationManager);
             }
 
             player.UpdateProgress(int.Parse(info[0]), int.Parse(info[1]));
@@ -97,12 +98,14 @@ namespace TypeRacers.Client
             }
         }
 
-        public void Leave(string name)
+        public bool Leave(string name)
         {
+            throw new NotImplementedException();
         }
 
         public void TrySetStartingTime()
         {
+            throw new NotImplementedException();
         }
     }
 }
