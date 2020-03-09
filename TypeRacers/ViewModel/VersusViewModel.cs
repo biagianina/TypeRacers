@@ -14,7 +14,6 @@ namespace TypeRacers.ViewModel
 {
     public class VersusViewModel : ITextToType, INotifyPropertyChanged
     {
-
         private string typedText;
         private InputCharacterValidation userInputValidator;
         private bool isValid;
@@ -165,6 +164,7 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(TypingAlert));
             }
         }
+
         public string InputBackgroundColor
         {
             get
@@ -181,6 +181,7 @@ namespace TypeRacers.ViewModel
                 return default;
             }
         }
+
         public bool StartReportingProgress
         {
             get => startReporting;
@@ -192,6 +193,7 @@ namespace TypeRacers.ViewModel
                 ReportProgress();
             }
         }
+
         public string TextToType => GameInfo?.CompetitionText ?? string.Empty;
         public bool EnableGetReadyAlert { get; set; }
         public bool EnableRestartOrExitAlert { get; set; }
@@ -268,7 +270,6 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(WPMProgress));
             }
         }
-
 
         private void ResetValidation()
         {

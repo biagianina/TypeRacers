@@ -18,19 +18,19 @@ namespace Server
         {
             while (true)
             {
-                var message = (ReceivedMessage)Player.Read();
-                var data = message?.GetData();
-                if (string.IsNullOrEmpty(data))
-                {
-                    return;
-                }
-
-                ManageReceivedData(data);
+                ManageReceivedData();
             }
         }
 
-        public void ManageReceivedData(string data)
+        public void ManageReceivedData()
         {
+            var message = (ReceivedMessage)Player.Read();
+            var data = message?.GetData();
+            if (string.IsNullOrEmpty(data))
+            {
+                return;
+            }
+
             Player.UpdateInfo(data);
 
             if (Player.CheckIfLeft())

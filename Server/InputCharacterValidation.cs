@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace TypeRacers
+﻿namespace TypeRacers
 {
     public class InputCharacterValidation
     {
         private string originalText = string.Empty;
-        bool isValid;
+        private bool isValid;
         private string typedText;
         private InputCharacterValidation userInputValidator;
         private int spaceIndex;
@@ -19,7 +17,7 @@ namespace TypeRacers
         private int incorrectTyping;
         private int correctTyping;
         private bool startReporting;
-        bool typingAlert;
+        private bool typingAlert;
 
         public InputCharacterValidation(string input)
         {
