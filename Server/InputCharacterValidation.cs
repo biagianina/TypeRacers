@@ -183,8 +183,8 @@ namespace TypeRacers
                 if (isValid)
                 {
                     correctTyping++;
-                    alert = false;
-                    correctChars = textTyped.Length;
+                    TypingAlert = false;
+                    correctChars = CurrentInputText.Length;
                     incorrectChars = 0;
                 }
 
@@ -194,23 +194,23 @@ namespace TypeRacers
                     incorrectChars++;
                     if (CurrentWordLength - correctChars - incorrectChars < 0)
                     {
-                        alert = true;
-                        textTyped = textTyped.Substring(0, correctChars);
+                        TypingAlert = true;
+                        CurrentInputText = CurrentInputText.Substring(0, correctChars);
                         incorrectChars = 0;
                     }
                 }
             }
             else
             {
-                if (!isValid && !string.IsNullOrEmpty(textTyped) && CurrentWordLength - correctChars > 0)
+                if (!isValid && !string.IsNullOrEmpty(CurrentInputText))
                 {
                     incorrectChars--;
                 }
                 else
                 {
-                    alert = false;
-                    correctChars = textTyped.Length;
                     incorrectChars = 0;
+                    TypingAlert = false;
+                    correctChars = CurrentInputText.Length;
                 }
             }
 
