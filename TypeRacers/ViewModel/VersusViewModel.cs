@@ -6,8 +6,6 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using TypeRacers.Client;
 
 namespace TypeRacers.ViewModel
@@ -16,15 +14,7 @@ namespace TypeRacers.ViewModel
     {
         private string typedText;
         private InputCharacterValidation userInputValidator;
-        private bool isValid;
-        private int spaceIndex;
-        private int currentWordIndex;
-        private bool wordIsCompletelyTyped;
-        private bool isLastWord;
-        private bool alert;
-        private int numberOfCharactersTyped;
-        private int incorrectTyping;
-        private int correctTyping;
+
         private bool startReporting;
         private Player player;
         private GameInfo gameInfo;
@@ -74,11 +64,8 @@ namespace TypeRacers.ViewModel
         public CommandHandler RestartSearchingOpponentsCommand { get; }
         public CommandHandler ExitProgramCommand { get; }
 
-        public IEnumerable<Inline> TextToTypeStyles
-        {
-            get => UserInputValidator.TextToTypeStyles;
-        }
-
+        public IEnumerable<Inline> TextToTypeStyles => UserInputValidator.TextToTypeStyles;
+     
         public IEnumerable<Player> Opponents => GameInfo?.Players ?? new List<Player>();
 
         public Visibility ShowFirstOpponent { get; set; }
@@ -91,31 +78,16 @@ namespace TypeRacers.ViewModel
 
         private InputCharacterValidation UserInputValidator { get => userInputValidator ?? new InputCharacterValidation(TextToType); set => userInputValidator = value; }
 
-        public bool IsValid
-        {
-            get => isValid;
-
-            set
-            {
-                if (isValid == value)
-                    return;
-
-                isValid = value;
-                TriggerPropertyChanged(nameof(IsValid));
-                TriggerPropertyChanged(nameof(InputBackgroundColor));
-            }
-        }
-
         public int SliderProgress
         {
             get
             {
-                if (AllTextTyped || TextToType.Length == 0)
+                if (UserInputValidator.AllTextTyped || TextToType.Length == 0)
                 {
                     return 100;
                 }
 
-                return spaceIndex * 100 / TextToType.Length;
+                return UserInputValidator.SpaceIndex * 100 / TextToType.Length;
             }
         }
 
@@ -123,53 +95,24 @@ namespace TypeRacers.ViewModel
         {
             get
             {
-                if (currentWordIndex == 0)
+                if (UserInputValidator.CurrentWordIndex == 0)
                 {
                     return 0;
                 }
 
-                var wordperminut = (numberOfCharactersTyped / 5) * 60;
+                var wordperminut = (UserInputValidator.NumberOfCharactersTyped / 5) * 60;
                 var secondsInGame = (int)(DateTime.UtcNow - StartTime).TotalSeconds;
                 return wordperminut / secondsInGame;
             }
-        }  
+        }
 
-        public bool AllTextTyped { get; set; }
+        public bool AllTextTyped => UserInputValidator.AllTextTyped;
 
         //determines if a popup alert should apear, binded in open property of popup xaml
-        public bool TypingAlert
-        {
-            get => alert;
+        public bool TypingAlert => UserInputValidator.TypingAlert;
 
-            set
-            {
-                if (alert == value)
-                {
-                    return;
-                }
 
-                alert = value;
-                TriggerPropertyChanged(nameof(TypingAlert));
-            }
-        }
-
-        public string InputBackgroundColor
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(CurrentInputText))
-                {
-                    return default;
-                }
-                if (!isValid)
-                {
-                    return "Salmon";
-                }
-
-                return default;
-            }
-        }
-
+        public string InputBackgroundColor => UserInputValidator.InputBackgroundColor;
         public bool StartReportingProgress
         {
             get => startReporting;
@@ -190,8 +133,8 @@ namespace TypeRacers.ViewModel
         public DateTime StartTime { get; set; }
         public bool ShowRanking => Player?.Finnished ?? false;
         public string RankingPlace => Player?.Place.ToString() ?? string.Empty;
-        public int Accuracy { get; private set; }
-        public bool OpenFinishPopup { get; private set; }
+        public int Accuracy => UserInputValidator?.Accuracy ?? 0;
+        public bool OpenFinishPopup => UserInputValidator?.OpenFinishPopup ?? false;
         public DateTime EndTime { get; private set; }
 
         private void ReportProgress()
@@ -213,92 +156,27 @@ namespace TypeRacers.ViewModel
                     return;
 
                 typedText = value;
-
-                //validate current word
-                IsValid = UserInputValidator.ValidateWord(typedText, spaceIndex, out wordIsCompletelyTyped, out isLastWord);
-
-                CheckUserInput();
-                TypingAlert = UserInputValidator.GenerateHighlightInfo(Keyboard.IsKeyDown(Key.Back));
-
+                if (userInputValidator == null)
+                {
+                    UserInputValidator = new InputCharacterValidation(TextToType);
+                    TriggerPropertyChanged(nameof(UserInputValidator));
+                }
+                UserInputValidator.ValidateInput(typedText);
+                if(UserInputValidator.Clear)
+                {
+                    CurrentInputText = string.Empty;
+                }
                 TriggerPropertyChanged(nameof(TextToTypeStyles));
                 TriggerPropertyChanged(nameof(CurrentInputText));
-            }
-        }
-
-        private void CheckUserInput()
-        {
-            //checks if current word is typed, clears textbox, reintializes remaining text to the validation, sends progress
-            if (wordIsCompletelyTyped)
-            {
-                spaceIndex += typedText.Length;
-
-                if (currentWordIndex < TextToType.Split().Length - 1)
-                {
-                    currentWordIndex++;
-                }
-
-                ResetValidation();
-            }
-
-            //checks if current word is the last one
-            if (isLastWord)
-            {
-                AllTextTyped = true;
-                TriggerPropertyChanged(nameof(AllTextTyped));
-
-                EndTime = DateTime.UtcNow;
-                TriggerPropertyChanged(nameof(EndTime));
-
-                Accuracy = 100 - (incorrectTyping * 100 / correctTyping);
                 TriggerPropertyChanged(nameof(Accuracy));
-
-                OpenFinishPopup = true;
                 TriggerPropertyChanged(nameof(OpenFinishPopup));
+                TriggerPropertyChanged(nameof(TypingAlert));
                 TriggerPropertyChanged(nameof(SliderProgress));
                 TriggerPropertyChanged(nameof(WPMProgress));
+                TriggerPropertyChanged(nameof(InputBackgroundColor));
+                TriggerPropertyChanged(nameof(AllTextTyped));
             }
         }
-
-        private void ResetValidation()
-        {
-            UserInputValidator = new InputCharacterValidation(TextToType.Substring(spaceIndex));
-            numberOfCharactersTyped += CurrentInputText.Length;
-            typedText = string.Empty;
-            TriggerPropertyChanged(nameof(SliderProgress));
-            TriggerPropertyChanged(nameof(WPMProgress));
-        }
-
-        //private void GenerateHighlightInfo()
-        //{
-        //    if (Keyboard.IsKeyDown(Key.Back) && !IsValid && !string.IsNullOrEmpty(typedText))
-        //    {
-        //        incorrectChars--;
-        //    }
-        //    else
-        //    {
-        //        if (IsValid)
-        //        {
-        //            correctTyping++;
-        //            TypingAlert = false;
-        //            correctChars = typedText.Length;
-        //            incorrectChars = 0;
-        //        }
-
-        //        if (!IsValid)
-        //        {
-        //            incorrectTyping++;
-        //            incorrectChars++;
-        //            if (CurrentWordLength - correctChars - incorrectChars < 0)
-        //            {
-        //                TypingAlert = true;
-        //                typedText = typedText.Substring(0, correctChars);
-        //                incorrectChars = 0;
-        //            }
-        //        }
-        //    }
-
-        //    //TriggerPropertyChanged(nameof(TextToTypeStyles)); //new Inlines formed at each char in input
-        //}
 
         private void RestartSearchingOpponents()
         {
@@ -327,9 +205,7 @@ namespace TypeRacers.ViewModel
 
         private void UpdateOpponents(List<Player> uppdateOpponents)
         {
-            //    Opponents = uppdateOpponents;
             TriggerPropertyChanged(nameof(Opponents));
-
             OpponentsCount = Opponents.Count();
             TriggerPropertyChanged(nameof(OpponentsCount));
 

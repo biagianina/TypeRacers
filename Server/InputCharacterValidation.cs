@@ -1,101 +1,193 @@
-
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace TypeRacers
 
 {
-    public class InputCharacterValidation
+    public class InputCharacterValidation : INotifyPropertyChanged
     {
-        string typedText;
-        private string originalText = string.Empty;
-
+        private readonly string originalText = string.Empty;
+        private string remainingText;
         private bool isValid;
         private InputCharacterValidation userInputValidator;
 
         private int spaceIndex;
         private int correctChars;
         private int incorrectChars;
-        private int currentWordIndex;
-        private bool wordIsCompletelyTyped;
-        private bool isLastWord;
-        private bool alert;
-        private int numberOfCharactersTyped;
         private int incorrectTyping;
         private int correctTyping;
+        private string textTyped;
+        private bool alert;
 
-        private bool startReporting;
-        private bool typingAlert;
-
-
-        public InputCharacterValidation(string input)
+        public InputCharacterValidation(string gameText)
         {
-            originalText = input;
+            originalText = gameText;
+            remainingText = gameText;
         }
 
         public IEnumerable<Inline> TextToTypeStyles
         {
-            get => new[] { new Run() { Text = originalText.Substring(0, spaceIndex) , Foreground = Brushes.Salmon},
-                new Run() { Text = originalText.Substring(spaceIndex, correctChars), Foreground = Brushes.Salmon, TextDecorations = TextDecorations.Underline},
-                new Run() { Text = originalText.Substring(correctChars + spaceIndex, incorrectChars), TextDecorations = TextDecorations.Underline, Background = Brushes.Salmon},
-                new Run() {Text = originalText.Substring(spaceIndex + correctChars + incorrectChars, CurrentWordLength - correctChars - incorrectChars), TextDecorations = TextDecorations.Underline},
-                new Run() {Text = originalText.Substring(spaceIndex + CurrentWordLength) }
+            get => new[] { new Run() { Text = originalText.Substring(0, SpaceIndex) , Foreground = Brushes.Salmon},
+                new Run() { Text = originalText.Substring(SpaceIndex, correctChars), Foreground = Brushes.Salmon, TextDecorations = TextDecorations.Underline},
+                new Run() { Text = originalText.Substring(correctChars + SpaceIndex, incorrectChars), TextDecorations = TextDecorations.Underline, Background = Brushes.Salmon},
+                new Run() {Text = originalText.Substring(SpaceIndex + correctChars + incorrectChars, CurrentWordLength - correctChars - incorrectChars), TextDecorations = TextDecorations.Underline},
+                new Run() {Text = originalText.Substring(SpaceIndex + CurrentWordLength) }
                 };
         }
- 
+
         public int CurrentWordLength
         {
-            get => originalText.Split()[currentWordIndex].Length;//length of current word
+            get => originalText.Split()[CurrentWordIndex].Length;//length of current word
         }
- 
-        public string RemianingText { get; set; }
-        //validate only one word
-        public bool ValidateWord(string currentTypedWord, int spaceIndex, out bool isWordCompleted, out bool isLastWord)
+        public bool IsValid 
         {
-            typedText = currentTypedWord;
-            var currentCharIndex = currentTypedWord.Length;
-            bool charIndexIsInRange = currentCharIndex != -1 && currentCharIndex <= originalText.Length;
+            get => isValid;
+            set
+            {
+                isValid = value;
+                TriggerPropertyChanged(nameof(IsValid));
+                TriggerPropertyChanged(nameof(InputBackgroundColor));
+            }
+        }
+        public string InputBackgroundColor
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(CurrentInputText))
+                {
+                    return default;
+                }
+                if (!isValid)
+                {
+                    return "Salmon";
+                }
+
+                return default;
+            }
+        }
+
+        public string CurrentInputText
+        {
+            get => textTyped;
+            set
+            {
+                // return because we dont need to execute logic if the input text has not changed
+                if (textTyped == value)
+                    return;
+
+                textTyped = value;
+            }
+        }
+        public bool TypingAlert
+        {
+            get => alert;
+
+            set
+            {
+                if (alert == value)
+                {
+                    return;
+                }
+
+                alert = value;
+                TriggerPropertyChanged(nameof(TypingAlert));
+            }
+        }
+
+        public bool AllTextTyped { get; private set; }
+        public DateTime EndTime { get; private set; }
+        public int Accuracy { get; private set; }
+        public bool OpenFinishPopup { get; private set; }
+        public bool Clear { get; set; }
+        public int SpaceIndex { get; private set; }
+
+        public int NumberOfCharactersTyped { get; set; }
+        public int CurrentWordIndex { get; private set; }
+
+        //validate only one word
+        public void ValidateInput(string input)
+        {
+            Clear = false;
+            TriggerPropertyChanged(nameof(Clear));
+
+            CurrentInputText = input;
+            bool charIndexIsInRange = CurrentInputText.Length != -1 && CurrentInputText.Length <= originalText.Length;
 
             if (!charIndexIsInRange)
             {
-                isWordCompleted = false;
-                isLastWord = false;
-                return false;
+                isValid = false;
             }
 
             string substringToCheck = string.Empty;
 
             //create the substring to compare with the typed word
-
             if (charIndexIsInRange)
             {
-                substringToCheck = originalText.Substring(0, currentCharIndex);
+                substringToCheck = remainingText.Substring(0, CurrentInputText.Length);
             }
 
-            isValid = substringToCheck.Equals(currentTypedWord);
-            isWordCompleted = isValid && currentTypedWord.EndsWith(" ");
-            isLastWord = isValid && currentTypedWord.Length + spaceIndex == originalText.Length;
-            return isValid;
+            isValid = substringToCheck.Equals(CurrentInputText);
+
+            CheckUserInput(CurrentInputText);
+            HighlightText();
         }
 
-        public bool GenerateHighlightInfo(bool isBackKeyPressed)
+        private void CheckUserInput(string text)
         {
+            CheckIfInputIsCompleteWord(text);
 
-            if (isBackKeyPressed && !isValid && !string.IsNullOrEmpty(typedText))
+            //checks if current word is the last one
+            CheckIfIsLastWord();
+        }
+        private void CheckIfInputIsCompleteWord(string value)
+        {
+            if (isValid && value.EndsWith(" "))
             {
-                incorrectChars--;
-            }
+                SpaceIndex += value.Length;
+                TriggerPropertyChanged(nameof(SpaceIndex));
+                if (CurrentWordIndex < originalText.Split().Length - 1)
+                {
+                    CurrentWordIndex++;
+                }
 
-            else
+                remainingText = originalText.Substring(SpaceIndex);
+                NumberOfCharactersTyped += CurrentInputText.Length;
+                TriggerPropertyChanged(nameof(NumberOfCharactersTyped));
+                textTyped = string.Empty;
+                Clear = true;
+                TriggerPropertyChanged(nameof(Clear));
+            }
+        }
+
+        private void CheckIfIsLastWord()
+        {
+            if (IsValid && textTyped.Length + SpaceIndex == originalText.Length)
+            {
+                AllTextTyped = true;
+                TriggerPropertyChanged(nameof(AllTextTyped));
+               
+                Accuracy = 100 - (incorrectTyping * 100 / correctTyping);
+                TriggerPropertyChanged(nameof(Accuracy));
+
+                OpenFinishPopup = true;
+                TriggerPropertyChanged(nameof(OpenFinishPopup));
+            }
+        }
+
+        private void HighlightText()
+        {
+            if (!Keyboard.IsKeyDown(Key.Back))
             {
                 if (isValid)
                 {
                     correctTyping++;
-                    typingAlert = false;
-                    correctChars = typedText.Length;
+                    alert = false;
+                    correctChars = textTyped.Length;
                     incorrectChars = 0;
                 }
 
@@ -105,13 +197,34 @@ namespace TypeRacers
                     incorrectChars++;
                     if (CurrentWordLength - correctChars - incorrectChars < 0)
                     {
-                        typingAlert = true;
-                        typedText.Substring(0, correctChars);
+                        alert = true;
+                        textTyped = textTyped.Substring(0, correctChars);
                         incorrectChars = 0;
                     }
                 }
             }
-            return typingAlert;
+            else
+            {
+                if (!isValid && !string.IsNullOrEmpty(textTyped) && CurrentWordLength - correctChars > 0)
+                {
+                    incorrectChars--;
+                }
+                else
+                {
+                    alert = false;
+                    correctChars = textTyped.Length;
+                    incorrectChars = 0;
+                }
+            }
+
+            TriggerPropertyChanged(nameof(TextToTypeStyles)); //new Inlines formed at each char in input
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void TriggerPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
