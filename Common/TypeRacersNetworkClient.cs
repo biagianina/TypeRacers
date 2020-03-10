@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using System.Diagnostics;
+using System.Net.Sockets;
 
 namespace Common
 {
@@ -28,9 +29,21 @@ namespace Common
 
         public void Write(IMessage message)
         {
-            networkStream = realTcpClient.GetStream();
-            var toSend = message.ToByteArray();
-            networkStream.Write(toSend, 0, toSend.Length);
+            try
+            {
+                if (realTcpClient.Connected)
+                {
+                    networkStream = realTcpClient.GetStream();
+                    var toSend = message.ToByteArray();
+                    networkStream.Write(toSend, 0, toSend.Length);
+                }
+        
+            }
+            catch (System.IO.IOException ex)
+            {
+                Debug.Write(ex);
+            }
+
         }
 
         public IMessage Read()

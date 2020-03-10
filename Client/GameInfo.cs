@@ -72,6 +72,10 @@ namespace TypeRacers.Client
         {
             var name = nameAndInfos.FirstOrDefault();
             var info = nameAndInfos.LastOrDefault()?.Split('&');
+            if(string.IsNullOrEmpty(name))
+            {
+                return;
+            }
             var player = GetPlayer(name);
 
             if (player == default)
