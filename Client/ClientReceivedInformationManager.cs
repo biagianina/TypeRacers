@@ -45,6 +45,7 @@ namespace TypeRacers.Client
         private void SetGameStatus(string data)
         {
             var infos = data.Split('%').ToList();
+
             infos.Remove("#");
             foreach (var i in infos)
             {

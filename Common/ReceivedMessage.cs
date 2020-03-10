@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using System.Diagnostics;
+using System.Net.Sockets;
 using System.Text;
 
 namespace Common
@@ -26,30 +27,34 @@ namespace Common
 
         public void DecodeMessage()
         {
-             
             var stream = tcpClient.GetStream();
             byte[] buffer = new byte[1024];
-             
-            int bytesRead = stream.Read(buffer, 0, buffer.Length);
-            Data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+         
 
-            while (!Data.Contains("#"))
+            try
             {
-                bytesRead = stream.Read(buffer, 0, 1024);
-                Data += Encoding.ASCII.GetString(buffer, Data.Length, bytesRead);
+                int bytesRead = stream.Read(buffer, 0, buffer.Length);
+                Data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+
+                while (!Data.Contains("#"))
+                {
+                    bytesRead = stream.Read(buffer, 0, 1024);
+                    Data += Encoding.ASCII.GetString(buffer, Data.Length, bytesRead);
+                }
             }
+            catch (System.IO.IOException ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
         }
 
         public string GetData()
         {
-            if (tcpClient != null)
-            {
-                DecodeMessage();
-            }
-
-            var data = Data.Substring(0, Data.IndexOf('#'));
-            Data = Data.Remove(0, data.Length + 1);
-            return string.IsNullOrEmpty(data) ? string.Empty : data;
+            DecodeMessage();
+            var data = Data?.Substring(0, Data.IndexOf('#')) ?? string.Empty;
+            Data = Data?.Remove(0, data.Length + 1);
+            return data ?? string.Empty;
         }
     }
 }
