@@ -11,13 +11,13 @@ namespace Common
         DateTime TimeToWaitForOpponents { get; set; }
         int Place { get; set; }
 
-        bool Join(Player player);
+        bool Join(Player player, IRecievedInformationManager informationManager);
 
         Player GetPlayer(string name);
 
         List<Player> Players { get; set; }
 
-        void Leave(string name);
+        bool Leave(string name);
 
         void TrySetStartingTime();
     }
