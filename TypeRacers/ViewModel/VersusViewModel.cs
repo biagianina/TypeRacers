@@ -184,7 +184,6 @@ namespace TypeRacers.ViewModel
             TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
 
             Player.Restarting = true;
-            Thread.Sleep(1000);
             //getting the waiting time again
             TriggerPropertyChanged(nameof(WaitingTime));
             TriggerPropertyChanged(nameof(TimeToStart));
@@ -244,7 +243,7 @@ namespace TypeRacers.ViewModel
         {
             if (TimeToStart.Subtract(DateTime.UtcNow) <= TimeSpan.Zero && GameInfo.GameStartingTime == DateTime.MinValue && !EnableGetReadyAlert)
             {
-                if (Opponents.Count() == 1)
+                if (Opponents.Any())
                 {
                     CheckIfStartTimeWasSet();
                 }
