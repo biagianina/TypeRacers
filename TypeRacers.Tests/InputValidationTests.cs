@@ -49,6 +49,7 @@ namespace TypeRacersFacts
                 var validator = new InputCharacterValidation("This is the text.");
                 validator.ValidateInput("Thiz");
                 Assert.False(validator.IsValid);
+                Assert.Equal("salmon", validator.InputBackgroundColor);
                 Assert.True(validator.TypingAlert);
                 Assert.Equal(4, validator.CurrentWordLength);
                 Assert.Equal(0, validator.CurrentWordIndex);
