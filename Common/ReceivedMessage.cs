@@ -25,12 +25,10 @@ namespace Common
             return default;
         }
 
-        public void DecodeMessage()
+        public void ReadMessage()
         {
             var stream = tcpClient.GetStream();
-            byte[] buffer = new byte[1024];
-         
-
+            byte[] buffer = new byte[1024];        
             try
             {
                 int bytesRead = stream.Read(buffer, 0, buffer.Length);
@@ -44,14 +42,14 @@ namespace Common
             }
             catch (System.IO.IOException ex)
             {
+                tcpClient.Close();
                 Debug.WriteLine(ex.Message);
             }
-
         }
 
         public string GetData()
         {
-            DecodeMessage();
+            ReadMessage();
             var data = Data?.Substring(0, Data.IndexOf('#')) ?? string.Empty;
             Data = Data?.Remove(0, data.Length + 1);
             return data ?? string.Empty;

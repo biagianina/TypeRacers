@@ -43,7 +43,7 @@ namespace Server
                 return localOpp;
             });
 
-            opponents += "*" + startingTime.ToString() + "+" + endingTime.ToString() + "%" + "!" + finnished + "/" + place + "#";
+            opponents += "*" + startingTime.ToString() + "+" + endingTime.ToString() + "%!" + finnished + "/" + place + "#";
 
             return opponents;
         }
