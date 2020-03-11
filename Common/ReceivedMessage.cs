@@ -55,4 +55,5 @@ namespace Common
             return data ?? string.Empty;
         }
     }
+
 }

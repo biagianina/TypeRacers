@@ -79,27 +79,26 @@ namespace TypeRacers.ViewModel
             {
                 if (typedText == value)
                     return;
-
-                typedText = value;
+                
                 if (userInputValidator == null)
                 {
                     UserInputValidator = new InputCharacterValidation(TextToType);
                     TriggerPropertyChanged(nameof(UserInputValidator));
                 }
-                UserInputValidator.ValidateInput(typedText);
-                if (UserInputValidator.Clear)
-                {
-                    CurrentInputText = string.Empty;
-                }
+
+                UserInputValidator.ValidateInput(value);
+              
                 TriggerPropertyChanged(nameof(TextToTypeStyles));
                 TriggerPropertyChanged(nameof(CurrentInputText));
                 TriggerPropertyChanged(nameof(Accuracy));
                 TriggerPropertyChanged(nameof(ShowFinishResults));
-                TriggerPropertyChanged(nameof(TypingAlert));
                 TriggerPropertyChanged(nameof(SliderProgress));
                 TriggerPropertyChanged(nameof(WPMProgress));
                 TriggerPropertyChanged(nameof(InputBackgroundColor));
                 TriggerPropertyChanged(nameof(AllTextTyped));
+                TriggerPropertyChanged(nameof(TypingAlert));
+
+                typedText = UserInputValidator.CurrentInputText;
             }
         }
 

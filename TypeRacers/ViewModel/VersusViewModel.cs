@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Documents;
 using TypeRacers.Client;
@@ -151,21 +150,17 @@ namespace TypeRacers.ViewModel
             get => typedText;
             set
             {
-                // return because we dont need to execute logic if the input text has not changed
                 if (typedText == value)
                     return;
 
-                typedText = value;
                 if (userInputValidator == null)
                 {
                     UserInputValidator = new InputCharacterValidation(TextToType);
                     TriggerPropertyChanged(nameof(UserInputValidator));
                 }
-                UserInputValidator.ValidateInput(typedText);
-                if(UserInputValidator.Clear)
-                {
-                    CurrentInputText = string.Empty;
-                }
+
+                UserInputValidator.ValidateInput(value);
+
                 TriggerPropertyChanged(nameof(TextToTypeStyles));
                 TriggerPropertyChanged(nameof(CurrentInputText));
                 TriggerPropertyChanged(nameof(Accuracy));
@@ -175,6 +170,8 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(WPMProgress));
                 TriggerPropertyChanged(nameof(InputBackgroundColor));
                 TriggerPropertyChanged(nameof(AllTextTyped));
+
+                typedText = UserInputValidator.CurrentInputText;
             }
         }
 
@@ -204,8 +201,7 @@ namespace TypeRacers.ViewModel
 
         private void UpdateOpponents(List<Player> uppdateOpponents)
         {
-            TriggerPropertyChanged(nameof(Opponents));
-            OpponentsCount = Opponents.Count();
+            TriggerPropertyChanged(nameof(Opponents));            OpponentsCount = Opponents.Count();
             TriggerPropertyChanged(nameof(OpponentsCount));
 
             TriggerPropertyChanged(nameof(RankingPlace));
