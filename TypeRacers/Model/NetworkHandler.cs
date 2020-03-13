@@ -7,7 +7,7 @@ namespace TypeRacers
     //a class that handles the messages to and from the network
     public class NetworkHandler
     {
-        private Player player;
+        private readonly Player player;
         private readonly TcpClient client;
 
         private TypeRacersClient typeRacersClient;

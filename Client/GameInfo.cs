@@ -1,6 +1,7 @@
 ﻿using Common;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net.Sockets;
 
@@ -12,6 +13,7 @@ namespace TypeRacers.Client
 
         public event OpponentsChangedEventHandler OpponentsChanged;
 
+
         public string CompetitionText { get; set; }
         public List<Player> Players { get; set; } = new List<Player>();
         public DateTime GameStartingTime { get; set; }
@@ -19,7 +21,7 @@ namespace TypeRacers.Client
         public DateTime TimeToWaitForOpponents { get; set; }
         public int Place { get; set; }
         public bool GameInfoIsSet { get; set; }
-
+        public bool PlayerDisconnected { get; private set; }
         public Player GetPlayer(string name)
         {
             return Players.Find(p => p.Name.Equals(name));
@@ -86,6 +88,7 @@ namespace TypeRacers.Client
                     Name = name
                 };
                 var informationManager = new ClientReceivedInformationManager(player, this);
+
                 Join(player, informationManager);
             }
 
@@ -102,6 +105,12 @@ namespace TypeRacers.Client
             }
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void TriggerPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
         public bool Leave(string name)
         {
             throw new NotImplementedException();
