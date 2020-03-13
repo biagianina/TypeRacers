@@ -37,7 +37,7 @@
                    Margin="88,2,101,2"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
-                   Source="pack://application:,,,/TypeRacers;component/Images/typer.png" />
+                   Source="/Images/typer.png" />
             <Border CornerRadius="5"
                     Background="AliceBlue"
                     Margin="15 20">
@@ -85,7 +85,7 @@
                     Visibility="{Binding EnableConnectingAnimation, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibleConverter}}"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center">
-            <Image Source="pack://application:,,,/TypeRacers;component/Images/loading.png"
+            <Image Source="/Images/loading.png"
                    Width="100"
                    Height="100"
                    VerticalAlignment="Center"
@@ -121,7 +121,7 @@
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     Background="Purple">
-            <Image Source="pack://application:,,,/TypeRacers;component/Images/sad.png"
+            <Image Source="/Images/sad.png"
                    Width="100"
                    Height="100"
                    VerticalAlignment="Center"

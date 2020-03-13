@@ -191,21 +191,22 @@ namespace TypeRacers
                     {
                         TypingAlert = true;
                         CurrentInputText = CurrentInputText.Substring(0, correctChars);
+                        Clear = true;
                         incorrectChars = 0;
                     }
                 }
             }
             else
             {
-                if (!isValid && !string.IsNullOrEmpty(CurrentInputText))
+                if (!IsValid && !string.IsNullOrEmpty(CurrentInputText))
                 {
                     incorrectChars--;
                 }
                 else
                 {
-                    incorrectChars = 0;
                     TypingAlert = false;
                     correctChars = CurrentInputText.Length;
+                    incorrectChars = 0;
                 }
             }
 
