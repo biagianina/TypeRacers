@@ -5,8 +5,8 @@ namespace TypeRacers.Client
 {
     public class TypeRacersClient
     {
-        private GameInfo gameInfo;
-        private Player player;
+        private readonly GameInfo gameInfo;
+        private readonly Player player;
 
         public TypeRacersClient(Player player)
         {

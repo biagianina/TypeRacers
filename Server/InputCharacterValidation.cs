@@ -14,9 +14,6 @@ namespace TypeRacers
         private readonly string originalText = string.Empty;
         private string remainingText;
         private bool isValid;
-        private InputCharacterValidation userInputValidator;
-
-        private int spaceIndex;
         private int correctChars;
         private int incorrectChars;
         private int incorrectTyping;
@@ -32,7 +29,7 @@ namespace TypeRacers
 
         public IEnumerable<Inline> TextToTypeStyles
         {
-            get => new[] { new Run() { Text = originalText.Substring(0, SpaceIndex) , Foreground = Brushes.Salmon},
+            get =>new[] { new Run() { Text = originalText.Substring(0, SpaceIndex) , Foreground = Brushes.Salmon},
                 new Run() { Text = originalText.Substring(SpaceIndex, correctChars), Foreground = Brushes.Salmon, TextDecorations = TextDecorations.Underline},
                 new Run() { Text = originalText.Substring(correctChars + SpaceIndex, incorrectChars), TextDecorations = TextDecorations.Underline, Background = Brushes.Salmon},
                 new Run() {Text = originalText.Substring(SpaceIndex + correctChars + incorrectChars, CurrentWordLength - correctChars - incorrectChars), TextDecorations = TextDecorations.Underline},
