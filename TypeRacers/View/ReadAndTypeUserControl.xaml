@@ -79,51 +79,58 @@
                          Width="19" />
             </StackPanel>
         </Popup>
-        <Popup Name="GetReadyPopUp"
-               IsOpen="{Binding RATUCGetReadyAlert, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-               Opened="GetReadyPopUp_Opened"
-               IsEnabled="{Binding RATUCGetReadyAlert, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-               Placement="Center"
-               VerticalAlignment="Center"
-               HorizontalAlignment="Center"
-               AllowsTransparency="True"
-               Height="180"
-               Width="180">
-            <Border CornerRadius="10"
-                    BorderBrush="#FF8CBED3"
-                    Background="White"
-                    BorderThickness="2"
-                    Padding="2">
+        <Popup
+            Name="GetReadyPopUp"
+            IsOpen="{Binding RATUCGetReadyAlert, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+            Opened="GetReadyPopUp_Opened"
+            IsEnabled="{Binding RATUCGetReadyAlert, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+            Placement="Center"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            AllowsTransparency="True"
+            Height="180"
+            Width="180">
+            <Border
+                CornerRadius="10"
+                BorderBrush="#FF8CBED3"
+                Background="White"
+                BorderThickness="2"
+                Padding="2">
                 <Border.Effect>
-                    <DropShadowEffect Color="#FF0C059E"
-                                      Direction="330"
-                                      BlurRadius="10" />
+                    <DropShadowEffect
+                        Color="#FF0C059E"
+                        Direction="330"
+                        BlurRadius="10" />
                 </Border.Effect>
-                <StackPanel Background="White"
-                            Height="170"
-                            Width="170">
+                <StackPanel
+                    Background="White"
+                    Height="170"
+                    Width="170">
 
-                    <Label Content="GET READY TO START!"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           Foreground="#1b336b"
-                           FontFamily="MV Boli"
-                           FontWeight="Bold" />
-                    <Image Width="80"
-                           Height="70"
-                           Margin="2"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           Source="pack://application:,,,/TypeRacers;component/Images/start.png" />
-                    <Label Name="Timer"
-                           Margin="5"
-                           FontSize="20"
-                           Content="{Binding RATUCSecondsToStart, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           Foreground="#1b336b"
-                           FontFamily="MV Boli"
-                           FontWeight="Bold" />
+                    <Label
+                        Content="GET READY TO START!"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Foreground="#1b336b"
+                        FontFamily="MV Boli"
+                        FontWeight="Bold" />
+                    <Image
+                        Width="80"
+                        Height="70"
+                        Margin="2"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Source="pack://application:,,,/TypeRacers;component/Images/start.png" />
+                    <Label
+                        Name="Timer"
+                        Margin="5"
+                        FontSize="20"
+                        Content="{Binding RATUCSecondsToStart, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Foreground="#1b336b"
+                        FontFamily="MV Boli"
+                        FontWeight="Bold" />
                 </StackPanel>
             </Border>
         </Popup>

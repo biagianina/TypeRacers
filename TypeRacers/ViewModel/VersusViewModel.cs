@@ -17,7 +17,6 @@ namespace TypeRacers.ViewModel
         private bool startReporting;
         private Player player;
         private GameInfo gameInfo;
-
         public VersusViewModel()
         {
             UpdateShownPlayers();
@@ -25,6 +24,8 @@ namespace TypeRacers.ViewModel
             ExitProgramCommand = new CommandHandler(ExitProgram, () => true);
             RemovePlayer = new CommandHandler(RemovePlayerFromPlayroom, () => true);
             RestartSearchingOpponentsCommand = new CommandHandler(RestartSearchingOpponents, () => true);
+            OKbuttonCommand = new CommandHandler(OnOKButtonPressed, () => true);
+            EnableDisconnectedAlert = true;
         }
 
         public Player Player
@@ -56,6 +57,7 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(ShowRanking));
                 TriggerPropertyChanged(nameof(RankingPlace));
                 UpdateShownPlayers();
+
             }
         }
 
@@ -63,6 +65,7 @@ namespace TypeRacers.ViewModel
         public CommandHandler RestartSearchingOpponentsCommand { get; }
         public CommandHandler ExitProgramCommand { get; }
 
+        public CommandHandler OKbuttonCommand { get; }
         public IEnumerable<Inline> TextToTypeStyles => UserInputValidator.TextToTypeStyles;
      
         public IEnumerable<Player> Opponents => GameInfo?.Players ?? new List<Player>();
@@ -127,6 +130,7 @@ namespace TypeRacers.ViewModel
         public string TextToType => GameInfo?.CompetitionText ?? string.Empty;
         public bool EnableGetReadyAlert { get; set; }
         public bool EnableRestartOrExitAlert { get; set; }
+        public bool EnableDisconnectedAlert { get; set; }
         public string SecondsToGetReady { get; set; }
         public bool EnableSearchingAnimation { get; private set; }
         public DateTime StartTime { get; set; }
@@ -175,6 +179,11 @@ namespace TypeRacers.ViewModel
             }
         }
 
+        private void OnOKButtonPressed()
+        {
+            EnableDisconnectedAlert = false;
+            TriggerPropertyChanged(nameof(EnableDisconnectedAlert));
+        }
         private void RestartSearchingOpponents()
         {
             EnableRestartOrExitAlert = false;
@@ -198,7 +207,6 @@ namespace TypeRacers.ViewModel
         {
             Player.Removed = true;
         }
-
         private void UpdateOpponents(List<Player> uppdateOpponents)
         {
             TriggerPropertyChanged(nameof(Opponents));            OpponentsCount = Opponents.Count();

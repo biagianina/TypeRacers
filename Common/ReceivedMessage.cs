@@ -1,10 +1,11 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Net.Sockets;
 using System.Text;
 
 namespace Common
 {
-    public class ReceivedMessage : IMessage
+    public class ReceivedMessage : IMessage, INotifyPropertyChanged
     {
         private readonly TcpClient tcpClient;
 
@@ -13,6 +14,7 @@ namespace Common
             Data = data;
         }
 
+        public bool ClientDisconnected { get; private set; }
         public ReceivedMessage(TcpClient tcpClient)
         {
             this.tcpClient = tcpClient;
@@ -43,6 +45,8 @@ namespace Common
             catch (System.IO.IOException ex)
             {
                 tcpClient.Close();
+                ClientDisconnected = true;
+                TriggerPropertyChanged(nameof(ClientDisconnected));
                 Debug.WriteLine(ex.Message);
             }
         }
@@ -53,6 +57,13 @@ namespace Common
             var data = Data?.Substring(0, Data.IndexOf('#')) ?? string.Empty;
             Data = Data?.Remove(0, data.Length + 1);
             return data ?? string.Empty;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void TriggerPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 
