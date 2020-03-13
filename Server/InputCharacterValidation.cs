@@ -12,13 +12,13 @@ namespace TypeRacers
     public class InputCharacterValidation : INotifyPropertyChanged
     {
         private readonly string originalText = string.Empty;
-        private string remainingText;
+        private string remainingText = string.Empty;
         private bool isValid;
         private int correctChars;
         private int incorrectChars;
         private int incorrectTyping;
         private int correctTyping;
-        private string textTyped;
+        private string textTyped = string.Empty;
         private bool alert;
 
         public InputCharacterValidation(string gameText)
@@ -41,7 +41,8 @@ namespace TypeRacers
         {
             get => originalText.Split()[CurrentWordIndex].Length;//length of current word
         }
-        public bool IsValid 
+
+        public bool IsValid
         {
             get => isValid;
             set
@@ -51,6 +52,7 @@ namespace TypeRacers
                 TriggerPropertyChanged(nameof(InputBackgroundColor));
             }
         }
+
         public string InputBackgroundColor
         {
             get
@@ -74,12 +76,16 @@ namespace TypeRacers
             set
             {
                 // return because we dont need to execute logic if the input text has not changed
-                if (textTyped == value)
+                if (textTyped.Equals(value))
                     return;
 
                 textTyped = value;
+                TriggerPropertyChanged(nameof(CurrentInputText));
+                Clear = false;
+                TriggerPropertyChanged(nameof(Clear));
             }
         }
+
         public bool TypingAlert
         {
             get => alert;
@@ -95,69 +101,58 @@ namespace TypeRacers
                 TriggerPropertyChanged(nameof(TypingAlert));
             }
         }
-
         public bool AllTextTyped { get; private set; }
-        public DateTime EndTime { get; private set; }
         public int Accuracy { get; private set; }
         public bool OpenFinishPopup { get; private set; }
         public bool Clear { get; set; }
         public int SpaceIndex { get; private set; }
-
         public int NumberOfCharactersTyped { get; set; }
         public int CurrentWordIndex { get; private set; }
 
         //validate only one word
         public void ValidateInput(string input)
         {
-            Clear = false;
-            TriggerPropertyChanged(nameof(Clear));
-
             CurrentInputText = input;
             bool charIndexIsInRange = CurrentInputText.Length != -1 && CurrentInputText.Length <= originalText.Length;
 
             if (!charIndexIsInRange)
             {
                 isValid = false;
+                return;
             }
-
-            string substringToCheck = string.Empty;
-
-            //create the substring to compare with the typed word
-            if (charIndexIsInRange)
+            else 
             {
-                substringToCheck = remainingText.Substring(0, CurrentInputText.Length);
+                string substringToCheck = remainingText.Substring(0, CurrentInputText.Length);
+                IsValid = substringToCheck.Equals(CurrentInputText);
+                CheckIfInputIsCompleteWord();
+                CheckIfIsLastWord();
+                HighlightText();
             }
-
-            isValid = substringToCheck.Equals(CurrentInputText);
-
-            CheckUserInput(CurrentInputText);
-            HighlightText();
         }
 
-        private void CheckUserInput(string text)
+        private void CheckIfInputIsCompleteWord()
         {
-            CheckIfInputIsCompleteWord(text);
-
-            //checks if current word is the last one
-            CheckIfIsLastWord();
-        }
-        private void CheckIfInputIsCompleteWord(string value)
-        {
-            if (isValid && value.EndsWith(" "))
+            if (IsValid && CurrentInputText.EndsWith(" "))
             {
-                SpaceIndex += value.Length;
+                SpaceIndex += CurrentInputText.Length;
                 TriggerPropertyChanged(nameof(SpaceIndex));
-                if (CurrentWordIndex < originalText.Split().Length - 1)
-                {
-                    CurrentWordIndex++;
-                }
+
+                UpdateCurrentWordIndex();
 
                 remainingText = originalText.Substring(SpaceIndex);
                 NumberOfCharactersTyped += CurrentInputText.Length;
                 TriggerPropertyChanged(nameof(NumberOfCharactersTyped));
-                textTyped = string.Empty;
+                CurrentInputText = string.Empty;
                 Clear = true;
                 TriggerPropertyChanged(nameof(Clear));
+            }
+        }
+
+        private void UpdateCurrentWordIndex()
+        {
+            if (CurrentWordIndex < originalText.Split().Length - 1)
+            {
+                CurrentWordIndex++;
             }
         }
 
@@ -167,7 +162,7 @@ namespace TypeRacers
             {
                 AllTextTyped = true;
                 TriggerPropertyChanged(nameof(AllTextTyped));
-               
+
                 Accuracy = 100 - (incorrectTyping * 100 / correctTyping);
                 TriggerPropertyChanged(nameof(Accuracy));
 
@@ -180,7 +175,7 @@ namespace TypeRacers
         {
             if (!Keyboard.IsKeyDown(Key.Back))
             {
-                if (isValid)
+                if (IsValid)
                 {
                     correctTyping++;
                     TypingAlert = false;
@@ -188,7 +183,7 @@ namespace TypeRacers
                     incorrectChars = 0;
                 }
 
-                if (!isValid)
+                if (!IsValid)
                 {
                     incorrectTyping++;
                     incorrectChars++;
