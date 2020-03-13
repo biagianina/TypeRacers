@@ -15,6 +15,7 @@ namespace Common
         }
 
         public bool ClientDisconnected { get; private set; }
+
         public ReceivedMessage(TcpClient tcpClient)
         {
             this.tcpClient = tcpClient;

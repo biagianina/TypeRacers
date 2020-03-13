@@ -104,13 +104,6 @@ namespace TypeRacers.Client
                 OpponentsChanged(opponents);
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void TriggerPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
         public bool Leave(string name)
         {
             throw new NotImplementedException();
