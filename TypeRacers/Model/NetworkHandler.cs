@@ -33,18 +33,20 @@ namespace TypeRacers
             return player;
         }
 
-        internal void StartCommunication()
+        internal bool StartCommunication()
         {
             try
             {
                 client.Connect("localhost", 80);
+
+                typeRacersClient.StartCommunication();
+                return true;
             }
-            catch(SocketException ex)
+            catch(SocketException)
             {
-
+                return false;
             }
 
-            typeRacersClient.StartCommunication();
         }
     }
 }
