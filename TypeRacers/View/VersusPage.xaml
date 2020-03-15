@@ -267,7 +267,6 @@
                             Height="50"
                             Content="OK"
                             Command="{Binding OKbuttonCommand}" />
-
                     </Border>
                 </StackPanel>
             </StackPanel>

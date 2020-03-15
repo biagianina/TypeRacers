@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Net.Sockets;
 using System.Threading;
 using System.Windows;
 using System.Windows.Navigation;
@@ -13,11 +15,12 @@ namespace TypeRacers.ViewModel
 
         public MainViewModel()
         {
-            RetryCommand = new CommandHandler(() => NavigateContest(), () => true);
-            ContestCommand = new CommandHandler(() => NavigateContest(), () => true);
-            PracticeCommand = new CommandHandler(() => NavigatePractice(), () => true);
+            RetryCommand = new CommandHandler(NavigateContest, () => true);
+            ContestCommand = new CommandHandler(NavigateContest, () => true);
+            PracticeCommand = new CommandHandler(NavigatePractice, () => true);
         }
 
+        private bool EnablePlayerCantConnect { get; set; }
         public bool UsernameEntered { get; set; }
         public Model.Model Model { get; set; }
         public bool EnterUsernameMessage { get; set; }
@@ -50,8 +53,7 @@ namespace TypeRacers.ViewModel
 
         private void NavigateContest()
         {
-            EnableRetry = false;
-            TriggerPropertyChanged(nameof(EnableRetry));
+
             if (UsernameEntered)
             {
                 race = new VersusPage();
@@ -61,7 +63,12 @@ namespace TypeRacers.ViewModel
                 {
                     try
                     {
-                        Model.StartCommunication();
+                        bool connected = Model.StartCommunication();
+                        if (!connected)
+                        {
+                            throw new SocketException();
+                       
+                        }
                         var gameInfo = Model.GetGameInfo();
                         var player = Model.GetPlayer();
                         while (!gameInfo.GameInfoIsSet)
@@ -76,7 +83,7 @@ namespace TypeRacers.ViewModel
                         Application.Current.Dispatcher.Invoke(() => race.Player = player);
                         Application.Current.Dispatcher.Invoke(() => ContestNavigation.Navigate(race));
                     }
-                    catch
+                    catch(SocketException ex)
                     {
                         Application.Current.Dispatcher.Invoke(() =>
                         {

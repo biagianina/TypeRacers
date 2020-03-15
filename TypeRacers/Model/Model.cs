@@ -23,9 +23,9 @@ namespace TypeRacers.Model
             return networkHandler.GameModel();
         }
 
-        public void StartCommunication()
+        public bool StartCommunication()
         {
-            networkHandler.StartCommunication();
+            return networkHandler.StartCommunication();
         }
 
         public string GetGeneratedTextToTypeLocally()

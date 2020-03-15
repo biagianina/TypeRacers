@@ -65,7 +65,6 @@ namespace TypeRacers.ViewModel
         public CommandHandler RemovePlayer { get; }
         public CommandHandler RestartSearchingOpponentsCommand { get; }
         public CommandHandler ExitProgramCommand { get; }
-
         public CommandHandler OKbuttonCommand { get; }
         public IEnumerable<Inline> TextToTypeStyles => UserInputValidator.TextToTypeStyles;
 
@@ -184,6 +183,7 @@ namespace TypeRacers.ViewModel
             EnableDisconnectedAlert = false;
             TriggerPropertyChanged(nameof(EnableDisconnectedAlert));
         }
+
         private void RestartSearchingOpponents()
         {
             EnableRestartOrExitAlert = false;
