@@ -1,4 +1,5 @@
 ﻿using Common;
+using System;
 using System.Net.Sockets;
 using TypeRacers.Client;
 
@@ -34,7 +35,15 @@ namespace TypeRacers
 
         internal void StartCommunication()
         {
-            client.Connect("localhost", 80);
+            try
+            {
+                client.Connect("localhost", 80);
+            }
+            catch(SocketException ex)
+            {
+
+            }
+
             typeRacersClient.StartCommunication();
         }
     }

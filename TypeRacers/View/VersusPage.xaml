@@ -255,11 +255,11 @@
                     Orientation="Horizontal"
                     Margin="0,20,0,0">
                     <Border
-                        Margin="0,0,5,0"
                         BorderThickness="3"
                         BorderBrush="White"
                         CornerRadius="1">
                         <Button
+                            Click="BackBtn_Click"
                             VerticalAlignment="Top"
                             Background="#e6e6e6"
                             Foreground="Black"
@@ -267,22 +267,6 @@
                             Height="50"
                             Content="OK"
                             Command="{Binding OKbuttonCommand}" />
-
-                    </Border>
-
-                    <Border
-                        BorderThickness="3"
-                        BorderBrush="White"
-                        CornerRadius="1"
-                        Margin="5,0,0,0">
-                        <Button
-                            VerticalAlignment="Top"
-                            Background="#e6e6e6"
-                            Foreground="Black"
-                            Width="70"
-                            Height="50"
-                            Content="EXIT GAME"
-                            Command="{Binding ExitProgramCommand}" />
 
                     </Border>
                 </StackPanel>

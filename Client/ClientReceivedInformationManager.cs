@@ -1,5 +1,7 @@
 ﻿using Common;
 using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
@@ -9,7 +11,7 @@ namespace TypeRacers.Client
     {
         public Player Player { get; set; }
         public IPlayroom Playroom { get; set; }
-        private GameInfo GameInfo { get; set; }
+        private GameInfo GameInfo { get; }
 
         public ClientReceivedInformationManager(Player player, IPlayroom playroom)
         {
@@ -22,13 +24,19 @@ namespace TypeRacers.Client
         {
             while (!Player.Removed)
             {
-                GetData();
+                SetData();
             }
         }
 
-        public void GetData()
+        public void SetData()
         {
             var message = (ReceivedMessage)Player.Read();
+            if(message is null)
+            {
+                GameInfo.ConnectionLost = true;
+                return;
+            }
+
             var data = message.GetData();
             if (Player.FirstTimeConnecting || Player.Restarting)
             {
@@ -58,7 +66,6 @@ namespace TypeRacers.Client
                     break;
                 }
             }
-
             GameInfo.SetOpponentsAndTimers(infos);
         }
 
