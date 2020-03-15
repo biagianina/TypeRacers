@@ -25,11 +25,12 @@ namespace Server
         public void ManageReceivedData()
         {
             var message = (ReceivedMessage)Player.Read();
-            var data = message?.GetData();
-            if (string.IsNullOrEmpty(data))
+
+            if (message is null)
             {
                 return;
             }
+            var data = message.GetData();
 
             Player.UpdateInfo(data);
 

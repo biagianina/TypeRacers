@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
@@ -13,10 +14,10 @@ namespace TypeRacers.ViewModel
     {
         private string typedText;
         private InputCharacterValidation userInputValidator;
-
         private bool startReporting;
         private Player player;
         private GameInfo gameInfo;
+
         public VersusViewModel()
         {
             UpdateShownPlayers();
@@ -25,8 +26,8 @@ namespace TypeRacers.ViewModel
             RemovePlayer = new CommandHandler(RemovePlayerFromPlayroom, () => true);
             RestartSearchingOpponentsCommand = new CommandHandler(RestartSearchingOpponents, () => true);
             OKbuttonCommand = new CommandHandler(OnOKButtonPressed, () => true);
-            EnableDisconnectedAlert = true;
         }
+
 
         public Player Player
         {
@@ -60,14 +61,14 @@ namespace TypeRacers.ViewModel
 
             }
         }
-
+ 
         public CommandHandler RemovePlayer { get; }
         public CommandHandler RestartSearchingOpponentsCommand { get; }
         public CommandHandler ExitProgramCommand { get; }
 
         public CommandHandler OKbuttonCommand { get; }
         public IEnumerable<Inline> TextToTypeStyles => UserInputValidator.TextToTypeStyles;
-     
+
         public IEnumerable<Player> Opponents => GameInfo?.Players ?? new List<Player>();
 
         public Visibility ShowFirstOpponent { get; set; }
@@ -112,8 +113,6 @@ namespace TypeRacers.ViewModel
 
         //determines if a popup alert should apear, binded in open property of popup xaml
         public bool TypingAlert => UserInputValidator.TypingAlert;
-
-
         public string InputBackgroundColor => UserInputValidator.InputBackgroundColor;
         public bool StartReportingProgress
         {
@@ -126,6 +125,7 @@ namespace TypeRacers.ViewModel
                 ReportProgress();
             }
         }
+
 
         public string TextToType => GameInfo?.CompetitionText ?? string.Empty;
         public bool EnableGetReadyAlert { get; set; }
@@ -207,19 +207,30 @@ namespace TypeRacers.ViewModel
         {
             Player.Removed = true;
         }
+
         private void UpdateOpponents(List<Player> uppdateOpponents)
         {
-            TriggerPropertyChanged(nameof(Opponents));            OpponentsCount = Opponents.Count();
+            TriggerPropertyChanged(nameof(Opponents));
+            OpponentsCount = Opponents.Count();
             TriggerPropertyChanged(nameof(OpponentsCount));
-
             TriggerPropertyChanged(nameof(RankingPlace));
             TriggerPropertyChanged(nameof(ShowRanking));
+
+
+            CheckConnectionStatus();
 
             UpdateShownPlayers();
 
             CheckIfStartTimeWasSet();
 
             CheckIfWaitingTimeHasPassed();
+        }
+
+        private void CheckConnectionStatus()
+        {
+            EnableDisconnectedAlert = GameInfo.ConnectionLost;
+            TriggerPropertyChanged(nameof(EnableDisconnectedAlert));
+
         }
 
         private void CheckIfStartTimeWasSet()
