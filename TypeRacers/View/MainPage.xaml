@@ -1,182 +1,214 @@
-﻿<Page x:Class="TypeRacers.View.MainPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:y="clr-namespace:TypeRacers.ViewModel"
-      Loaded="OnLoaded"
-      mc:Ignorable="d"
-      Title="MainPage"
-      MinHeight="450"
-      MinWidth="410">
+﻿<Page
+    x:Class="TypeRacers.View.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:y="clr-namespace:TypeRacers.ViewModel"
+    Loaded="OnLoaded"
+    mc:Ignorable="d"
+    Title="MainPage"
+    MinHeight="450"
+    MinWidth="410">
 
     <Page.Resources>
-        <y:MainViewModel x:Key="MainVM" />
-        <BooleanToVisibilityConverter x:Key="VisibleConverter" />
+        <y:MainViewModel
+            x:Key="MainVM" />
+        <BooleanToVisibilityConverter
+            x:Key="VisibleConverter" />
     </Page.Resources>
-    <Grid Style="{StaticResource FocusTextBox}"
-          Background="#FF7726B0"
-          DataContext="{StaticResource MainVM}">
+    <Grid
+        Style="{StaticResource FocusTextBox}"
+        Background="#FF7726B0"
+        DataContext="{StaticResource MainVM}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="10" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="10" />
+            <RowDefinition
+                Height="10" />
+            <RowDefinition
+                Height="*" />
+            <RowDefinition
+                Height="10" />
         </Grid.RowDefinitions>
-        <StackPanel MinWidth="360"
-                    Background="#FF7726B0"
-                    Grid.Column="1"
-                    Grid.Row="1">
-            <TextBlock Name="txt_welcomingmessage"
-                       Text="Welcome to Type Racers!"
-                       Foreground="Black"
-                       TextAlignment="Center"
-                       FontSize="30"
-                       FontFamily="Papyrus" />
-            <Image Width="191"
-                   Height="131"
-                   Margin="88,2,101,2"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   Source="/Images/typer.png" />
-            <Border CornerRadius="5"
-                    Background="AliceBlue"
-                    Margin="15 20">
-                <StackPanel x:Name="userInput">
-                    <Label Content="Please enter a username:"
-                           Margin="10"
-                           FontSize="24"
-                           HorizontalContentAlignment="Center"
-                           FontFamily="Pristina"
-                           FontWeight="Bold"></Label>
-                    <TextBox x:Name="username"
-                             Text="{Binding Username, Mode=TwoWay}"
-                             Foreground="Black"
-                             FontSize="20"
-                             Background="White"
-                             Margin="20"
-                             Focusable="True"
-                             FontFamily="Sylfaen"
-                             BorderThickness="2" />
-                    <StackPanel Orientation="Horizontal"
-                                HorizontalAlignment="Center">
-                        <Button x:Name="btnRace"
-                                Width="150"
-                                Content=" Race mode "
-                                Foreground="Black"
-                                FontSize="24"
-                                Background="#FFAE578E"
-                                Margin="15 10"
-                                Command="{Binding ContestCommand}"
-                                FontFamily="Sylfaen" />
+        <StackPanel
+            MinWidth="360"
+            Background="#FF7726B0"
+            Grid.Column="1"
+            Grid.Row="1">
+            <TextBlock
+                Name="txt_welcomingmessage"
+                Text="Welcome to Type Racers!"
+                Foreground="Black"
+                TextAlignment="Center"
+                FontSize="30"
+                FontFamily="Papyrus" />
+            <Image
+                Width="191"
+                Height="131"
+                Margin="88,2,101,2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Source="/Images/typer.png" />
+            <Border
+                CornerRadius="5"
+                Background="AliceBlue"
+                Margin="15 20">
+                <StackPanel
+                    x:Name="userInput">
+                    <Label
+                        Content="Please enter a username:"
+                        Margin="10"
+                        FontSize="24"
+                        HorizontalContentAlignment="Center"
+                        FontFamily="Pristina"
+                        FontWeight="Bold"></Label>
+                    <TextBox
+                        x:Name="username"
+                        Text="{Binding Username, Mode=TwoWay}"
+                        Foreground="Black"
+                        FontSize="20"
+                        Background="White"
+                        Margin="20"
+                        Focusable="True"
+                        FontFamily="Sylfaen"
+                        BorderThickness="2" />
+                    <StackPanel
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+                        <Button
+                            x:Name="btnRace"
+                            Width="150"
+                            Content=" Race mode "
+                            Foreground="Black"
+                            FontSize="24"
+                            Background="#FFAE578E"
+                            Margin="15 10"
+                            Command="{Binding ContestCommand}"
+                            FontFamily="Sylfaen" />
 
-                        <Button Content=" Practice "
-                                Foreground="Black"
-                                Width="150"
-                                FontSize="24"
-                                FontFamily="Sylfaen"
-                                Background="#FFAE578E"
-                                Margin="15 10"
-                                Command="{Binding PracticeCommand}" />
+                        <Button
+                            Content=" Practice "
+                            Foreground="Black"
+                            Width="150"
+                            FontSize="24"
+                            FontFamily="Sylfaen"
+                            Background="#FFAE578E"
+                            Margin="15 10"
+                            Command="{Binding PracticeCommand}" />
                     </StackPanel>
                 </StackPanel>
             </Border>
         </StackPanel>
-        <StackPanel Grid.Row="1"
-                    Visibility="{Binding EnableConnectingAnimation, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibleConverter}}"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center">
-            <Image Source="/Images/loading.png"
-                   Width="100"
-                   Height="100"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   RenderTransformOrigin="0.5, 0.5">
+        <StackPanel
+            Grid.Row="1"
+            Visibility="{Binding EnableConnectingAnimation, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibleConverter}}"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center">
+            <Image
+                Source="/Images/loading.png"
+                Width="100"
+                Height="100"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                RenderTransformOrigin="0.5, 0.5">
                 <Image.RenderTransform>
-                    <RotateTransform x:Name="noFreeze" />
+                    <RotateTransform
+                        x:Name="noFreeze" />
                 </Image.RenderTransform>
                 <Image.Triggers>
-                    <EventTrigger RoutedEvent="Loaded">
+                    <EventTrigger
+                        RoutedEvent="Loaded">
                         <BeginStoryboard>
                             <Storyboard>
-                                <DoubleAnimation Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
-                                                 To="360"
-                                                 Duration="0:0:1"
-                                                 RepeatBehavior="Forever" />
+                                <DoubleAnimation
+                                    Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
+                                    To="360"
+                                    Duration="0:0:1"
+                                    RepeatBehavior="Forever" />
                             </Storyboard>
                         </BeginStoryboard>
                     </EventTrigger>
                 </Image.Triggers>
             </Image>
-            <Label Content="Gathering game information..."
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Bottom"
-                   FontFamily="Times New Roman"
-                   FontSize="14"
-                   FontWeight="Bold"
-                   Foreground="DarkSalmon" />
+            <Label
+                Content="Gathering game information..."
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                FontFamily="Times New Roman"
+                FontSize="14"
+                FontWeight="Bold"
+                Foreground="DarkSalmon" />
         </StackPanel>
 
-        <StackPanel Grid.Row="1"
-                    Visibility="{Binding EnableRetry, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibleConverter}}"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    Background="Purple">
-            <Image Source="/Images/sad.png"
-                   Width="100"
-                   Height="100"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   RenderTransformOrigin="0.5, 0.5">
+        <StackPanel
+            Grid.Row="1"
+            Visibility="{Binding EnableRetry, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibleConverter}}"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Background="Purple">
+            <Image
+                Source="/Images/sad.png"
+                Width="100"
+                Height="100"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                RenderTransformOrigin="0.5, 0.5">
             </Image>
-            <Label Content="Connection lost..."
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Bottom"
-                   FontFamily="Times New Roman"
-                   FontSize="14"
-                   FontWeight="Bold"
-                   Foreground="MediumPurple" />
-            <Button Width="150"
-                    Content=" Retry "
-                    Foreground="Black"
-                    FontSize="24"
-                    Background="#FFAE578E"
-                    Margin="15 10"
-                    Command="{Binding RetryCommand}"
-                    FontFamily="Sylfaen" />
+            <Label
+                Content="Connection lost..."
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                FontFamily="Times New Roman"
+                FontSize="14"
+                FontWeight="Bold"
+                Foreground="MediumPurple" />
+            <Button
+                Width="150"
+                Content=" Retry "
+                Foreground="Black"
+                FontSize="24"
+                Background="#FFAE578E"
+                Margin="15 10"
+                Command="{Binding RetryCommand}"
+                FontFamily="Sylfaen" />
         </StackPanel>
-        <Popup IsOpen="{Binding EnterUsernameMessage}"
-               PlacementTarget="{Binding ElementName=username}"
-               Placement="Top"
-               StaysOpen="False"
-               AllowsTransparency="True"
-               HorizontalAlignment="Center"
-               Width="230">
-            <StackPanel VerticalAlignment="Center">
+        <Popup
+            IsOpen="{Binding EnterUsernameMessage}"
+            PlacementTarget="{Binding ElementName=username}"
+            Placement="Top"
+            StaysOpen="False"
+            AllowsTransparency="True"
+            HorizontalAlignment="Center"
+            Width="230">
+            <StackPanel
+                VerticalAlignment="Center">
                 <StackPanel.Effect>
-                    <DropShadowEffect Color="#FF410A49" />
+                    <DropShadowEffect
+                        Color="#FF410A49" />
                 </StackPanel.Effect>
-                <Border CornerRadius="20"
-                        Height="80"
-                        Width="200"
-                        Background="#FFDE7BE8"
-                        Opacity="100"
-                        SnapsToDevicePixels="True">
+                <Border
+                    CornerRadius="20"
+                    Height="80"
+                    Width="200"
+                    Background="#FFDE7BE8"
+                    Opacity="100"
+                    SnapsToDevicePixels="True">
 
-                    <TextBlock Text="Username cannot be empty!"
-                               TextAlignment="Center"
-                               VerticalAlignment="Center"
-                               FontFamily="Monotype Corsiva"
-                               FontSize="18"
-                               FontWeight="Bold" />
+                    <TextBlock
+                        Text="Username cannot be empty!"
+                        TextAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontFamily="Monotype Corsiva"
+                        FontSize="18"
+                        FontWeight="Bold" />
                 </Border>
-                <Polygon Margin="30 0"
-                         HorizontalAlignment="Left"
-                         Points="0,0 15,0 0,30"
-                         Stroke="#FFDE7BE8"
-                         Fill="#FFDE7BE8"
-                         Width="19" />
+                <Polygon
+                    Margin="30 0"
+                    HorizontalAlignment="Left"
+                    Points="0,0 15,0 0,30"
+                    Stroke="#FFDE7BE8"
+                    Fill="#FFDE7BE8"
+                    Width="19" />
             </StackPanel>
         </Popup>
-
     </Grid>
 </Page>

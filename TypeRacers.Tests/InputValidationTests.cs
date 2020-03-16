@@ -1,7 +1,6 @@
-﻿using Xunit;
+﻿using System.Threading;
 using TypeRacers;
-using System.Windows;
-using System.Threading;
+using Xunit;
 
 namespace TypeRacersFacts
 {
@@ -10,7 +9,9 @@ namespace TypeRacersFacts
         [Fact]
         public void FirstCharValidator()
         {
-            Thread validate = new Thread(()=> { var validator = new InputCharacterValidation("This is the text.");
+            Thread validate = new Thread(() =>
+            {
+                var validator = new InputCharacterValidation("This is the text.");
                 validator.ValidateInput("T");
                 Assert.True(validator.IsValid);
                 Assert.False(validator.TypingAlert);
@@ -27,7 +28,8 @@ namespace TypeRacersFacts
         [Fact]
         public void FirstWordValidator()
         {
-            Thread validate = new Thread(() => {
+            Thread validate = new Thread(() =>
+            {
                 var validator = new InputCharacterValidation("This is the text.");
                 validator.ValidateInput("This ");
                 Assert.True(validator.IsValid);
@@ -45,7 +47,8 @@ namespace TypeRacersFacts
         [Fact]
         public void OneIncorectCharValidator()
         {
-            Thread validate = new Thread(() => {
+            Thread validate = new Thread(() =>
+            {
                 var validator = new InputCharacterValidation("This is the text.");
                 validator.ValidateInput("Thiz");
                 Assert.False(validator.IsValid);
@@ -64,7 +67,8 @@ namespace TypeRacersFacts
         [Fact]
         public void WholeTextValidator()
         {
-            Thread validate = new Thread(() => {
+            Thread validate = new Thread(() =>
+            {
                 var validator = new InputCharacterValidation("This is the text.");
                 validator.ValidateInput("This is the text.");
                 Assert.True(validator.IsValid);

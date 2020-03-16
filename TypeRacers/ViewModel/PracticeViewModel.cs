@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows;
 using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 
 namespace TypeRacers.ViewModel
 {
     public class PracticeViewModel : ITextToType, INotifyPropertyChanged
     {
-        private string typedText=string.Empty;
+        private string typedText = string.Empty;
         private string textToType = string.Empty;
         private InputCharacterValidation userInputValidator;
 
@@ -79,7 +76,7 @@ namespace TypeRacers.ViewModel
             {
                 if (typedText == value)
                     return;
-                
+
                 if (userInputValidator == null)
                 {
                     UserInputValidator = new InputCharacterValidation(TextToType);
@@ -87,7 +84,7 @@ namespace TypeRacers.ViewModel
                 }
 
                 UserInputValidator.ValidateInput(value);
-              
+
                 TriggerPropertyChanged(nameof(TextToTypeStyles));
                 TriggerPropertyChanged(nameof(CurrentInputText));
                 TriggerPropertyChanged(nameof(Accuracy));
@@ -110,7 +107,7 @@ namespace TypeRacers.ViewModel
         public bool ShowFinishResults => UserInputValidator?.OpenFinishPopup ?? false;
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-     
+
         //INotifyPropertyChanged code - basic
         public event PropertyChangedEventHandler PropertyChanged;
 

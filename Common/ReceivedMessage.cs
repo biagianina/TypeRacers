@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Text;
 
 namespace Common
@@ -8,6 +6,7 @@ namespace Common
     public class ReceivedMessage : IMessage
     {
         private readonly TcpClient tcpClient;
+
         public ReceivedMessage(string data)
         {
             Data = data;
@@ -54,5 +53,4 @@ namespace Common
             return data ?? string.Empty;
         }
     }
-
 }

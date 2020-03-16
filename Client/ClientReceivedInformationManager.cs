@@ -1,7 +1,5 @@
 ﻿using Common;
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
@@ -31,7 +29,7 @@ namespace TypeRacers.Client
         public void SetData()
         {
             var message = (ReceivedMessage)Player.Read();
-            if(message is null)
+            if (message is null)
             {
                 GameInfo.ConnectionLost = true;
                 return;

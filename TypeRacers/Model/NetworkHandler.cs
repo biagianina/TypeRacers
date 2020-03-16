@@ -1,5 +1,4 @@
 ﻿using Common;
-using System;
 using System.Net.Sockets;
 using TypeRacers.Client;
 
@@ -42,11 +41,10 @@ namespace TypeRacers
                 typeRacersClient.StartCommunication();
                 return true;
             }
-            catch(SocketException)
+            catch (SocketException)
             {
                 return false;
             }
-
         }
     }
 }

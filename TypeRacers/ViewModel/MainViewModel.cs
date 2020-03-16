@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Net.Sockets;
 using System.Threading;
 using System.Windows;
@@ -20,7 +19,6 @@ namespace TypeRacers.ViewModel
             PracticeCommand = new CommandHandler(NavigatePractice, () => true);
         }
 
-        private bool EnablePlayerCantConnect { get; set; }
         public bool UsernameEntered { get; set; }
         public Model.Model Model { get; set; }
         public bool EnterUsernameMessage { get; set; }
@@ -53,7 +51,6 @@ namespace TypeRacers.ViewModel
 
         private void NavigateContest()
         {
-
             if (UsernameEntered)
             {
                 race = new VersusPage();
@@ -67,7 +64,6 @@ namespace TypeRacers.ViewModel
                         if (!connected)
                         {
                             throw new SocketException();
-                       
                         }
                         var gameInfo = Model.GetGameInfo();
                         var player = Model.GetPlayer();
@@ -83,7 +79,7 @@ namespace TypeRacers.ViewModel
                         Application.Current.Dispatcher.Invoke(() => race.Player = player);
                         Application.Current.Dispatcher.Invoke(() => ContestNavigation.Navigate(race));
                     }
-                    catch(SocketException ex)
+                    catch (SocketException)
                     {
                         Application.Current.Dispatcher.Invoke(() =>
                         {

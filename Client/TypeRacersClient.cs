@@ -1,5 +1,4 @@
 ﻿using Common;
-using System.Diagnostics;
 using System.Threading;
 
 namespace TypeRacers.Client

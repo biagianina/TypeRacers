@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Common;
+﻿using Common;
+using System;
+
 namespace TypeRacersFacts
 {
     public class MockInformationManager : IRecievedInformationManager
