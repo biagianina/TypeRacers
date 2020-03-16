@@ -58,7 +58,6 @@ namespace TypeRacers.ViewModel
                 TriggerPropertyChanged(nameof(ShowRanking));
                 TriggerPropertyChanged(nameof(RankingPlace));
                 UpdateShownPlayers();
-
             }
         }
  
@@ -113,6 +112,7 @@ namespace TypeRacers.ViewModel
         //determines if a popup alert should apear, binded in open property of popup xaml
         public bool TypingAlert => UserInputValidator.TypingAlert;
         public string InputBackgroundColor => UserInputValidator.InputBackgroundColor;
+
         public bool StartReportingProgress
         {
             get => startReporting;
@@ -215,8 +215,6 @@ namespace TypeRacers.ViewModel
             TriggerPropertyChanged(nameof(OpponentsCount));
             TriggerPropertyChanged(nameof(RankingPlace));
             TriggerPropertyChanged(nameof(ShowRanking));
-
-
             CheckConnectionStatus();
 
             UpdateShownPlayers();
@@ -230,7 +228,6 @@ namespace TypeRacers.ViewModel
         {
             EnableDisconnectedAlert = GameInfo.ConnectionLost;
             TriggerPropertyChanged(nameof(EnableDisconnectedAlert));
-
         }
 
         private void CheckIfStartTimeWasSet()
@@ -264,16 +261,21 @@ namespace TypeRacers.ViewModel
                 }
                 else
                 {
-                    EnableSearchingAnimation = false;
-                    TriggerPropertyChanged(nameof(EnableSearchingAnimation));
-                    EnableRestartOrExitAlert = true;
-                    TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
+                    if (!Player.Restarting)
+                    {
+                        EnableSearchingAnimation = false;
+                        TriggerPropertyChanged(nameof(EnableSearchingAnimation));
+                        EnableRestartOrExitAlert = true;
+                        TriggerPropertyChanged(nameof(EnableRestartOrExitAlert));
+                    }
+
                 }
             }
         }
 
         private void UpdateShownPlayers()
         {
+           
             if (Opponents.Count() == 0)
             {
                 ShowFirstOpponent = Visibility.Hidden;

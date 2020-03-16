@@ -37,7 +37,6 @@ namespace Common
                     var toSend = message.ToByteArray();
                     networkStream.Write(toSend, 0, toSend.Length);
                 }
-
             }
             catch (System.IO.IOException ex)
             {

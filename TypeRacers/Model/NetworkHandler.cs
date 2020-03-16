@@ -46,7 +46,6 @@ namespace TypeRacers
             {
                 return false;
             }
-
         }
     }
 }

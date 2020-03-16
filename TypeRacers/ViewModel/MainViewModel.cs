@@ -1,4 +1,5 @@
-﻿using System;
+
+using System;
 using System.ComponentModel;
 using System.Net.Sockets;
 using System.Threading;
@@ -53,7 +54,6 @@ namespace TypeRacers.ViewModel
 
         private void NavigateContest()
         {
-
             if (UsernameEntered)
             {
                 race = new VersusPage();
@@ -67,7 +67,7 @@ namespace TypeRacers.ViewModel
                         if (!connected)
                         {
                             throw new SocketException();
-                       
+
                         }
                         var gameInfo = Model.GetGameInfo();
                         var player = Model.GetPlayer();
@@ -83,7 +83,7 @@ namespace TypeRacers.ViewModel
                         Application.Current.Dispatcher.Invoke(() => race.Player = player);
                         Application.Current.Dispatcher.Invoke(() => ContestNavigation.Navigate(race));
                     }
-                    catch(SocketException ex)
+                    catch (SocketException)
                     {
                         Application.Current.Dispatcher.Invoke(() =>
                         {

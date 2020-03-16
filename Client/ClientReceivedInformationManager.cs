@@ -31,6 +31,7 @@ namespace TypeRacers.Client
         public void SetData()
         {
             var message = (ReceivedMessage)Player.Read();
+
             if(message is null)
             {
                 GameInfo.ConnectionLost = true;

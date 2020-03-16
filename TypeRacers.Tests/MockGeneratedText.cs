@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Common;
+﻿using Common;
+
 namespace TypeRacersFacts
 {
     public class MockGeneratedText : ITextToType

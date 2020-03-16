@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TypeRacers.Server;
 
 namespace Server
 {
@@ -22,7 +21,6 @@ namespace Server
         public DateTime TimeToWaitForOpponents { get; set; }
         public int Place { get; set; } = 1;
         public string CompetitionText { get; set; }
-
 
         public bool Join(Player currentPlayer, IRecievedInformationManager informationManager)
         {
@@ -48,7 +46,7 @@ namespace Server
         }
 
         public Player GetPlayer(string name)
-        { 
+        {
             return Players.Find(x => x.Name.Equals(name));
         }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Documents;
@@ -29,7 +28,7 @@ namespace TypeRacers
 
         public IEnumerable<Inline> TextToTypeStyles
         {
-            get =>new[] { new Run() { Text = originalText.Substring(0, SpaceIndex) , Foreground = Brushes.Salmon},
+            get => new[] { new Run() { Text = originalText.Substring(0, SpaceIndex) , Foreground = Brushes.Salmon},
                 new Run() { Text = originalText.Substring(SpaceIndex, correctChars), Foreground = Brushes.Salmon, TextDecorations = TextDecorations.Underline},
                 new Run() { Text = originalText.Substring(correctChars + SpaceIndex, incorrectChars), TextDecorations = TextDecorations.Underline, Background = Brushes.Salmon},
                 new Run() {Text = originalText.Substring(SpaceIndex + correctChars + incorrectChars, CurrentWordLength - correctChars - incorrectChars), TextDecorations = TextDecorations.Underline},
@@ -101,6 +100,7 @@ namespace TypeRacers
                 TriggerPropertyChanged(nameof(TypingAlert));
             }
         }
+
         public bool AllTextTyped { get; private set; }
         public int Accuracy { get; private set; }
         public bool OpenFinishPopup { get; private set; }
@@ -120,7 +120,7 @@ namespace TypeRacers
                 isValid = false;
                 return;
             }
-            else 
+            else
             {
                 string substringToCheck = remainingText.Substring(0, CurrentInputText.Length);
                 IsValid = substringToCheck.Equals(CurrentInputText);

@@ -1,82 +1,96 @@
-﻿<UserControl x:Class="TypeRacers.View.ReadAndTypeUserControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:TypeRacers.View"
-             xmlns:vm="clr-namespace:TypeRacers.ViewModel"
-             mc:Ignorable="d">
+﻿<UserControl
+    x:Class="TypeRacers.View.ReadAndTypeUserControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TypeRacers.View"
+    xmlns:vm="clr-namespace:TypeRacers.ViewModel"
+    mc:Ignorable="d">
 
-    <Grid Style="{StaticResource FocusTextBoxInGame}"
-          VerticalAlignment="Bottom"
-          DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ReadAndTypeUserControl}}">
+    <Grid
+        Style="{StaticResource FocusTextBoxInGame}"
+        VerticalAlignment="Bottom"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ReadAndTypeUserControl}}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="auto" />
+            <RowDefinition
+                Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock vm:TextBlockExtensions.BindableInlines="{Binding RATUCInlines}"
-                   Grid.Row="1"
-                   MaxWidth="800"
-                   FontFamily="Arial"
-                   Foreground="#f0efd5"
-                   Name="displayText"
-                   FontSize="30"
-                   TextAlignment="Center"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   TextWrapping="Wrap" />
-        <Label Grid.Row="0"
-               Margin="5"
-               Content="{Binding RATUCSecondsInGame}"
-               IsEnabled="True"
-               FontFamily="Times New Roman"
-               FontSize="12"
-               HorizontalAlignment="Right"
-               VerticalAlignment="Top"
-               Grid.Column="2"
-               Foreground="White"
-               FontWeight="Bold"
-               Background="#e84a5f"
-               BorderBrush="#FF5D1572">
+        <TextBlock
+            vm:TextBlockExtensions.BindableInlines="{Binding RATUCInlines}"
+            Grid.Row="1"
+            MaxWidth="800"
+            FontFamily="Arial"
+            Foreground="#f0efd5"
+            Name="displayText"
+            FontSize="30"
+            TextAlignment="Center"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            TextWrapping="Wrap" />
+        <Label
+            Grid.Row="0"
+            Margin="5"
+            Content="{Binding RATUCSecondsInGame}"
+            IsEnabled="True"
+            FontFamily="Times New Roman"
+            FontSize="12"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Grid.Column="2"
+            Foreground="White"
+            FontWeight="Bold"
+            Background="#e84a5f"
+            BorderBrush="#FF5D1572">
             <Label.Effect>
-                <DropShadowEffect Color="#FF853C95" />
+                <DropShadowEffect
+                    Color="#FF853C95" />
             </Label.Effect>
         </Label>
-        <Popup IsOpen="{Binding RATUCTypingAlert, UpdateSourceTrigger=PropertyChanged}"
-               Width="220"
-               Height="120"
-               PlacementTarget="{Binding ElementName=inputTextbox}"
-               Placement="Top"
-               AllowsTransparency="True"
-               PopupAnimation="Fade">
-            <StackPanel VerticalAlignment="Center">
+        <Popup
+            IsOpen="{Binding RATUCTypingAlert, UpdateSourceTrigger=PropertyChanged}"
+            Width="220"
+            Height="120"
+            PlacementTarget="{Binding ElementName=inputTextbox}"
+            Placement="Top"
+            AllowsTransparency="True"
+            PopupAnimation="Fade">
+            <StackPanel
+                VerticalAlignment="Center">
                 <StackPanel.Effect>
-                    <DropShadowEffect Color="#3fc1c9" />
+                    <DropShadowEffect
+                        Color="#3fc1c9" />
                 </StackPanel.Effect>
-                <Border CornerRadius="20"
-                        Height="80"
-                        Width="200"
-                        Background="White"
-                        Opacity="100"
-                        SnapsToDevicePixels="True">
+                <Border
+                    CornerRadius="20"
+                    Height="80"
+                    Width="200"
+                    Background="White"
+                    Opacity="100"
+                    SnapsToDevicePixels="True">
 
-                    <TextBlock Text="You are spelling this word wrong!"
-                               TextAlignment="Center"
-                               TextWrapping="Wrap"
-                               Foreground="#1b336b"
-                               VerticalAlignment="Center"
-                               FontFamily="Monotype Corsiva"
-                               FontSize="18"
-                               FontWeight="Bold" />
+                    <TextBlock
+                        Text="You are spelling this word wrong!"
+                        TextAlignment="Center"
+                        TextWrapping="Wrap"
+                        Foreground="#1b336b"
+                        VerticalAlignment="Center"
+                        FontFamily="Monotype Corsiva"
+                        FontSize="18"
+                        FontWeight="Bold" />
                 </Border>
-                <Polygon Margin="30 0"
-                         HorizontalAlignment="Left"
-                         Points="0,0 15,0 0,30"
-                         Stroke="White"
-                         Fill="White"
-                         Width="19" />
+                <Polygon
+                    Margin="30 0"
+                    HorizontalAlignment="Left"
+                    Points="0,0 15,0 0,30"
+                    Stroke="White"
+                    Fill="White"
+                    Width="19" />
             </StackPanel>
         </Popup>
         <Popup
@@ -134,14 +148,15 @@
                 </StackPanel>
             </Border>
         </Popup>
-        <TextBox Name="inputTextbox"
-                 Grid.Row="2"
-                 VerticalAlignment="Bottom"
-                 Foreground="White"
-                 Focusable="True"
-                 IsEnabled="{Binding RATUCCanType}"
-                 IsReadOnly="{Binding RATUCAllTextTyped}"
-                 Text="{Binding RATUCCurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                 Background="{Binding RATUCBackgroundColor, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBox
+            Name="inputTextbox"
+            Grid.Row="2"
+            VerticalAlignment="Bottom"
+            Foreground="White"
+            Focusable="True"
+            IsEnabled="{Binding RATUCCanType}"
+            IsReadOnly="{Binding RATUCAllTextTyped}"
+            Text="{Binding RATUCCurrentInputText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+            Background="{Binding RATUCBackgroundColor, UpdateSourceTrigger=PropertyChanged}" />
     </Grid>
 </UserControl>

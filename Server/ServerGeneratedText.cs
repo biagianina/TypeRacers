@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Common;
+
 namespace Server
 {
     public class ServerGeneratedText : ITextToType

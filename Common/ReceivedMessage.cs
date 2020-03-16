@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Text;
 
 namespace Common
@@ -54,5 +52,4 @@ namespace Common
             return data ?? string.Empty;
         }
     }
-
 }

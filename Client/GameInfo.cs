@@ -1,7 +1,6 @@
 ﻿using Common;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Net.Sockets;
 
@@ -97,7 +96,6 @@ namespace TypeRacers.Client
                 player.Finnished = Convert.ToBoolean(info[2]);
                 player.Place = int.Parse(info[3]);
             }
-
         }
 
         public void OnOpponentsChanged(List<Player> opponents)
@@ -107,7 +105,7 @@ namespace TypeRacers.Client
                 OpponentsChanged(opponents);
             }
         }
-  
+
         public bool Leave(string name)
         {
             throw new NotImplementedException();
