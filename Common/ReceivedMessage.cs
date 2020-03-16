@@ -6,7 +6,6 @@ namespace Common
     public class ReceivedMessage : IMessage
     {
         private readonly TcpClient tcpClient;
-
         public ReceivedMessage(string data)
         {
             Data = data;
