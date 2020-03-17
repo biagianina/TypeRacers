@@ -90,12 +90,10 @@ namespace TypeRacers.Client
                 var informationManager = new ClientReceivedInformationManager(player, this);
                 Join(player, informationManager);
             }
-            else
-            {
-                player.UpdateProgress(int.Parse(info[0]), int.Parse(info[1]));
-                player.Finnished = Convert.ToBoolean(info[2]);
-                player.Place = int.Parse(info[3]);
-            }
+
+            player.UpdateProgress(int.Parse(info[0]), int.Parse(info[1]));
+            player.Finnished = Convert.ToBoolean(info[2]);
+            player.Place = int.Parse(info[3]);
         }
 
         public void OnOpponentsChanged(List<Player> opponents)
