@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+
+using System;
+using System.ComponentModel;
 using System.Net.Sockets;
 using System.Threading;
 using System.Windows;
@@ -19,6 +21,7 @@ namespace TypeRacers.ViewModel
             PracticeCommand = new CommandHandler(NavigatePractice, () => true);
         }
 
+        private bool EnablePlayerCantConnect { get; set; }
         public bool UsernameEntered { get; set; }
         public Model.Model Model { get; set; }
         public bool EnterUsernameMessage { get; set; }
@@ -64,6 +67,7 @@ namespace TypeRacers.ViewModel
                         if (!connected)
                         {
                             throw new SocketException();
+
                         }
                         var gameInfo = Model.GetGameInfo();
                         var player = Model.GetPlayer();

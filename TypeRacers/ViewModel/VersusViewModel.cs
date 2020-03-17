@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
@@ -26,6 +27,7 @@ namespace TypeRacers.ViewModel
             RestartSearchingOpponentsCommand = new CommandHandler(RestartSearchingOpponents, () => true);
             OKbuttonCommand = new CommandHandler(OnOKButtonPressed, () => true);
         }
+
 
         public Player Player
         {
@@ -58,7 +60,7 @@ namespace TypeRacers.ViewModel
                 UpdateShownPlayers();
             }
         }
-
+ 
         public CommandHandler RemovePlayer { get; }
         public CommandHandler RestartSearchingOpponentsCommand { get; }
         public CommandHandler ExitProgramCommand { get; }
@@ -109,7 +111,6 @@ namespace TypeRacers.ViewModel
 
         //determines if a popup alert should apear, binded in open property of popup xaml
         public bool TypingAlert => UserInputValidator.TypingAlert;
-
         public string InputBackgroundColor => UserInputValidator.InputBackgroundColor;
 
         public bool StartReportingProgress
@@ -123,6 +124,7 @@ namespace TypeRacers.ViewModel
                 ReportProgress();
             }
         }
+
 
         public string TextToType => GameInfo?.CompetitionText ?? string.Empty;
         public bool EnableGetReadyAlert { get; set; }
@@ -213,7 +215,6 @@ namespace TypeRacers.ViewModel
             TriggerPropertyChanged(nameof(OpponentsCount));
             TriggerPropertyChanged(nameof(RankingPlace));
             TriggerPropertyChanged(nameof(ShowRanking));
-
             CheckConnectionStatus();
 
             UpdateShownPlayers();

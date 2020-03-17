@@ -20,7 +20,6 @@ namespace TypeRacers.Client
         public int Place { get; set; }
         public bool GameInfoIsSet { get; set; }
         public bool ConnectionLost { get; set; }
-
         public Player GetPlayer(string name)
         {
             return Players.Find(p => p.Name.Equals(name));
@@ -68,9 +67,9 @@ namespace TypeRacers.Client
             OpponentsChanged = new OpponentsChangedEventHandler(updateOpponents);
             OpponentsChanged += new OpponentsChangedEventHandler(OpponentsChanged);
         }
-
         private void SetOpponents(string[] nameAndInfos)
         {
+
             var name = nameAndInfos.FirstOrDefault();
             var info = nameAndInfos.LastOrDefault()?.Split('&');
 
@@ -79,6 +78,7 @@ namespace TypeRacers.Client
                 return;
             }
             var player = GetPlayer(name);
+
 
             if (player == default)
             {
