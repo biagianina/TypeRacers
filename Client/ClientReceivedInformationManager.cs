@@ -45,6 +45,7 @@ namespace TypeRacers.Client
                 Player.FirstTimeConnecting = false;
                 Player.Restarting = false;
             }
+
             else
             {
                 SetGameStatus(data);
