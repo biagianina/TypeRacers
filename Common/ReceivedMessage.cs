@@ -46,11 +46,10 @@ namespace Common
 
         public string GetData()
         {
-            if(tcpClient != null)
+            if (tcpClient != null)
             {
                 ReadMessage();
             }
-
             var data = Data?.Substring(0, Data.IndexOf('#')) ?? string.Empty;
             Data = Data?.Remove(0, data.Length + 1);
             return data ?? string.Empty;
