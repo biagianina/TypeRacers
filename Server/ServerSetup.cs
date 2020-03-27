@@ -12,7 +12,8 @@ namespace TypeRacers.Server
         private TcpListener server;
         private Rooms playrooms;
         private TcpClient client;
-
+        // Thread signal.
+        public static ManualResetEvent tcpClientConnected = new ManualResetEvent(false);
         public void Setup()
         {
             server = new TcpListener(IPAddress.IPv6Any, 80);
@@ -29,7 +30,6 @@ namespace TypeRacers.Server
             }
 
             Console.WriteLine("Server started");
-
             CommunicationSetup();
         }
 
@@ -37,14 +37,41 @@ namespace TypeRacers.Server
         {
             while (true)
             {
-                Thread thread = new Thread(() =>
-                {
-                    client = server.AcceptTcpClient();
-                    Player newConnectedClient = new Player(new TypeRacersNetworkClient(client));
-                    playrooms.AllocatePlayroom(newConnectedClient);
-                });
-                thread.Start();
+                DoBeginAcceptTcpClient();
             }
+        }
+
+        // Accept one client connection asynchronously.
+        public void DoBeginAcceptTcpClient()
+        {
+            Console.WriteLine("waiting...");
+            // Start to listen for connections from a client.
+            server.BeginAcceptTcpClient(new AsyncCallback(DoAcceptTcpClientCallback), server);
+
+        }
+
+        // Process the client connection.
+        public void DoAcceptTcpClientCallback(IAsyncResult ar)
+        {
+            TcpListener listener = (TcpListener)ar.AsyncState;
+
+            try
+            {
+                client = listener.EndAcceptTcpClient(ar);
+                Player newConnectedClient = new Player(new TypeRacersNetworkClient(client));
+                playrooms.AllocatePlayroom(newConnectedClient);
+            }
+
+            catch (SocketException ex)
+            {
+                Console.WriteLine("Error accepting TCP connection: {0}", ex.Message);
+
+                // unrecoverable
+               // _doneEvent.Set();
+                return;
+            }
+
+            listener.BeginAcceptTcpClient(new AsyncCallback(DoAcceptTcpClientCallback), listener);
         }
     }
 }

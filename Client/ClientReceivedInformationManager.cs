@@ -39,13 +39,13 @@ namespace TypeRacers.Client
             }
 
             var data = message.GetData();
+
             if (Player.FirstTimeConnecting || Player.Restarting)
             {
                 GameInfo.SetGameInfo(data);
                 Player.FirstTimeConnecting = false;
                 Player.Restarting = false;
             }
-
             else
             {
                 SetGameStatus(data);
